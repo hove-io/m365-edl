@@ -1,0 +1,36 @@
+{
+  "generatedAt": "2026-08-21T15:51:27.544346Z",
+  "source": {
+    "publisher": "Microsoft",
+    "name": "Microsoft 365 IP Address and URL web service",
+    "instance": "Worldwide",
+    "url": "https://endpoints.office.com/endpoints/worldwide",
+    "requestUrl": "https://endpoints.office.com/endpoints/worldwide?ClientRequestId=c1759c71-ee91-4f0a-b06c-933aad723045&Format=JSON",
+    "clientRequestId": "c1759c71-ee91-4f0a-b06c-933aad723045",
+    "responseRecordCount": 63,
+    "field": "ips"
+  },
+  "filters": {
+    "ipVersion": 4,
+    "excludeDefaultRoute": true,
+    "publicNetworksOnly": true
+  },
+  "files": {
+    "m365-common-ipv4.txt": {
+      "serviceArea": "Common",
+      "cidrCount": 11
+    },
+    "m365-exchange-ipv4.txt": {
+      "serviceArea": "Exchange",
+      "cidrCount": 16
+    },
+    "m365-sharepoint-ipv4.txt": {
+      "serviceArea": "SharePoint",
+      "cidrCount": 5
+    },
+    "m365-teams-ipv4.txt": {
+      "serviceArea": "Skype",
+      "cidrCount": 2
+    }
+  }
+}
