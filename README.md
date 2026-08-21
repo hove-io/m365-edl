@@ -127,8 +127,9 @@ complète.
 ### Dell Command Update
 
 La documentation Dell indique que Dell Command Update se connecte à
-`downloads.dell.com`. Seuls les A records courants de ce FQDN officiel sont
-publiés. Aucun réseau Dell global n'est ajouté et un PTR sous `dell.com` ne
+`downloads.dell.com`. Le workflow récupère et valide le catalogue officiel
+`CatalogPC.cab` directement sur ce FQDN, puis en publie uniquement les A records
+courants. Aucun réseau Dell global n'est ajouté et un PTR sous `dell.com` ne
 suffit pas, à lui seul, à autoriser une adresse.
 
 ### Microsoft Edge et services Windows

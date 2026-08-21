@@ -129,7 +129,7 @@ jobs:
             'https://whois.arin.net/rest/org/DROPB/nets.json' \
             "$dropbox_arin_file"
           download_source \
-            'https://www.dell.com/support/manuals/en-us/command-update/dellcommandupdate_3.1_ug/install-updates?guid=guid-2ecd73e2-0593-43f1-8e99-07be35e86bf8' \
+            'https://downloads.dell.com/catalog/CatalogPC.cab' \
             "$dell_update_file"
           download_source \
             'https://learn.microsoft.com/en-us/deployedge/microsoft-edge-security-endpoints' \

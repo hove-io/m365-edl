@@ -58,11 +58,12 @@ GITHUB_META_URL = "https://api.github.com/meta"
 GITHUB_META_DOCS_URL = "https://docs.github.com/en/rest/meta/meta"
 DROPBOX_FIREWALL_URL = "https://help.dropbox.com/installs/configuring-firewall"
 DROPBOX_ARIN_URL = "https://whois.arin.net/rest/org/DROPB/nets.json"
-DELL_UPDATE_URL = (
+DELL_UPDATE_DOCUMENTATION_URL = (
     "https://www.dell.com/support/manuals/en-us/command-update/"
     "dellcommandupdate_3.1_ug/install-updates"
     "?guid=guid-2ecd73e2-0593-43f1-8e99-07be35e86bf8"
 )
+DELL_UPDATE_URL = "https://downloads.dell.com/catalog/CatalogPC.cab"
 MICROSOFT_EDGE_URL = (
     "https://learn.microsoft.com/en-us/deployedge/"
     "microsoft-edge-security-endpoints"
@@ -1096,6 +1097,16 @@ def validate_documented_hostnames(
     return sorted(hostnames)
 
 
+def validate_dell_catalog_source(source: bytes) -> list[str]:
+    """Validate Dell's official update catalog and select its exact host."""
+    hostname = urlsplit(DELL_UPDATE_URL).hostname
+    if hostname != "downloads.dell.com":
+        raise GenerationError("Unexpected Dell catalog source hostname")
+    if not source.startswith(b"MSCF"):
+        raise GenerationError("Dell update catalog is not a valid CAB payload")
+    return [hostname]
+
+
 def exclude_existing_networks(
     networks: list[ipaddress.IPv4Network],
     generated: dict[str, list[ipaddress.IPv4Network]],
@@ -1590,9 +1601,9 @@ def main() -> int:
             args.dropbox_arin_file,
             label="Dropbox ARIN allocation response",
         )
-        dell_update = load_text_source(
+        dell_update = load_bytes(
             args.dell_update_file,
-            label="Dell Command Update source",
+            label="Dell Command Update catalog source",
         )
         microsoft_edge = load_text_source(
             args.microsoft_edge_file,
@@ -1689,9 +1700,7 @@ def main() -> int:
             firewall_html=dropbox_firewall,
         )
 
-        dell_hosts = validate_documented_hostnames(
-            dell_update, {"downloads.dell.com"}, label="Dell Command Update"
-        )
+        dell_hosts = validate_dell_catalog_source(dell_update)
         dell_networks, dell_resolutions, dell_unresolved = resolve_service_hostnames(
             dell_hosts, label="Dell Command Update"
         )
@@ -1784,7 +1793,8 @@ def main() -> int:
             "dellCommandUpdate": {
                 "publisher": "Dell",
                 "url": DELL_UPDATE_URL,
-                "sha256": source_hash(dell_update),
+                "documentationUrl": DELL_UPDATE_DOCUMENTATION_URL,
+                "sha256": hashlib.sha256(dell_update).hexdigest(),
             },
             "microsoftEdgeEndpoints": {
                 "publisher": "Microsoft",
