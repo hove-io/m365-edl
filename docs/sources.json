@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-08-21T16:41:33.074979Z",
+  "generatedAt": "2026-08-21T16:49:13.921878Z",
   "sources": {
     "microsoft365Endpoints": {
       "publisher": "Microsoft",
       "name": "Microsoft 365 IP Address and URL web service",
       "instance": "Worldwide",
       "url": "https://endpoints.office.com/endpoints/worldwide",
-      "requestUrl": "https://endpoints.office.com/endpoints/worldwide?ClientRequestId=3075f41f-3fca-4767-a240-212dcefccd9c&Format=JSON",
-      "clientRequestId": "3075f41f-3fca-4767-a240-212dcefccd9c",
+      "requestUrl": "https://endpoints.office.com/endpoints/worldwide?ClientRequestId=e8b3ab32-af6f-4b2a-866d-2450558166aa&Format=JSON",
+      "clientRequestId": "e8b3ab32-af6f-4b2a-866d-2450558166aa",
       "responseRecordCount": 63,
       "field": "ips"
     },
@@ -66,7 +66,7 @@
       "method": "Filter the Microsoft 365 ips field by serviceArea"
     },
     "microsoft-defender-ipv4.txt": {
-      "cidrCount": 33,
+      "cidrCount": 35,
       "hostnameCount": 32,
       "method": "Resolve selected official Defender FQDN A records to IPv4 /32",
       "scope": [
@@ -136,55 +136,57 @@
           "20.60.130.228"
         ],
         "crl.microsoft.com": [
-          "23.212.62.81",
-          "23.212.62.83"
+          "23.48.99.5",
+          "23.48.99.10"
         ],
         "ctldl.windowsupdate.com": [
-          "23.11.232.37",
-          "23.11.232.41"
+          "140.248.146.172"
         ],
         "definitionupdates.microsoft.com": [
-          "184.28.148.241"
+          "23.43.214.6"
         ],
         "download.microsoft.com": [
           "204.79.197.219"
         ],
         "download.windowsupdate.com": [
-          "23.11.232.37",
-          "23.11.232.41"
+          "140.248.146.172"
         ],
         "ecs.office.com": [
-          "52.123.249.142",
-          "52.123.249.156",
-          "52.123.249.174",
-          "52.123.249.192"
+          "52.123.250.128",
+          "52.123.250.130",
+          "52.123.250.132",
+          "52.123.250.140",
+          "52.123.250.152",
+          "52.123.250.161",
+          "52.123.250.168",
+          "52.123.250.171"
         ],
         "eu-mobile.events.data.microsoft.com": [
-          "20.50.73.15"
+          "51.116.246.106"
         ],
         "eu-v20.events.data.microsoft.com": [
-          "20.50.73.15"
+          "20.50.201.203"
         ],
         "eu.vortex-win.data.microsoft.com": [
-          "20.50.73.15"
+          "20.50.201.203"
         ],
         "europe.x.cp.wd.microsoft.com": [
-          "20.50.2.45"
+          "20.50.64.15"
         ],
         "events.data.microsoft.com": [
-          "52.182.141.63"
+          "4.150.223.108"
         ],
         "fe3cr.delivery.mp.microsoft.com": [
-          "74.178.240.51"
+          "74.179.77.164"
         ],
         "go.microsoft.com": [
-          "23.40.25.215"
+          "184.29.98.3"
         ],
         "mobile.events.data.microsoft.com": [
-          "20.52.64.200"
+          "4.150.223.100"
         ],
         "settings-win.data.microsoft.com": [
-          "85.210.193.152"
+          "20.42.179.192"
         ],
         "update.microsoft.com": [
           "132.196.74.18"
@@ -196,10 +198,10 @@
           "20.209.11.97"
         ],
         "vortex-win.data.microsoft.com": [
-          "4.150.223.107"
+          "4.150.223.100"
         ],
         "wdcp.microsoft.com": [
-          "48.211.71.201"
+          "172.178.160.26"
         ],
         "wdcpalt.microsoft.com": [
           "172.178.160.26"
@@ -223,7 +225,7 @@
           "20.60.27.132"
         ],
         "www.microsoft.com": [
-          "23.36.22.40"
+          "23.192.50.102"
         ]
       }
     },
