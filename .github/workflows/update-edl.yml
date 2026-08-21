@@ -1,0 +1,130 @@
+name: Update Microsoft 365 IPv4 EDLs
+
+on:
+  schedule:
+    - cron: "37 * * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/update-edl.yml
+      - scripts/generate_edl.py
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: m365-edl-update
+  cancel-in-progress: false
+
+jobs:
+  update-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Retrieve official Microsoft 365 endpoints
+        id: request
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          request_id="$(python3 -c 'import uuid; print(uuid.uuid4())')"
+          request_url="https://endpoints.office.com/endpoints/worldwide?ClientRequestId=${request_id}&Format=JSON"
+          response_file="${RUNNER_TEMP}/m365-endpoints-${request_id}.json"
+
+          content_type="$(curl \
+            --fail \
+            --silent \
+            --show-error \
+            --location \
+            --retry 3 \
+            --retry-all-errors \
+            --connect-timeout 15 \
+            --max-time 60 \
+            --proto '=https' \
+            --tlsv1.2 \
+            --header 'Accept: application/json' \
+            --header 'User-Agent: hove-io-m365-edl/1.0' \
+            --output "$response_file" \
+            --write-out '%{content_type}' \
+            "$request_url")"
+
+          case "$content_type" in
+            application/json*) ;;
+            *)
+              echo "Unexpected Microsoft content type: $content_type" >&2
+              exit 1
+              ;;
+          esac
+
+          test -s "$response_file"
+          printf 'request_id=%s\n' "$request_id" >> "$GITHUB_OUTPUT"
+          printf 'request_url=%s\n' "$request_url" >> "$GITHUB_OUTPUT"
+          printf 'response_file=%s\n' "$response_file" >> "$GITHUB_OUTPUT"
+
+      - name: Generate and validate EDL files
+        run: |
+          python3 scripts/generate_edl.py \
+            --input-file "${{ steps.request.outputs.response_file }}" \
+            --request-id "${{ steps.request.outputs.request_id }}" \
+            --request-url "${{ steps.request.outputs.request_url }}" \
+            --output-dir docs
+
+      - name: Detect publication changes
+        id: changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "$(git status --porcelain -- docs)" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Validated publication changes detected"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No publication changes detected"
+          fi
+
+      - name: Commit and push changed EDL files
+        if: steps.changes.outputs.changed == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- \
+            docs/.nojekyll \
+            docs/index.html \
+            docs/sources.json \
+            docs/m365-common-ipv4.txt \
+            docs/m365-exchange-ipv4.txt \
+            docs/m365-sharepoint-ipv4.txt \
+            docs/m365-teams-ipv4.txt
+          git diff --cached --check
+          git commit -m "Update Microsoft 365 IPv4 EDLs"
+          git push origin HEAD:main
+
+      - name: Configure GitHub Pages
+        if: steps.changes.outputs.changed == 'true'
+        uses: actions/configure-pages@v6
+
+      - name: Upload Pages artifact
+        if: steps.changes.outputs.changed == 'true'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs
+
+      - name: Deploy to GitHub Pages
+        if: steps.changes.outputs.changed == 'true'
+        id: deployment
+        uses: actions/deploy-pages@v5
