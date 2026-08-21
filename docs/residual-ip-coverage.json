@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-21T17:46:31.797324Z",
+  "generatedAt": "2026-08-21T18:51:30.140125Z",
   "policy": "Coverage is reported only from generated EDL content; unmatched IPs are never added to force coverage",
   "entries": [
     {
@@ -140,10 +140,11 @@
     },
     {
       "ip": "52.168.117.169",
-      "covered": true,
-      "edl": "microsoft-edge-windows-services-ipv4.txt",
-      "source": "Official Microsoft Edge and Windows endpoint FQDN resolution",
-      "fqdn": "functional.events.data.microsoft.com"
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
       "ip": "52.168.117.170",
@@ -241,10 +242,11 @@
     },
     {
       "ip": "150.171.28.11",
-      "covered": true,
-      "edl": "microsoft-edge-windows-services-ipv4.txt",
-      "source": "Official Microsoft Edge and Windows endpoint FQDN resolution",
-      "fqdn": "edge.microsoft.com"
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     }
   ]
 }
