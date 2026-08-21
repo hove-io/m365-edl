@@ -73,8 +73,9 @@
     },
     "dellCommandUpdate": {
       "publisher": "Dell",
-      "url": "https://www.dell.com/support/manuals/en-us/command-update/dellcommandupdate_3.1_ug/install-updates?guid=guid-2ecd73e2-0593-43f1-8e99-07be35e86bf8",
-      "sha256": "56cfebcc9d7bca91fa749c97c5683c920e4457244b7360e29e1ac58c3178a168"
+      "url": "https://downloads.dell.com/catalog/CatalogPC.cab",
+      "documentationUrl": "https://www.dell.com/support/manuals/en-us/command-update/dellcommandupdate_3.1_ug/install-updates?guid=guid-2ecd73e2-0593-43f1-8e99-07be35e86bf8",
+      "sha256": "fce9a017027a2aa845d59701d82f4b60b30c42d8d0862244e8c788a2f6dcf587"
     },
     "microsoftEdgeEndpoints": {
       "publisher": "Microsoft",
