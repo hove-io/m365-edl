@@ -1,0 +1,260 @@
+{
+  "generatedAt": "2026-08-21T17:28:45.168386Z",
+  "policy": "Coverage is reported only from generated EDL content; unmatched IPs are never added to force coverage",
+  "entries": [
+    {
+      "ip": "52.85.118.32",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "52.85.118.49",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "52.85.118.61",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "52.85.118.108",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "20.42.65.85",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+    },
+    {
+      "ip": "4.150.223.96",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+    },
+    {
+      "ip": "4.150.223.104",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+    },
+    {
+      "ip": "23.103.234.43",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+    },
+    {
+      "ip": "17.248.236.28",
+      "covered": true,
+      "edl": "apple-appstore-content-ipv4.txt",
+      "source": "Apple enterprise Apps and additional content FQDN resolution",
+      "fqdn": "api.apple-cloudkit.com",
+      "allEdls": [
+        "apple-appstore-content-ipv4.txt",
+        "apple-device-services-ipv4.txt"
+      ],
+      "allFqdns": [
+        "api.apple-cloudkit.com",
+        "gateway.icloud.com"
+      ]
+    },
+    {
+      "ip": "72.153.5.61",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+    },
+    {
+      "ip": "72.153.5.129",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+    },
+    {
+      "ip": "72.153.5.140",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+    },
+    {
+      "ip": "95.101.137.11",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "95.101.137.12",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "95.101.137.14",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "20.85.108.33",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+    },
+    {
+      "ip": "48.209.138.189",
+      "covered": true,
+      "edl": "microsoft-defender-ipv4.txt",
+      "source": "Official Microsoft Defender endpoints and DNS",
+      "fqdn": "settings-win.data.microsoft.com"
+    },
+    {
+      "ip": "52.168.117.169",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+    },
+    {
+      "ip": "52.168.117.170",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+    },
+    {
+      "ip": "23.200.213.147",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "20.85.130.105",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+    },
+    {
+      "ip": "48.209.133.15",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+    },
+    {
+      "ip": "17.253.29.146",
+      "covered": true,
+      "edl": "apple-updates-ipv4.txt",
+      "source": "Apple enterprise Software updates FQDN resolution",
+      "fqdn": "swdist.apple.com",
+      "allFqdns": [
+        "swdist.apple.com",
+        "xp.apple.com"
+      ]
+    },
+    {
+      "ip": "17.188.170.10",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "Not returned by the targeted official APNs FQDNs; the prohibited 17.0.0.0/8 fallback was not used"
+    },
+    {
+      "ip": "13.107.6.156",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+    },
+    {
+      "ip": "143.166.124.33",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "PTR stor-g3-ph-legacy-pc1.dell.com observed, but the current A records of the officially documented downloads.dell.com endpoint do not contain this address; PTR ownership alone isn't authorization"
+    },
+    {
+      "ip": "20.105.245.153",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+    },
+    {
+      "ip": "162.125.67.18",
+      "covered": true,
+      "edl": "dropbox-ipv4.txt",
+      "source": "Dropbox-linked ARIN product allocations",
+      "fqdn": null
+    },
+    {
+      "ip": "172.66.0.227",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "140.82.121.5",
+      "covered": true,
+      "edl": "github-ipv4.txt",
+      "source": "GitHub Meta API fields web, api, git, and pages",
+      "fqdn": null
+    },
+    {
+      "ip": "150.171.28.11",
+      "covered": true,
+      "edl": "microsoft-edge-windows-services-ipv4.txt",
+      "source": "Official Microsoft Edge and Windows endpoint FQDN resolution",
+      "fqdn": "edge.microsoft.com"
+    }
+  ]
+}

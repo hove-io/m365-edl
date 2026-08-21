@@ -1,4 +1,4 @@
-name: Update Microsoft IPv4 EDLs
+name: Update public service IPv4 EDLs
 
 on:
   schedule:
@@ -34,7 +34,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Retrieve official Microsoft sources
+      - name: Retrieve official service sources
         id: request
         shell: bash
         run: |
@@ -47,6 +47,14 @@ jobs:
           defender_antivirus_file="${RUNNER_TEMP}/defender-antivirus.md"
           teams_direct_routing_file="${RUNNER_TEMP}/teams-direct-routing.html"
           intune_endpoints_file="${RUNNER_TEMP}/intune-endpoints.md"
+          apple_enterprise_file="${RUNNER_TEMP}/apple-enterprise.html"
+          apple_apns_file="${RUNNER_TEMP}/apple-apns.html"
+          github_meta_file="${RUNNER_TEMP}/github-meta.json"
+          dropbox_firewall_file="${RUNNER_TEMP}/dropbox-firewall.html"
+          dropbox_arin_file="${RUNNER_TEMP}/dropbox-arin.json"
+          dell_update_file="${RUNNER_TEMP}/dell-command-update.html"
+          microsoft_edge_file="${RUNNER_TEMP}/microsoft-edge.html"
+          microsoft_windows_file="${RUNNER_TEMP}/microsoft-windows.html"
 
           content_type="$(curl \
             --fail \
@@ -105,6 +113,30 @@ jobs:
           download_source \
             'https://raw.githubusercontent.com/MicrosoftDocs/memdocs/main/intune/fundamentals/endpoints.md' \
             "$intune_endpoints_file"
+          download_source \
+            'https://support.apple.com/en-us/101555' \
+            "$apple_enterprise_file"
+          download_source \
+            'https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/CommunicatingwithAPNs.html' \
+            "$apple_apns_file"
+          download_source \
+            'https://api.github.com/meta' \
+            "$github_meta_file"
+          download_source \
+            'https://help.dropbox.com/installs/configuring-firewall' \
+            "$dropbox_firewall_file"
+          download_source \
+            'https://whois.arin.net/rest/org/DROPB/nets.json' \
+            "$dropbox_arin_file"
+          download_source \
+            'https://www.dell.com/support/manuals/en-us/command-update/dellcommandupdate_3.1_ug/install-updates?guid=guid-2ecd73e2-0593-43f1-8e99-07be35e86bf8' \
+            "$dell_update_file"
+          download_source \
+            'https://learn.microsoft.com/en-us/deployedge/microsoft-edge-security-endpoints' \
+            "$microsoft_edge_file"
+          download_source \
+            'https://learn.microsoft.com/en-us/windows/privacy/manage-windows-11-endpoints' \
+            "$microsoft_windows_file"
 
           test -s "$response_file"
           printf 'request_id=%s\n' "$request_id" >> "$GITHUB_OUTPUT"
@@ -114,6 +146,14 @@ jobs:
           printf 'defender_antivirus_file=%s\n' "$defender_antivirus_file" >> "$GITHUB_OUTPUT"
           printf 'teams_direct_routing_file=%s\n' "$teams_direct_routing_file" >> "$GITHUB_OUTPUT"
           printf 'intune_endpoints_file=%s\n' "$intune_endpoints_file" >> "$GITHUB_OUTPUT"
+          printf 'apple_enterprise_file=%s\n' "$apple_enterprise_file" >> "$GITHUB_OUTPUT"
+          printf 'apple_apns_file=%s\n' "$apple_apns_file" >> "$GITHUB_OUTPUT"
+          printf 'github_meta_file=%s\n' "$github_meta_file" >> "$GITHUB_OUTPUT"
+          printf 'dropbox_firewall_file=%s\n' "$dropbox_firewall_file" >> "$GITHUB_OUTPUT"
+          printf 'dropbox_arin_file=%s\n' "$dropbox_arin_file" >> "$GITHUB_OUTPUT"
+          printf 'dell_update_file=%s\n' "$dell_update_file" >> "$GITHUB_OUTPUT"
+          printf 'microsoft_edge_file=%s\n' "$microsoft_edge_file" >> "$GITHUB_OUTPUT"
+          printf 'microsoft_windows_file=%s\n' "$microsoft_windows_file" >> "$GITHUB_OUTPUT"
 
       - name: Generate and validate EDL files
         run: |
@@ -125,6 +165,14 @@ jobs:
             --defender-antivirus-file "${{ steps.request.outputs.defender_antivirus_file }}" \
             --teams-direct-routing-file "${{ steps.request.outputs.teams_direct_routing_file }}" \
             --intune-endpoints-file "${{ steps.request.outputs.intune_endpoints_file }}" \
+            --apple-enterprise-file "${{ steps.request.outputs.apple_enterprise_file }}" \
+            --apple-apns-file "${{ steps.request.outputs.apple_apns_file }}" \
+            --github-meta-file "${{ steps.request.outputs.github_meta_file }}" \
+            --dropbox-firewall-file "${{ steps.request.outputs.dropbox_firewall_file }}" \
+            --dropbox-arin-file "${{ steps.request.outputs.dropbox_arin_file }}" \
+            --dell-update-file "${{ steps.request.outputs.dell_update_file }}" \
+            --microsoft-edge-file "${{ steps.request.outputs.microsoft_edge_file }}" \
+            --microsoft-windows-file "${{ steps.request.outputs.microsoft_windows_file }}" \
             --output-dir docs
 
       - name: Detect publication changes
@@ -149,6 +197,12 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -- \
             docs/.nojekyll \
+            docs/apple-appstore-content-ipv4.txt \
+            docs/apple-device-services-ipv4.txt \
+            docs/apple-updates-ipv4.txt \
+            docs/dell-update-ipv4.txt \
+            docs/dropbox-ipv4.txt \
+            docs/github-ipv4.txt \
             docs/index.html \
             docs/sources.json \
             docs/m365-common-ipv4.txt \
@@ -156,10 +210,12 @@ jobs:
             docs/m365-sharepoint-ipv4.txt \
             docs/m365-teams-ipv4.txt \
             docs/microsoft-defender-ipv4.txt \
+            docs/microsoft-edge-windows-services-ipv4.txt \
             docs/microsoft-intune-windows-ipv4.txt \
-            docs/microsoft-teams-media-ipv4.txt
+            docs/microsoft-teams-media-ipv4.txt \
+            docs/residual-ip-coverage.json
           git diff --cached --check
-          git commit -m "Update Microsoft IPv4 EDLs"
+          git commit -m "Update public service IPv4 EDLs"
           git push origin HEAD:main
 
       - name: Configure GitHub Pages
