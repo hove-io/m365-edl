@@ -41,6 +41,14 @@ DEFENDER_ANTIVIRUS_RAW_URL = (
 TEAMS_DIRECT_ROUTING_URL = (
     "https://learn.microsoft.com/en-us/microsoftteams/direct-routing-plan"
 )
+INTUNE_ENDPOINTS_LEARN_URL = (
+    "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/"
+    "intune-endpoints"
+)
+INTUNE_ENDPOINTS_RAW_URL = (
+    "https://raw.githubusercontent.com/MicrosoftDocs/memdocs/main/"
+    "intune/fundamentals/endpoints.md"
+)
 
 MAX_SOURCE_BYTES = 10 * 1024 * 1024
 M365_SERVICE_FILES = {
@@ -51,6 +59,7 @@ M365_SERVICE_FILES = {
 }
 DEFENDER_FILE = "microsoft-defender-ipv4.txt"
 TEAMS_MEDIA_FILE = "microsoft-teams-media-ipv4.txt"
+INTUNE_WINDOWS_FILE = "microsoft-intune-windows-ipv4.txt"
 
 PUBLICATIONS = (
     ("Microsoft 365 Common", "m365-common-ipv4.txt"),
@@ -59,6 +68,7 @@ PUBLICATIONS = (
     ("Microsoft 365 Teams/Skype", "m365-teams-ipv4.txt"),
     ("Microsoft Defender EU/global", DEFENDER_FILE),
     ("Microsoft Teams Media/Direct Routing", TEAMS_MEDIA_FILE),
+    ("Microsoft Intune / Windows", INTUNE_WINDOWS_FILE),
 )
 
 EXPECTED_TEAMS_MEDIA_NETWORKS = {
@@ -164,6 +174,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--defender-standard-file", type=Path, required=True)
     parser.add_argument("--defender-antivirus-file", type=Path, required=True)
     parser.add_argument("--teams-direct-routing-file", type=Path, required=True)
+    parser.add_argument("--intune-endpoints-file", type=Path, required=True)
     return parser.parse_args()
 
 
@@ -529,6 +540,80 @@ def extract_teams_media_networks(learn_html: str) -> list[ipaddress.IPv4Network]
     ]
 
 
+def extract_intune_windows_networks(
+    intune_markdown: str,
+) -> list[ipaddress.IPv4Network]:
+    """Extract only Microsoft's explicit consolidated Intune IP subnets."""
+    lines = intune_markdown.splitlines()
+    section_markers = [
+        index
+        for index, line in enumerate(lines)
+        if line.strip() == "## Consolidated Endpoint List"
+    ]
+    if len(section_markers) != 1:
+        raise GenerationError(
+            "Expected exactly one Intune consolidated endpoint section, found "
+            f"{len(section_markers)}"
+        )
+
+    section_start = section_markers[0] + 1
+    section_end = next(
+        (
+            index
+            for index in range(section_start, len(lines))
+            if lines[index].startswith("## ")
+        ),
+        len(lines),
+    )
+    section = lines[section_start:section_end]
+    subnet_markers = [
+        index for index, line in enumerate(section) if line.strip() == "IP Subnets"
+    ]
+    if len(subnet_markers) != 1:
+        raise GenerationError(
+            "Expected exactly one Intune IP Subnets block, found "
+            f"{len(subnet_markers)}"
+        )
+
+    cursor = subnet_markers[0] + 1
+    while cursor < len(section) and not section[cursor].strip():
+        cursor += 1
+    if cursor >= len(section) or section[cursor].strip() != "```":
+        raise GenerationError("Unexpected Intune IP Subnets code block opening")
+
+    cursor += 1
+    raw_networks: list[str] = []
+    while cursor < len(section) and section[cursor].strip() != "```":
+        value = section[cursor].strip()
+        if not value:
+            raise GenerationError("Unexpected blank line in Intune IP Subnets block")
+        raw_networks.append(value)
+        cursor += 1
+    if cursor >= len(section):
+        raise GenerationError("Intune IP Subnets code block isn't closed")
+    if not raw_networks:
+        raise GenerationError("Intune IP Subnets block is empty")
+
+    networks: set[ipaddress.IPv4Network] = set()
+    for line_number, raw_network in enumerate(raw_networks, start=1):
+        context = f"Intune consolidated IP Subnets line {line_number}"
+        try:
+            network = ipaddress.ip_network(raw_network, strict=True)
+        except ValueError as error:
+            raise GenerationError(
+                f"Invalid Intune CIDR {raw_network!r} at {context}: {error}"
+            ) from error
+        if network.version == 6:
+            continue
+        if not isinstance(network, ipaddress.IPv4Network):
+            raise GenerationError(f"Unexpected IP version at {context}")
+        networks.add(validate_ipv4_network(network, context=context))
+
+    if not networks:
+        raise GenerationError("Intune source contains no public IPv4 CIDR")
+    return sort_networks(networks)
+
+
 def parse_previous_file(path: Path) -> list[ipaddress.IPv4Network] | None:
     if not path.exists():
         return None
@@ -597,6 +682,7 @@ def build_sources(
     defender_standard: str,
     defender_antivirus: str,
     teams_direct_routing: str,
+    intune_endpoints: str,
     defender_hostnames: list[str],
     defender_wildcards: list[str],
     wildcard_targets: dict[str, tuple[str, ...]],
@@ -632,6 +718,17 @@ def build_sources(
             str(network) for network in generated[TEAMS_MEDIA_FILE]
         ],
     }
+    files[INTUNE_WINDOWS_FILE] = {
+        "cidrCount": len(generated[INTUNE_WINDOWS_FILE]),
+        "method": (
+            "Extract and validate explicit IPv4 CIDRs from the consolidated "
+            "Intune IP Subnets block"
+        ),
+        "scope": (
+            "Intune-managed devices, including the explicitly published "
+            "Intune and Azure Front Door Microsoft Security subnets"
+        ),
+    }
 
     document = {
         "generatedAt": generated_at,
@@ -664,6 +761,14 @@ def build_sources(
                 "publisher": "Microsoft",
                 "learnUrl": TEAMS_DIRECT_ROUTING_URL,
                 "sha256": source_hash(teams_direct_routing),
+            },
+            "intuneNetworkEndpoints": {
+                "publisher": "Microsoft",
+                "learnUrl": INTUNE_ENDPOINTS_LEARN_URL,
+                "sourceUrl": INTUNE_ENDPOINTS_RAW_URL,
+                "documentDate": document_date(intune_endpoints),
+                "sha256": source_hash(intune_endpoints),
+                "section": "Consolidated Endpoint List / IP Subnets",
             },
         },
         "filters": {
@@ -726,6 +831,7 @@ def publish(
     defender_standard: str,
     defender_antivirus: str,
     teams_direct_routing: str,
+    intune_endpoints: str,
     defender_hostnames: list[str],
     defender_wildcards: list[str],
     wildcard_targets: dict[str, tuple[str, ...]],
@@ -761,6 +867,7 @@ def publish(
         defender_standard=defender_standard,
         defender_antivirus=defender_antivirus,
         teams_direct_routing=teams_direct_routing,
+        intune_endpoints=intune_endpoints,
         defender_hostnames=defender_hostnames,
         defender_wildcards=defender_wildcards,
         wildcard_targets=wildcard_targets,
@@ -803,6 +910,10 @@ def main() -> int:
             args.teams_direct_routing_file,
             label="Teams Direct Routing Microsoft Learn source",
         )
+        intune_endpoints = load_text_source(
+            args.intune_endpoints_file,
+            label="Microsoft Intune network endpoints source",
+        )
 
         generated = extract_m365_networks(payload)
         defender_hostnames, defender_wildcards, wildcard_targets = (
@@ -812,8 +923,10 @@ def main() -> int:
             defender_hostnames
         )
         teams_media_networks = extract_teams_media_networks(teams_direct_routing)
+        intune_windows_networks = extract_intune_windows_networks(intune_endpoints)
         generated[DEFENDER_FILE] = defender_networks
         generated[TEAMS_MEDIA_FILE] = teams_media_networks
+        generated[INTUNE_WINDOWS_FILE] = intune_windows_networks
 
         publish(
             output_dir=args.output_dir,
@@ -824,6 +937,7 @@ def main() -> int:
             defender_standard=defender_standard,
             defender_antivirus=defender_antivirus,
             teams_direct_routing=teams_direct_routing,
+            intune_endpoints=intune_endpoints,
             defender_hostnames=defender_hostnames,
             defender_wildcards=defender_wildcards,
             wildcard_targets=wildcard_targets,

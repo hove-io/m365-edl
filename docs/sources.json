@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-21T16:23:52.965766Z",
+  "generatedAt": "2026-08-21T16:39:21Z",
   "sources": {
     "microsoft365Endpoints": {
       "publisher": "Microsoft",
@@ -29,6 +29,14 @@
       "publisher": "Microsoft",
       "learnUrl": "https://learn.microsoft.com/en-us/microsoftteams/direct-routing-plan",
       "sha256": "ec5948f67aa9f224002b90f990d2f06c10790f03a9806a2794043bed3019287f"
+    },
+    "intuneNetworkEndpoints": {
+      "publisher": "Microsoft",
+      "learnUrl": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "sourceUrl": "https://raw.githubusercontent.com/MicrosoftDocs/memdocs/main/intune/fundamentals/endpoints.md",
+      "documentDate": "03/24/2026",
+      "sha256": "a9d518dfb7460a4205136b7495a668ecec45aadf3db4ab5c7b13e62dffb5cbdb",
+      "section": "Consolidated Endpoint List / IP Subnets"
     }
   },
   "filters": {
@@ -233,6 +241,11 @@
         "52.112.0.0/14",
         "52.120.0.0/14"
       ]
+    },
+    "microsoft-intune-windows-ipv4.txt": {
+      "cidrCount": 85,
+      "method": "Extract and validate explicit IPv4 CIDRs from the consolidated Intune IP Subnets block",
+      "scope": "Intune-managed devices, including the explicitly published Intune and Azure Front Door Microsoft Security subnets"
     }
   }
 }

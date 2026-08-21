@@ -13,6 +13,7 @@ External Dynamic Lists (**IP List**) par un pare-feu Palo Alto Networks.
 | `m365-teams-ipv4.txt` | Microsoft 365 `Skype` | https://hove-io.github.io/m365-edl/m365-teams-ipv4.txt |
 | `microsoft-defender-ipv4.txt` | Defender for Endpoint EU/global et Defender Antivirus | https://hove-io.github.io/m365-edl/microsoft-defender-ipv4.txt |
 | `microsoft-teams-media-ipv4.txt` | Teams Media / Direct Routing | https://hove-io.github.io/m365-edl/microsoft-teams-media-ipv4.txt |
+| `microsoft-intune-windows-ipv4.txt` | Intune / gestion des appareils Windows | https://hove-io.github.io/m365-edl/microsoft-intune-windows-ipv4.txt |
 
 Toutes les listes sont **IPv4 only**. `microsoft-teams-media-ipv4.txt` complète
 la liste `m365-teams-ipv4.txt` et ne la remplace pas.
@@ -70,6 +71,19 @@ et contient uniquement les plages commerciales officiellement documentées :
 
 La plage `52.120.0.0/14` couvre notamment `52.123.242.163`.
 
+### Microsoft Intune / Windows
+
+La liste Intune est extraite de la documentation officielle
+[Network endpoints for Microsoft Intune](https://learn.microsoft.com/intune/intune-service/fundamentals/intune-endpoints),
+section **Consolidated Endpoint List / IP Subnets**. Elle contient uniquement
+les CIDR explicitement publiés par Microsoft pour les appareils gérés par
+Intune, y compris les sous-réseaux Azure Front Door `MicrosoftSecurity` que la
+page intègre à sa liste consolidée.
+
+Les dépendances Windows Update, Delivery Optimization, WNS et Autopilot qui ne
+sont publiées que sous forme de FQDN ne sont pas résolues artificiellement dans
+cette EDL. Aucun préfixe Azure générique ni aucune plage AS8075 n'est ajouté.
+
 ## Génération et garde-fous
 
 Le workflow `.github/workflows/update-edl.yml` s'exécute toutes les heures et
@@ -77,8 +91,8 @@ peut être lancé manuellement. Aucun token Microsoft ni secret n'est requis.
 
 Il applique les contrôles suivants à chaque liste :
 
-1. validation explicite du JSON, des tableaux Markdown Microsoft et de la
-   section Teams Direct Routing ;
+1. validation explicite du JSON, des tableaux Markdown Microsoft, de la
+   section Teams Direct Routing et du bloc consolidé Intune ;
 2. validation Python `ipaddress` de chaque réseau ;
 3. IPv4 publiques uniquement, triées et dédupliquées ;
 4. refus de `0.0.0.0/0`, RFC1918, loopback, multicast, link-local, réseaux
@@ -112,6 +126,7 @@ EDL-M365-SHAREPOINT-IPV4
 EDL-M365-TEAMS-IPV4
 EDL-MICROSOFT-DEFENDER-IPV4
 EDL-MICROSOFT-TEAMS-MEDIA-IPV4
+EDL-MICROSOFT-INTUNE-WINDOWS-IPV4
 ```
 
 Pour HTTPS, associer un **Certificate Profile** faisant confiance à la chaîne
