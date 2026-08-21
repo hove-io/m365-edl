@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-21T17:28:45.168386Z",
+  "generatedAt": "2026-08-21T17:34:59.836056Z",
   "policy": "Coverage is reported only from generated EDL content; unmatched IPs are never added to force coverage",
   "entries": [
     {
@@ -68,18 +68,11 @@
     },
     {
       "ip": "17.248.236.28",
-      "covered": true,
-      "edl": "apple-appstore-content-ipv4.txt",
-      "source": "Apple enterprise Apps and additional content FQDN resolution",
-      "fqdn": "api.apple-cloudkit.com",
-      "allEdls": [
-        "apple-appstore-content-ipv4.txt",
-        "apple-device-services-ipv4.txt"
-      ],
-      "allFqdns": [
-        "api.apple-cloudkit.com",
-        "gateway.icloud.com"
-      ]
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "Apple address not returned by an in-scope official FQDN"
     },
     {
       "ip": "72.153.5.61",
@@ -139,10 +132,11 @@
     },
     {
       "ip": "48.209.138.189",
-      "covered": true,
-      "edl": "microsoft-defender-ipv4.txt",
-      "source": "Official Microsoft Defender endpoints and DNS",
-      "fqdn": "settings-win.data.microsoft.com"
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
       "ip": "52.168.117.169",
@@ -186,14 +180,11 @@
     },
     {
       "ip": "17.253.29.146",
-      "covered": true,
-      "edl": "apple-updates-ipv4.txt",
-      "source": "Apple enterprise Software updates FQDN resolution",
-      "fqdn": "swdist.apple.com",
-      "allFqdns": [
-        "swdist.apple.com",
-        "xp.apple.com"
-      ]
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "Apple address not returned by an in-scope official FQDN"
     },
     {
       "ip": "17.188.170.10",
