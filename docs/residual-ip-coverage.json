@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-21T19:43:26.315897Z",
+  "generatedAt": "2026-08-21T20:44:11.265911Z",
   "policy": "Coverage is reported only from generated EDL content; unmatched IPs are never added to force coverage",
   "entries": [
     {
@@ -36,10 +36,11 @@
     },
     {
       "ip": "20.42.65.85",
-      "covered": true,
-      "edl": "microsoft-defender-ipv4.txt",
-      "source": "Official Microsoft Defender endpoints and DNS",
-      "fqdn": "vortex-win.data.microsoft.com"
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
       "ip": "4.150.223.96",
