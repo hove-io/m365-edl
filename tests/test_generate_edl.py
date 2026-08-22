@@ -1,7 +1,15 @@
 import ipaddress
 import unittest
 
-from scripts.generate_edl import GenerationError, extract_teams_media_networks
+from scripts.generate_edl import (
+    GenerationError,
+    INTUNE_EVENT_WILDCARD_TARGETS,
+    WINDOWS_UPDATE_WILDCARD_TARGETS,
+    expand_documented_hostnames,
+    extract_intune_consolidated_hostnames,
+    extract_intune_windows_networks,
+    extract_teams_media_networks,
+)
 
 
 EXPECTED = [
@@ -46,6 +54,62 @@ class TeamsMediaParserTests(unittest.TestCase):
 
         with self.assertRaisesRegex(GenerationError, "Unexpected Teams media ranges"):
             extract_teams_media_networks(learn_html)
+
+
+class IntuneConsolidatedParserTests(unittest.TestCase):
+    SOURCE = """
+## Consolidated Endpoint List
+
+FQDNs
+```
+*.events.data.microsoft.com
+manage.microsoft.com
+```
+
+IP Subnets
+```
+4.150.254.64/27
+2620:1ec:40::/48
+```
+
+## Related content
+"""
+
+    def test_parses_fqdns_and_ipv4_subnets_independently(self) -> None:
+        self.assertEqual(
+            extract_intune_consolidated_hostnames(self.SOURCE),
+            ["*.events.data.microsoft.com", "manage.microsoft.com"],
+        )
+        self.assertEqual(
+            extract_intune_windows_networks(self.SOURCE),
+            [ipaddress.IPv4Network("4.150.254.64/27")],
+        )
+
+    def test_expands_only_audited_intune_event_targets(self) -> None:
+        hosts, wildcards, selected = expand_documented_hostnames(
+            ["*.events.data.microsoft.com"],
+            wildcard_targets=INTUNE_EVENT_WILDCARD_TARGETS,
+            label="Microsoft Intune events",
+        )
+
+        self.assertEqual(wildcards, ["*.events.data.microsoft.com"])
+        self.assertEqual(
+            selected["*.events.data.microsoft.com"],
+            INTUNE_EVENT_WILDCARD_TARGETS["*.events.data.microsoft.com"],
+        )
+        self.assertIn("us-mobile.events.data.microsoft.com", hosts)
+
+    def test_windows_update_targets_are_dns_names_not_ip_overrides(self) -> None:
+        targets = {
+            hostname
+            for hostnames in WINDOWS_UPDATE_WILDCARD_TARGETS.values()
+            for hostname in hostnames
+        }
+
+        self.assertIn("array504.prod.do.dsp.mp.microsoft.com", targets)
+        for target in targets:
+            with self.assertRaises(ValueError):
+                ipaddress.ip_address(target)
 
 
 if __name__ == "__main__":

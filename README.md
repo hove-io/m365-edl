@@ -94,14 +94,23 @@ Les plages souveraines GCC High (`52.127.88.0/21`) et DoD
 
 La liste Intune est extraite de la documentation officielle
 [Network endpoints for Microsoft Intune](https://learn.microsoft.com/intune/intune-service/fundamentals/intune-endpoints),
-section **Consolidated Endpoint List / IP Subnets**. Elle contient uniquement
-les CIDR explicitement publiés par Microsoft pour les appareils gérés par
-Intune, y compris les sous-réseaux Azure Front Door `MicrosoftSecurity` que la
-page intègre à sa liste consolidée.
+section **Consolidated Endpoint List**. Elle combine :
 
-Les dépendances Windows Update, Delivery Optimization, WNS et Autopilot qui ne
-sont publiées que sous forme de FQDN ne sont pas résolues artificiellement dans
-cette EDL. Aucun préfixe Azure générique ni aucune plage AS8075 n'est ajouté.
+- les CIDR explicitement publiés pour les appareils gérés par Intune, y compris
+  les sous-réseaux Azure Front Door `MicrosoftSecurity` ;
+- les A records IPv4 courants d'un ensemble audité de cibles géographiques sous
+  le wildcard officiel `*.events.data.microsoft.com`, utilisé pour le reporting
+  Intune optionnel, Endpoint Analytics et les diagnostics clients.
+
+Le wildcard n'est jamais résolu artificiellement et aucune IP observée n'est
+ajoutée en dur. Le générateur valide sa présence dans la source Microsoft, puis
+résout des cibles concrètes auditées appartenant à ce wildcard (`events`,
+`mobile`, `v10`, `v20` et leurs variantes `au`, `eu`, `uk` et `us`). Les
+résultats sont publiés en `/32` et consignés dans `sources.json`.
+
+Les autres dépendances Windows Update et Delivery Optimization résolues par le
+workflow sont placées dans `microsoft-edge-windows-services-ipv4.txt`. Aucun
+préfixe Azure générique ni aucune plage AS8075 n'est ajouté.
 
 ### Apple
 
@@ -153,6 +162,15 @@ et [Windows 11](https://learn.microsoft.com/windows/privacy/manage-windows-11-en
 Elle couvre Edge Update, les téléchargements Edge, Windows Update, Store,
 certificats/révocation, SmartScreen et les services de diagnostic retenus.
 
+Pour Windows Update et Delivery Optimization, le générateur valide puis résout
+les familles officielles `*.prod.do.dsp.mp.microsoft.com`,
+`*.dl.delivery.mp.microsoft.com`, `*.delivery.mp.microsoft.com`,
+`*.update.microsoft.com` et `*.windowsupdate.com`, ainsi que
+`tsfe.trafficshaping.dsp.mp.microsoft.com`. Les wildcards sont représentés par
+des cibles concrètes auditées, notamment les services `array`, `geo`, de
+métadonnées et de téléchargement. Les réponses DNS changent avec les backends
+Microsoft et sont donc recalculées à chaque exécution, sans `/32` manuel.
+
 Les `/32` déjà couverts par une EDL Microsoft existante sont retirés de cette
 nouvelle liste. Aucun range Azure global ni AS8075 n'est utilisé.
 
@@ -177,13 +195,16 @@ Il applique les contrôles suivants à chaque liste :
    réservés, non spécifiés ou non globaux ;
 5. refus de tout fichier vide ;
 6. blocage d'une baisse de plus de 50 % du nombre d'entrées ;
-7. jusqu'à trois tentatives DNS par FQDN ciblé, suivi des CNAME par le résolveur
-   et journalisation de chaque mapping FQDN vers IPv4 ;
+7. jusqu'à huit résolutions DNS par FQDN Microsoft dynamique (trois pour les
+   autres sources), suivi des CNAME par le résolveur et journalisation de chaque
+   mapping FQDN vers IPv4 ;
 8. génération atomique de l'ensemble ;
 9. commit et publication uniquement lorsqu'une EDL a changé.
 
 Des tests de régression vérifient les deux structures Microsoft Learn pour
 Teams Media et confirment qu'une plage commerciale inattendue reste bloquée.
+Ils vérifient également le parsing séparé des blocs FQDN/CIDR Intune et la
+sélection contrôlée des familles DNS Microsoft.
 
 Une erreur HTTP, un parsing invalide, un changement inattendu des sources ou
 un échec DNS arrête le workflow avant le remplacement des fichiers. La dernière

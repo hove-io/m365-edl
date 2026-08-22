@@ -127,6 +127,7 @@ RESIDUAL_IPS = (
     "20.42.65.85",
     "4.150.223.96",
     "4.150.223.104",
+    "4.150.223.115",
     "23.103.234.43",
     "17.248.236.28",
     "72.153.5.61",
@@ -227,12 +228,10 @@ MICROSOFT_WINDOWS_HOSTS = {
     "data-edge.smartscreen.microsoft.com",
     "definitionupdates.microsoft.com",
     "displaycatalog.mp.microsoft.com",
-    "functional.events.data.microsoft.com",
     "licensing.mp.microsoft.com",
     "manage.devcenter.microsoft.com",
     "nav-edge.smartscreen.microsoft.com",
     "ping-edge.smartscreen.microsoft.com",
-    "self.events.data.microsoft.com",
     "settings-win.data.microsoft.com",
     "settings.data.microsoft.com",
     "share.microsoft.com",
@@ -240,8 +239,47 @@ MICROSOFT_WINDOWS_HOSTS = {
     "storeedgefd.dsx.mp.microsoft.com",
     "telecommand.telemetry.microsoft.com",
     "tsfe.trafficshaping.dsp.mp.microsoft.com",
-    "v10.events.data.microsoft.com",
     "www.telecommandsvc.microsoft.com",
+}
+
+# Microsoft documents these wildcard families for Windows Update, Delivery
+# Optimization, and Intune. DNS wildcards can't be queried directly, so the
+# generator resolves only concrete, auditable service names below. The IPs are
+# never hard-coded and may change on every workflow run.
+WINDOWS_UPDATE_WILDCARD_TARGETS = {
+    "*.prod.do.dsp.mp.microsoft.com": (
+        "array504.prod.do.dsp.mp.microsoft.com",
+        "array506.prod.do.dsp.mp.microsoft.com",
+        "geo.prod.do.dsp.mp.microsoft.com",
+        "geover.prod.do.dsp.mp.microsoft.com",
+    ),
+    "*.dl.delivery.mp.microsoft.com": ("dl.delivery.mp.microsoft.com",),
+    "*.delivery.mp.microsoft.com": ("fe3cr.delivery.mp.microsoft.com",),
+    "*.update.microsoft.com": ("update.microsoft.com",),
+    "*.windowsupdate.com": (
+        "ctldl.windowsupdate.com",
+        "download.windowsupdate.com",
+    ),
+}
+
+INTUNE_EVENT_WILDCARD_TARGETS = {
+    "*.events.data.microsoft.com": (
+        "events.data.microsoft.com",
+        "functional.events.data.microsoft.com",
+        "self.events.data.microsoft.com",
+        "v10.events.data.microsoft.com",
+        "v10c.events.data.microsoft.com",
+        "v20.events.data.microsoft.com",
+        "mobile.events.data.microsoft.com",
+        "au-mobile.events.data.microsoft.com",
+        "eu-mobile.events.data.microsoft.com",
+        "uk-mobile.events.data.microsoft.com",
+        "us-mobile.events.data.microsoft.com",
+        "au-v20.events.data.microsoft.com",
+        "eu-v20.events.data.microsoft.com",
+        "uk-v20.events.data.microsoft.com",
+        "us-v20.events.data.microsoft.com",
+    ),
 }
 
 EXPECTED_TEAMS_MEDIA_NETWORKS = {
@@ -793,10 +831,10 @@ def extract_teams_media_networks(learn_html: str) -> list[ipaddress.IPv4Network]
     ]
 
 
-def extract_intune_windows_networks(
-    intune_markdown: str,
-) -> list[ipaddress.IPv4Network]:
-    """Extract only Microsoft's explicit consolidated Intune IP subnets."""
+def extract_intune_consolidated_values(
+    intune_markdown: str, *, block_label: str
+) -> list[str]:
+    """Extract one fenced block from Intune's consolidated endpoint section."""
     lines = intune_markdown.splitlines()
     section_markers = [
         index
@@ -819,33 +857,63 @@ def extract_intune_windows_networks(
         len(lines),
     )
     section = lines[section_start:section_end]
-    subnet_markers = [
-        index for index, line in enumerate(section) if line.strip() == "IP Subnets"
+    block_markers = [
+        index for index, line in enumerate(section) if line.strip() == block_label
     ]
-    if len(subnet_markers) != 1:
+    if len(block_markers) != 1:
         raise GenerationError(
-            "Expected exactly one Intune IP Subnets block, found "
-            f"{len(subnet_markers)}"
+            f"Expected exactly one Intune {block_label} block, found "
+            f"{len(block_markers)}"
         )
 
-    cursor = subnet_markers[0] + 1
+    cursor = block_markers[0] + 1
     while cursor < len(section) and not section[cursor].strip():
         cursor += 1
     if cursor >= len(section) or section[cursor].strip() != "```":
-        raise GenerationError("Unexpected Intune IP Subnets code block opening")
+        raise GenerationError(
+            f"Unexpected Intune {block_label} code block opening"
+        )
 
     cursor += 1
-    raw_networks: list[str] = []
+    values: list[str] = []
     while cursor < len(section) and section[cursor].strip() != "```":
         value = section[cursor].strip()
         if not value:
-            raise GenerationError("Unexpected blank line in Intune IP Subnets block")
-        raw_networks.append(value)
+            raise GenerationError(
+                f"Unexpected blank line in Intune {block_label} block"
+            )
+        values.append(value)
         cursor += 1
     if cursor >= len(section):
-        raise GenerationError("Intune IP Subnets code block isn't closed")
-    if not raw_networks:
-        raise GenerationError("Intune IP Subnets block is empty")
+        raise GenerationError(f"Intune {block_label} code block isn't closed")
+    if not values:
+        raise GenerationError(f"Intune {block_label} block is empty")
+    return values
+
+
+def extract_intune_consolidated_hostnames(intune_markdown: str) -> list[str]:
+    """Validate the FQDNs published in Intune's consolidated endpoint list."""
+    hostnames = extract_intune_consolidated_values(
+        intune_markdown, block_label="FQDNs"
+    )
+    if len(hostnames) != len(set(hostnames)):
+        raise GenerationError("Intune consolidated FQDN block contains duplicates")
+    for hostname in hostnames:
+        validation_target = hostname[2:] if hostname.startswith("*.") else hostname
+        if not HOSTNAME_PATTERN.fullmatch(validation_target):
+            raise GenerationError(
+                f"Invalid Intune consolidated FQDN {hostname!r}"
+            )
+    return sorted(hostnames)
+
+
+def extract_intune_windows_networks(
+    intune_markdown: str,
+) -> list[ipaddress.IPv4Network]:
+    """Extract only Microsoft's explicit consolidated Intune IP subnets."""
+    raw_networks = extract_intune_consolidated_values(
+        intune_markdown, block_label="IP Subnets"
+    )
 
     networks: set[ipaddress.IPv4Network] = set()
     for line_number, raw_network in enumerate(raw_networks, start=1):
@@ -1257,7 +1325,9 @@ def build_residual_coverage(
         "m365-teams-ipv4.txt": "Microsoft 365 endpoint web service: Skype",
         DEFENDER_FILE: "Official Microsoft Defender endpoints and DNS",
         TEAMS_MEDIA_FILE: "Microsoft Teams Direct Routing media ranges",
-        INTUNE_WINDOWS_FILE: "Microsoft Intune consolidated IP Subnets",
+        INTUNE_WINDOWS_FILE: (
+            "Microsoft Intune consolidated IP Subnets and official FQDN DNS"
+        ),
         APPLE_UPDATES_FILE: "Apple enterprise Software updates FQDN resolution",
         APPLE_CONTENT_FILE: "Apple enterprise Apps and additional content FQDN resolution",
         APPLE_DEVICE_FILE: "Apple enterprise Device management/APNs FQDN resolution",
@@ -1476,6 +1546,13 @@ def build_index(
       <code>52.112.0.0/14</code> et <code>52.120.0.0/14</code> sont acceptées.
       Les plages GCC High, DoD ou toute plage inattendue font échouer la publication.</p>
     </div>
+    <div class="notice">
+      <p><strong>Windows Update, Delivery Optimization et Intune :</strong> les
+      familles FQDN officielles sont validées dans les sources Microsoft puis des
+      cibles DNS auditées sont résolues à chaque exécution. Seules leurs IPv4 publiques
+      courantes sont ajoutées en <code>/32</code> ; aucune IP observée ni plage Azure
+      globale n'est injectée manuellement.</p>
+    </div>
     <table>
       <thead><tr><th>Périmètre</th><th>Fichier</th><th>CIDR</th></tr></thead>
       <tbody>{''.join(rows)}</tbody>
@@ -1647,7 +1724,39 @@ def main() -> int:
             defender_hostnames
         )
         teams_media_networks = extract_teams_media_networks(teams_direct_routing)
-        intune_windows_networks = extract_intune_windows_networks(intune_endpoints)
+        intune_explicit_networks = extract_intune_windows_networks(intune_endpoints)
+        intune_documented_hostnames = extract_intune_consolidated_hostnames(
+            intune_endpoints
+        )
+        missing_intune_wildcards = set(INTUNE_EVENT_WILDCARD_TARGETS) - set(
+            intune_documented_hostnames
+        )
+        if missing_intune_wildcards:
+            raise GenerationError(
+                "Intune consolidated FQDN block no longer contains required "
+                "wildcards: " + ", ".join(sorted(missing_intune_wildcards))
+            )
+        (
+            intune_event_hosts,
+            intune_event_wildcards,
+            intune_event_targets,
+        ) = expand_documented_hostnames(
+            sorted(INTUNE_EVENT_WILDCARD_TARGETS),
+            wildcard_targets=INTUNE_EVENT_WILDCARD_TARGETS,
+            label="Microsoft Intune events",
+        )
+        (
+            intune_event_networks,
+            intune_event_resolutions,
+            intune_event_unresolved,
+        ) = resolve_service_hostnames(
+            intune_event_hosts,
+            label="Microsoft Intune events",
+            attempts=8,
+        )
+        intune_windows_networks = sort_networks(
+            [*intune_explicit_networks, *intune_event_networks]
+        )
         generated[DEFENDER_FILE] = defender_networks
         generated[TEAMS_MEDIA_FILE] = teams_media_networks
         generated[INTUNE_WINDOWS_FILE] = intune_windows_networks
@@ -1735,10 +1844,17 @@ def main() -> int:
             MICROSOFT_EDGE_HOSTS,
             label="Microsoft Edge endpoints",
         )
-        windows_hosts = validate_documented_hostnames(
+        windows_documented_hostnames = validate_documented_hostnames(
             microsoft_windows,
-            MICROSOFT_WINDOWS_HOSTS,
+            MICROSOFT_WINDOWS_HOSTS | set(WINDOWS_UPDATE_WILDCARD_TARGETS),
             label="Microsoft Windows endpoints",
+        )
+        windows_hosts, windows_wildcards, windows_targets = (
+            expand_documented_hostnames(
+                windows_documented_hostnames,
+                wildcard_targets=WINDOWS_UPDATE_WILDCARD_TARGETS,
+                label="Microsoft Windows endpoints",
+            )
         )
         microsoft_service_hosts = sorted(set(edge_hosts) | set(windows_hosts))
         (
@@ -1748,6 +1864,7 @@ def main() -> int:
         ) = resolve_service_hostnames(
             microsoft_service_hosts,
             label="Microsoft Edge/Windows services",
+            attempts=8,
         )
         (
             microsoft_service_networks,
@@ -1767,6 +1884,7 @@ def main() -> int:
 
         resolutions_by_file = {
             DEFENDER_FILE: defender_resolutions,
+            INTUNE_WINDOWS_FILE: intune_event_resolutions,
             APPLE_UPDATES_FILE: apple_updates_resolutions,
             APPLE_CONTENT_FILE: apple_content_resolutions,
             APPLE_DEVICE_FILE: apple_device_resolutions,
@@ -1833,6 +1951,27 @@ def main() -> int:
             },
         }
         additional_files: dict[str, dict[str, Any]] = {
+            INTUNE_WINDOWS_FILE: {
+                "cidrCount": len(intune_windows_networks),
+                "explicitCidrCount": len(intune_explicit_networks),
+                "method": (
+                    "Combine explicit consolidated Intune IP Subnets with IPv4 "
+                    "A records from audited *.events.data.microsoft.com targets"
+                ),
+                "scope": (
+                    "Intune-managed devices, including consolidated IP subnets "
+                    "and optional reporting/Endpoint Analytics endpoints"
+                ),
+                "wildcardPatterns": intune_event_wildcards,
+                "wildcardResolutionTargets": {
+                    pattern: list(targets)
+                    for pattern, targets in intune_event_targets.items()
+                },
+                "resolvedHostnames": intune_event_resolutions,
+                "unresolvedHostnames": intune_event_unresolved,
+                "manualIpOverrides": False,
+                "globalAzureOrAs8075RangesIncluded": False,
+            },
             APPLE_UPDATES_FILE: {
                 "cidrCount": len(apple_updates_networks),
                 "method": "Resolve official Apple Software updates FQDNs to IPv4 /32",
@@ -1917,9 +2056,15 @@ def main() -> int:
                 ),
                 "edgeHostnames": edge_hosts,
                 "windowsHostnames": windows_hosts,
+                "windowsWildcardPatterns": windows_wildcards,
+                "windowsWildcardResolutionTargets": {
+                    pattern: list(targets)
+                    for pattern, targets in windows_targets.items()
+                },
                 "resolvedHostnames": microsoft_service_resolutions,
                 "unresolvedHostnames": microsoft_service_unresolved,
                 "excludedExistingNetworks": microsoft_existing_exclusions,
+                "manualIpOverrides": False,
                 "globalAzureOrAs8075RangesIncluded": False,
             },
         }
