@@ -1697,12 +1697,20 @@ def extract_doh_observations(
         response_ecs_subnet = response.get("edns_client_subnet")
         try:
             requested_ecs = ipaddress.IPv4Network(ecs_subnet)
-            returned_ecs = ipaddress.IPv4Network(response_ecs_subnet)
-        except (ipaddress.AddressValueError, ipaddress.NetmaskValueError) as error:
+            if not isinstance(response_ecs_subnet, str):
+                raise ValueError("ECS response isn't a string")
+            returned_address_text, returned_scope_text = (
+                response_ecs_subnet.rsplit("/", 1)
+            )
+            returned_address = ipaddress.IPv4Address(returned_address_text)
+            returned_scope = int(returned_scope_text)
+            if not 0 <= returned_scope <= 32:
+                raise ValueError("ECS scope is outside 0..32")
+        except (ValueError, ipaddress.AddressValueError) as error:
             raise GenerationError(
                 f"Invalid {label} DNS ECS response at line {line_number}"
             ) from error
-        if not returned_ecs.subnet_of(requested_ecs):
+        if returned_address not in requested_ecs:
             raise GenerationError(
                 f"{label} DNS ECS response escaped the requested subnet at line {line_number}"
             )
@@ -1787,7 +1795,7 @@ def extract_doh_observations(
                 f"its CNAME chain at line {line_number}"
             )
 
-        source_name = f"google-doh-ecs:{returned_ecs}"
+        source_name = f"google-doh-ecs:{returned_address}/{returned_scope}"
         for address in addresses:
             addresses_by_hostname[hostname].add(address)
             record = details[hostname].setdefault(

@@ -337,7 +337,11 @@ class MicrosoftControlledDnsTests(unittest.TestCase):
                             "attempt": attempt,
                             "response": {
                                 "Status": 0,
-                                "edns_client_subnet": subnet,
+                                "edns_client_subnet": (
+                                    "82.64.0.0/0"
+                                    if subnet == MICROSOFT_DOH_ECS_SUBNETS[0]
+                                    else subnet
+                                ),
                                 "Question": [{"name": cls.HOSTNAME, "type": 1}],
                                 "Answer": [
                                     {
