@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T11:31:22.695022Z",
+  "generatedAt": "2026-08-22T11:41:45.253353Z",
   "policy": "Coverage is reported only from generated EDL content; unmatched IPs are never added to force coverage",
   "entries": [
     {
@@ -217,22 +217,30 @@
       "ip": "4.150.223.112",
       "owner": "Microsoft/Azure",
       "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
-      "verified": false,
-      "covered": false,
-      "edl": null,
-      "targetEdl": null,
-      "source": null,
-      "fqdn": null,
-      "officialFqdn": null,
-      "cname_chain": [],
-      "cnameChain": [],
-      "first_seen": null,
-      "firstSeen": null,
-      "last_seen": null,
-      "lastSeen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "reason": "Probable Microsoft telemetry address not returned during the current or rolling 24-hour DNS window by an authorized *.events.data.microsoft.com target"
+      "verified": true,
+      "covered": true,
+      "edl": "microsoft-intune-windows-ipv4.txt",
+      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
+      "fqdn": "mobile.events.data.microsoft.com",
+      "cname_chain": [
+        "mobile.events.data.trafficmanager.net",
+        "onedscolprdcus54.centralus.cloudapp.azure.com"
+      ],
+      "first_seen": "2026-08-22T11:41:45.253353Z",
+      "last_seen": "2026-08-22T11:41:45.253353Z",
+      "observation_sources": [
+        "system-resolver"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "targetEdl": "microsoft-intune-windows-ipv4.txt",
+      "officialFqdn": "mobile.events.data.microsoft.com",
+      "cnameChain": [
+        "mobile.events.data.trafficmanager.net",
+        "onedscolprdcus54.centralus.cloudapp.azure.com"
+      ],
+      "firstSeen": "2026-08-22T11:41:45.253353Z",
+      "lastSeen": "2026-08-22T11:41:45.253353Z",
+      "reason": "Covered by a DNS-observed official FQDN"
     },
     {
       "ip": "4.150.223.115",
@@ -528,7 +536,7 @@
         "tokenghubeus21.actions.githubusercontent.com"
       ],
       "first_seen": "2026-08-22T09:29:05.060917Z",
-      "last_seen": "2026-08-22T11:31:22.695022Z",
+      "last_seen": "2026-08-22T11:41:45.253353Z",
       "observation_sources": [
         "system-resolver"
       ],
@@ -539,7 +547,7 @@
         "tokenghubeus21.actions.githubusercontent.com"
       ],
       "firstSeen": "2026-08-22T09:29:05.060917Z",
-      "lastSeen": "2026-08-22T11:31:22.695022Z",
+      "lastSeen": "2026-08-22T11:41:45.253353Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -639,7 +647,7 @@
         "glb-c0e95bd587389a.github.com"
       ],
       "first_seen": "2026-08-22T09:29:05.060917Z",
-      "last_seen": "2026-08-22T11:31:22.695022Z",
+      "last_seen": "2026-08-22T11:41:45.253353Z",
       "observation_sources": [
         "system-resolver"
       ],
@@ -656,7 +664,7 @@
         "glb-c0e95bd587389a.github.com"
       ],
       "firstSeen": "2026-08-22T09:29:05.060917Z",
-      "lastSeen": "2026-08-22T11:31:22.695022Z",
+      "lastSeen": "2026-08-22T11:41:45.253353Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -941,7 +949,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "first_seen": "2026-08-22T09:00:08.705520Z",
-      "last_seen": "2026-08-22T11:31:22.695022Z",
+      "last_seen": "2026-08-22T11:41:45.253353Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24"
@@ -953,7 +961,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "firstSeen": "2026-08-22T09:00:08.705520Z",
-      "lastSeen": "2026-08-22T11:31:22.695022Z",
+      "lastSeen": "2026-08-22T11:41:45.253353Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1033,7 +1041,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "first_seen": "2026-08-22T09:29:05.060917Z",
-      "last_seen": "2026-08-22T11:31:22.695022Z",
+      "last_seen": "2026-08-22T11:41:45.253353Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24"
@@ -1049,7 +1057,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "firstSeen": "2026-08-22T09:29:05.060917Z",
-      "lastSeen": "2026-08-22T11:31:22.695022Z",
+      "lastSeen": "2026-08-22T11:41:45.253353Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1097,7 +1105,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "first_seen": "2026-08-22T08:46:37.008576Z",
-      "last_seen": "2026-08-22T11:31:22.695022Z",
+      "last_seen": "2026-08-22T11:41:45.253353Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24"
@@ -1113,7 +1121,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "firstSeen": "2026-08-22T08:46:37.008576Z",
-      "lastSeen": "2026-08-22T11:31:22.695022Z",
+      "lastSeen": "2026-08-22T11:41:45.253353Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
