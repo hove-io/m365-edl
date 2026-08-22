@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T06:53:23.365665Z",
+  "generatedAt": "2026-08-22T07:18:04.348834Z",
   "policy": "Coverage is reported only from generated EDL content; unmatched IPs are never added to force coverage",
   "entries": [
     {
@@ -8,6 +8,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
     {
@@ -16,6 +18,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
     {
@@ -24,6 +28,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
     {
@@ -32,6 +38,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
     {
@@ -40,6 +48,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
@@ -48,6 +58,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
@@ -56,6 +68,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
@@ -64,6 +78,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
@@ -72,6 +88,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
@@ -80,22 +98,36 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "Apple address not returned by an in-scope official FQDN"
     },
     {
       "ip": "72.153.5.61",
       "covered": true,
       "edl": "microsoft-edge-windows-services-ipv4.txt",
-      "source": "Official Microsoft Edge and Windows endpoint FQDN resolution",
-      "fqdn": "array504.prod.do.dsp.mp.microsoft.com"
+      "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
+      "fqdn": "array504.prod.do.dsp.mp.microsoft.com",
+      "cname_chain": [],
+      "source_documentation": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow"
     },
     {
       "ip": "72.153.5.129",
-      "covered": false,
-      "edl": null,
-      "source": null,
-      "fqdn": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "covered": true,
+      "edl": "microsoft-edge-windows-services-ipv4.txt",
+      "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
+      "fqdn": "array508.prod.do.dsp.mp.microsoft.com",
+      "cname_chain": [],
+      "source_documentation": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow"
+    },
+    {
+      "ip": "72.153.5.137",
+      "covered": true,
+      "edl": "microsoft-edge-windows-services-ipv4.txt",
+      "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
+      "fqdn": "array516.prod.do.dsp.mp.microsoft.com",
+      "cname_chain": [],
+      "source_documentation": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow"
     },
     {
       "ip": "72.153.5.140",
@@ -103,7 +135,18 @@
       "edl": null,
       "source": null,
       "fqdn": null,
-      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+      "cname_chain": [],
+      "source_documentation": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+    },
+    {
+      "ip": "72.154.7.101",
+      "covered": true,
+      "edl": "microsoft-edge-windows-services-ipv4.txt",
+      "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
+      "fqdn": "array808.prod.do.dsp.mp.microsoft.com",
+      "cname_chain": [],
+      "source_documentation": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow"
     },
     {
       "ip": "95.101.137.11",
@@ -111,6 +154,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
     {
@@ -119,6 +164,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
     {
@@ -127,7 +174,9 @@
       "edl": null,
       "source": null,
       "fqdn": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "cname_chain": [],
+      "source_documentation": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
     {
       "ip": "20.85.108.33",
@@ -135,6 +184,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
@@ -143,21 +194,29 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
       "ip": "52.168.117.169",
-      "covered": true,
-      "edl": "microsoft-intune-windows-ipv4.txt",
-      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
-      "fqdn": "v10c.events.data.microsoft.com"
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
       "ip": "52.168.117.170",
-      "covered": true,
-      "edl": "microsoft-intune-windows-ipv4.txt",
-      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
-      "fqdn": "v20.events.data.microsoft.com"
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
       "ip": "23.200.213.147",
@@ -165,6 +224,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
     {
@@ -173,6 +234,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
@@ -181,6 +244,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
@@ -189,6 +254,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "Apple address not returned by an in-scope official FQDN"
     },
     {
@@ -197,6 +264,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "Not returned by the targeted official APNs FQDNs; the prohibited 17.0.0.0/8 fallback was not used"
     },
     {
@@ -205,6 +274,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
@@ -213,6 +284,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "PTR stor-g3-ph-legacy-pc1.dell.com observed, but the current A records of the officially documented downloads.dell.com endpoint do not contain this address; PTR ownership alone isn't authorization"
     },
     {
@@ -221,6 +294,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
@@ -228,7 +303,9 @@
       "covered": true,
       "edl": "dropbox-ipv4.txt",
       "source": "Dropbox-linked ARIN product allocations",
-      "fqdn": null
+      "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": "https://help.dropbox.com/installs/configuring-firewall"
     },
     {
       "ip": "172.66.0.227",
@@ -236,6 +313,8 @@
       "edl": null,
       "source": null,
       "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
     {
@@ -243,14 +322,111 @@
       "covered": true,
       "edl": "github-ipv4.txt",
       "source": "GitHub Meta API fields web, api, git, and pages",
-      "fqdn": null
+      "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": "https://docs.github.com/en/rest/meta/meta"
     },
     {
       "ip": "150.171.28.11",
       "covered": true,
       "edl": "microsoft-edge-windows-services-ipv4.txt",
-      "source": "Official Microsoft Edge and Windows endpoint FQDN resolution",
-      "fqdn": "edge.microsoft.com"
+      "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
+      "fqdn": "edge.microsoft.com",
+      "cname_chain": [
+        "edge-microsoft-com.ax-0002.ax-msedge.net",
+        "ax-0002.ax-msedge.net"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/windows/privacy/manage-windows-11-endpoints"
+    },
+    {
+      "ip": "17.248.209.16",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
+      "reason": "Apple address not returned by an in-scope official FQDN"
+    },
+    {
+      "ip": "17.253.37.204",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
+      "reason": "Apple address not returned by an in-scope official FQDN"
+    },
+    {
+      "ip": "95.101.137.16",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "95.101.137.21",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "95.101.137.23",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "95.101.137.24",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "23.58.84.19",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "151.101.1.64",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "151.101.129.64",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "source_documentation": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     }
   ]
 }
