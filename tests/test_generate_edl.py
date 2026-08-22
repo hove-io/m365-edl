@@ -8,6 +8,8 @@ from scripts.generate_edl import (
     APPLE_SECTION_REQUIREMENTS,
     APPLE_XCODE_HOSTS,
     APPLE_XCODE_FILE,
+    COVERAGE_CATEGORIES,
+    CURRENT_INTERNET_ONLY_AUDIT,
     DNS_HISTORY_GRACE_PERIOD,
     GenerationError,
     GITHUB_ACTIONS_FILE,
@@ -16,6 +18,8 @@ from scripts.generate_edl import (
     INTUNE_EVENT_EXACT_SOURCE_REQUIREMENTS,
     INTUNE_EVENT_WILDCARD_TARGETS,
     INTUNE_WINDOWS_FILE,
+    M365_COMMON_WILDCARD_TARGETS,
+    M365_SERVICE_FILES,
     MICROSOFT_DELIVERY_OPTIMIZATION_URL,
     MICROSOFT_EDGE_WINDOWS_FILE,
     RESIDUAL_IPS,
@@ -35,6 +39,7 @@ from scripts.generate_edl import (
     extract_github_actions_hostnames,
     extract_teams_media_networks,
     resolve_service_hostnames,
+    validate_m365_documented_urls,
 )
 
 
@@ -42,6 +47,42 @@ EXPECTED = [
     ipaddress.IPv4Network("52.112.0.0/14"),
     ipaddress.IPv4Network("52.120.0.0/14"),
 ]
+
+
+class Microsoft365CommonDnsTests(unittest.TestCase):
+    PAYLOAD = [
+        {
+            "id": 147,
+            "serviceArea": "Common",
+            "urls": ["*.office.com", "www.microsoft365.com"],
+            "ips": None,
+            "required": True,
+        }
+    ]
+
+    def test_validates_official_common_wildcard_and_selects_one_target(self) -> None:
+        patterns = validate_m365_documented_urls(
+            self.PAYLOAD,
+            service_area="Common",
+            required_patterns=set(M365_COMMON_WILDCARD_TARGETS),
+        )
+        hosts, wildcards, selected = expand_documented_hostnames(
+            patterns,
+            wildcard_targets=M365_COMMON_WILDCARD_TARGETS,
+            label="Microsoft 365 Common test",
+        )
+
+        self.assertEqual(wildcards, ["*.office.com"])
+        self.assertEqual(hosts, ["word.office.com"])
+        self.assertEqual(selected, M365_COMMON_WILDCARD_TARGETS)
+
+    def test_rejects_disappearance_of_official_common_wildcard(self) -> None:
+        with self.assertRaisesRegex(GenerationError, "no longer contain"):
+            validate_m365_documented_urls(
+                self.PAYLOAD,
+                service_area="Common",
+                required_patterns={"*.missing.example"},
+            )
 
 
 class TeamsMediaParserTests(unittest.TestCase):
@@ -558,6 +599,21 @@ class ResidualCoverageTests(unittest.TestCase):
         "4.150.223.112",
         "20.184.175.2",
         "20.42.72.131",
+        "4.150.223.107",
+        "150.171.22.17",
+        "13.107.6.156",
+        "20.184.175.3",
+        "104.208.16.94",
+        "20.105.245.153",
+        "17.145.0.2",
+        "17.248.209.54",
+        "23.200.213.147",
+        "95.101.137.28",
+        "95.101.137.33",
+        "52.85.118.49",
+        "52.85.118.108",
+        "52.222.169.45",
+        "52.222.169.104",
     }
 
     def test_tracks_requested_ips_and_emits_provenance_schema(self) -> None:
@@ -606,6 +662,10 @@ class ResidualCoverageTests(unittest.TestCase):
                     "lastSeen",
                     "targetEdl",
                     "reason",
+                    "paloSource",
+                    "officialSource",
+                    "category",
+                    "confidence",
                 }.issubset(entries[address])
             )
         self.assertTrue(entries["72.153.5.61"]["covered"])
@@ -621,6 +681,22 @@ class ResidualCoverageTests(unittest.TestCase):
         self.assertFalse(entries["20.42.72.131"]["covered"])
         self.assertFalse(entries["20.42.72.131"]["verified"])
         self.assertIsNone(entries["20.42.72.131"]["officialFqdn"])
+        self.assertEqual(
+            set(document["currentInternetOnlyAudit"]["ips"]),
+            set(CURRENT_INTERNET_ONLY_AUDIT),
+        )
+        self.assertEqual(document["currentInternetOnlyAudit"]["ipCount"], 15)
+        self.assertEqual(
+            sum(document["currentInternetOnlyAudit"]["categoryCounts"].values()),
+            15,
+        )
+        self.assertTrue(
+            set(document["currentInternetOnlyAudit"]["categoryCounts"])
+            == COVERAGE_CATEGORIES
+        )
+        for address in CURRENT_INTERNET_ONLY_AUDIT:
+            self.assertIn(entries[address]["category"], COVERAGE_CATEGORIES)
+            self.assertIsNotNone(entries[address]["paloSource"])
 
     def test_intune_telemetry_residual_requires_dns_provenance(self) -> None:
         observed_at = "2026-08-22T12:00:00Z"
@@ -709,6 +785,44 @@ class ResidualCoverageTests(unittest.TestCase):
             entry["cname_chain"],
             ["tokenghubeus21.actions.githubusercontent.com"],
         )
+
+    def test_m365_common_canary_is_covered_only_by_official_dns(self) -> None:
+        observed_at = "2026-08-22T12:00:00Z"
+        address = "13.107.6.156"
+        hostname = "word.office.com"
+        common_file = M365_SERVICE_FILES["Common"]
+        document = json.loads(
+            build_residual_coverage(
+                generated_at=observed_at,
+                generated={common_file: [ipaddress.IPv4Network(f"{address}/32")]},
+                resolutions_by_file={common_file: {hostname: [address]}},
+                cname_chains_by_file={common_file: {}},
+                dns_history_by_file={
+                    common_file: {
+                        hostname: {
+                            address: {
+                                "cnameChain": [
+                                    "home-redirects.www.office.com",
+                                    "home-office365-com.b-0004.b-msedge.net",
+                                    "b-0004.b-msedge.net",
+                                ],
+                                "firstSeen": observed_at,
+                                "lastSeen": observed_at,
+                                "observationSources": ["system-resolver"],
+                            }
+                        }
+                    }
+                },
+            )
+        )
+        entry = next(item for item in document["entries"] if item["ip"] == address)
+
+        self.assertTrue(entry["covered"])
+        self.assertTrue(entry["verified"])
+        self.assertEqual(entry["category"], "COVERED_OFFICIAL")
+        self.assertEqual(entry["targetEdl"], common_file)
+        self.assertEqual(entry["officialFqdn"], hostname)
+        self.assertEqual(entry["firstSeen"], observed_at)
 
 
 if __name__ == "__main__":

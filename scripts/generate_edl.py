@@ -117,6 +117,226 @@ GITHUB_ACTIONS_REQUIRED_HOSTS = {
     "results-receiver.actions.githubusercontent.com",
     "tokenghub.actions.githubusercontent.com",
 }
+M365_COMMON_WILDCARD_TARGETS = {
+    "*.office.com": ("word.office.com",),
+}
+M365_COMMON_DNS_RESIDUAL_IPS = {"13.107.6.156"}
+
+COVERAGE_CATEGORIES = {
+    "COVERED_OFFICIAL",
+    "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+    "CDN_SHARED_UNATTRIBUTED",
+    "OWNER_ONLY_UNATTRIBUTED",
+    "INTENTIONALLY_UNCOVERED",
+}
+
+# The Palo source, owner, and passive-DNS-like service hints below are audit
+# context only. They never add an address to an EDL. Coverage still requires an
+# address to be present in an official CIDR or in the current/24-hour DNS
+# history of an authorized FQDN.
+CURRENT_INTERNET_ONLY_AUDIT: dict[str, dict[str, str | None]] = {
+    "4.150.223.107": {
+        "paloSource": "10.50.82.50",
+        "owner": "Microsoft/Azure (AS8075)",
+        "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
+        "officialSource": INTUNE_ENDPOINTS_LEARN_URL,
+        "officialFqdn": "*.events.data.microsoft.com",
+        "uncoveredCategory": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+        "confidence": "medium",
+        "reason": (
+            "Microsoft telemetry is a plausible attribution, but no authorized "
+            "*.events.data.microsoft.com target returned this address in the "
+            "current or rolling 24-hour DNS window"
+        ),
+    },
+    "150.171.22.17": {
+        "paloSource": "10.50.84.3",
+        "owner": "Microsoft/Azure (AS8075)",
+        "suspectedService": "Microsoft ECS/Office configuration infrastructure",
+        "officialSource": None,
+        "officialFqdn": None,
+        "uncoveredCategory": "OWNER_ONLY_UNATTRIBUTED",
+        "confidence": "low",
+        "reason": (
+            "Microsoft ownership and historical ECS infrastructure names are "
+            "only clues; no in-scope official commercial FQDN currently maps "
+            "this address"
+        ),
+    },
+    "13.107.6.156": {
+        "paloSource": "10.50.84.3",
+        "owner": "Microsoft/Azure (AS8075)",
+        "suspectedService": "Microsoft 365 Office web front door",
+        "officialSource": M365_API_URL,
+        "officialFqdn": "word.office.com",
+        "uncoveredCategory": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+        "confidence": "high",
+        "reason": (
+            "The official Microsoft 365 Common wildcard *.office.com is in "
+            "scope, but its audited word.office.com target did not return this "
+            "address in the current or rolling 24-hour DNS window"
+        ),
+    },
+    "20.184.175.3": {
+        "paloSource": "10.50.84.3",
+        "owner": "Microsoft/Azure (AS8075)",
+        "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
+        "officialSource": INTUNE_ENDPOINTS_LEARN_URL,
+        "officialFqdn": "*.events.data.microsoft.com",
+        "uncoveredCategory": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+        "confidence": "medium",
+        "reason": (
+            "Microsoft telemetry is a plausible attribution, but no authorized "
+            "*.events.data.microsoft.com target returned this address in the "
+            "current or rolling 24-hour DNS window"
+        ),
+    },
+    "104.208.16.94": {
+        "paloSource": "10.50.83.87",
+        "owner": "Microsoft/Azure (AS8075)",
+        "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
+        "officialSource": INTUNE_ENDPOINTS_LEARN_URL,
+        "officialFqdn": "*.events.data.microsoft.com",
+        "uncoveredCategory": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+        "confidence": "medium",
+        "reason": (
+            "Microsoft telemetry is a plausible attribution, but no authorized "
+            "*.events.data.microsoft.com target returned this address in the "
+            "current or rolling 24-hour DNS window"
+        ),
+    },
+    "20.105.245.153": {
+        "paloSource": "10.50.83.87",
+        "owner": "Microsoft/Azure (AS8075)",
+        "suspectedService": "Azure AI/Cognitive Services infrastructure",
+        "officialSource": None,
+        "officialFqdn": None,
+        "uncoveredCategory": "OWNER_ONLY_UNATTRIBUTED",
+        "confidence": "low",
+        "reason": (
+            "Microsoft ownership and historical cognitive-service names do not "
+            "prove that this flow belongs to an authorized repository service"
+        ),
+    },
+    "17.145.0.2": {
+        "paloSource": "10.50.83.27",
+        "owner": "Apple (AS714)",
+        "suspectedService": "Apple app/content service",
+        "officialSource": None,
+        "officialFqdn": None,
+        "uncoveredCategory": "OWNER_ONLY_UNATTRIBUTED",
+        "confidence": "low",
+        "reason": (
+            "Apple ownership and historical app.apple.com attribution are not "
+            "an official in-scope endpoint proof, and no permitted Apple FQDN "
+            "currently maps this address"
+        ),
+    },
+    "17.248.209.54": {
+        "paloSource": "10.50.83.27",
+        "owner": "Apple (AS714)",
+        "suspectedService": "Apple iCloud edge service",
+        "officialSource": APPLE_ENTERPRISE_URL,
+        "officialFqdn": "*.icloud.com",
+        "uncoveredCategory": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+        "confidence": "medium",
+        "reason": (
+            "Apple documents the *.icloud.com family, but no in-scope concrete "
+            "Apple FQDN currently or recently maps this address"
+        ),
+    },
+    "23.200.213.147": {
+        "paloSource": "10.50.84.3",
+        "owner": "Akamai (AS16625)",
+        "suspectedService": "Microsoft developer website on shared Akamai",
+        "officialSource": None,
+        "officialFqdn": None,
+        "uncoveredCategory": "CDN_SHARED_UNATTRIBUTED",
+        "confidence": "medium",
+        "reason": (
+            "Shared Akamai address with historical Microsoft developer names, "
+            "but no authorized official service FQDN currently maps it"
+        ),
+    },
+    "95.101.137.28": {
+        "paloSource": "10.50.83.27",
+        "owner": "Akamai (AS20940)",
+        "suspectedService": "Unattributed shared CDN traffic",
+        "officialSource": None,
+        "officialFqdn": None,
+        "uncoveredCategory": "CDN_SHARED_UNATTRIBUTED",
+        "confidence": "low",
+        "reason": (
+            "Shared Akamai address without a demonstrated official client FQDN; "
+            "Akamai ownership alone is not authorization"
+        ),
+    },
+    "95.101.137.33": {
+        "paloSource": "10.50.83.27",
+        "owner": "Akamai (AS20940)",
+        "suspectedService": "Unattributed shared CDN traffic",
+        "officialSource": None,
+        "officialFqdn": None,
+        "uncoveredCategory": "CDN_SHARED_UNATTRIBUTED",
+        "confidence": "low",
+        "reason": (
+            "Shared Akamai address without a demonstrated official client FQDN; "
+            "Akamai ownership alone is not authorization"
+        ),
+    },
+    "52.85.118.49": {
+        "paloSource": "10.50.83.126",
+        "owner": "AWS CloudFront (AS16509)",
+        "suspectedService": "Unattributed shared CloudFront distribution",
+        "officialSource": None,
+        "officialFqdn": None,
+        "uncoveredCategory": "CDN_SHARED_UNATTRIBUTED",
+        "confidence": "low",
+        "reason": (
+            "Shared CloudFront address without a demonstrated official client "
+            "FQDN; CloudFront ownership alone is not authorization"
+        ),
+    },
+    "52.85.118.108": {
+        "paloSource": "10.50.83.125",
+        "owner": "AWS CloudFront (AS16509)",
+        "suspectedService": "Possible AWS CodeBuild console on shared CloudFront",
+        "officialSource": None,
+        "officialFqdn": None,
+        "uncoveredCategory": "CDN_SHARED_UNATTRIBUTED",
+        "confidence": "low",
+        "reason": (
+            "Historical CodeBuild names on a shared CloudFront address do not "
+            "identify this TLS flow or authorize the whole distribution"
+        ),
+    },
+    "52.222.169.45": {
+        "paloSource": "10.50.83.125",
+        "owner": "AWS CloudFront (AS16509)",
+        "suspectedService": "Unattributed shared CloudFront distribution",
+        "officialSource": None,
+        "officialFqdn": None,
+        "uncoveredCategory": "CDN_SHARED_UNATTRIBUTED",
+        "confidence": "low",
+        "reason": (
+            "Shared CloudFront address without a demonstrated official client "
+            "FQDN; unrelated tenants may use the same edge"
+        ),
+    },
+    "52.222.169.104": {
+        "paloSource": "10.50.83.126",
+        "owner": "AWS CloudFront (AS16509)",
+        "suspectedService": "Unattributed shared CloudFront distribution",
+        "officialSource": None,
+        "officialFqdn": None,
+        "uncoveredCategory": "CDN_SHARED_UNATTRIBUTED",
+        "confidence": "low",
+        "reason": (
+            "Shared CloudFront address without a demonstrated official client "
+            "FQDN; the distribution hostname alone does not identify a service"
+        ),
+    },
+}
 
 PUBLICATIONS = (
     ("Microsoft 365 Common", "m365-common-ipv4.txt"),
@@ -159,10 +379,14 @@ RESIDUAL_IPS = (
     "4.150.223.96",
     "4.150.223.98",
     "4.150.223.104",
+    "4.150.223.107",
     "4.150.223.112",
     "4.150.223.115",
     "20.184.175.2",
+    "20.184.175.3",
     "51.132.193.104",
+    "150.171.22.17",
+    "104.208.16.94",
     "23.103.234.43",
     "17.248.236.28",
     "72.153.5.61",
@@ -191,6 +415,8 @@ RESIDUAL_IPS = (
     "150.171.28.11",
     "17.248.209.16",
     "17.145.16.2",
+    "17.145.0.2",
+    "17.248.209.54",
     "17.253.37.204",
     "17.253.29.135",
     "17.253.29.147",
@@ -207,19 +433,26 @@ RESIDUAL_IPS = (
     "95.101.137.21",
     "95.101.137.23",
     "95.101.137.24",
+    "95.101.137.28",
+    "95.101.137.33",
     "23.58.84.19",
     "151.101.1.64",
     "151.101.129.64",
     "162.159.194.64",
     "162.159.194.66",
     "172.64.69.66",
+    "52.222.169.45",
+    "52.222.169.104",
 )
 INTUNE_EVENT_RESIDUAL_IPS = {
+    "4.150.223.107",
     "4.150.223.98",
     "4.150.223.112",
+    "20.184.175.3",
     "20.184.175.2",
     "20.42.72.131",
     "51.132.193.104",
+    "104.208.16.94",
 }
 
 GITHUB_META_FIELDS = ("web", "api", "git", "pages")
@@ -746,6 +979,42 @@ def extract_m365_networks(payload: Any) -> dict[str, list[ipaddress.IPv4Network]
             )
         result[filename] = networks
     return result
+
+
+def validate_m365_documented_urls(
+    payload: Any,
+    *,
+    service_area: str,
+    required_patterns: set[str],
+) -> list[str]:
+    """Require selected URL patterns in the official Microsoft 365 web service."""
+    if not isinstance(payload, list) or not payload:
+        raise GenerationError("Expected a non-empty JSON array from Microsoft 365")
+    observed: set[str] = set()
+    for record_index, record in enumerate(payload):
+        if not isinstance(record, dict) or record.get("serviceArea") != service_area:
+            continue
+        raw_urls = record.get("urls")
+        if raw_urls is None:
+            continue
+        if not isinstance(raw_urls, list):
+            raise GenerationError(
+                f"Microsoft 365 record {record_index} urls must be an array"
+            )
+        for url_index, raw_url in enumerate(raw_urls):
+            if not isinstance(raw_url, str) or not raw_url.strip():
+                raise GenerationError(
+                    "Invalid Microsoft 365 URL at record "
+                    f"{record_index}, urls[{url_index}]"
+                )
+            observed.add(hostname_from_token(raw_url))
+    missing = required_patterns - observed
+    if missing:
+        raise GenerationError(
+            f"Microsoft 365 {service_area} URLs no longer contain required "
+            "patterns: " + ", ".join(sorted(missing))
+        )
+    return sorted(required_patterns)
 
 
 def extract_markdown_table(
@@ -1992,6 +2261,11 @@ def document_date(markdown: str) -> str | None:
 
 
 def residual_noncoverage_reason(address: ipaddress.IPv4Address) -> str:
+    audit = CURRENT_INTERNET_ONLY_AUDIT.get(str(address))
+    if audit is not None:
+        reason = audit.get("reason")
+        if isinstance(reason, str) and reason:
+            return reason
     shared_cdn = {
         ipaddress.IPv4Address(value)
         for value in {
@@ -2076,6 +2350,13 @@ def residual_classification(
     fqdn: str | None,
 ) -> dict[str, Any]:
     """Describe ownership separately from service authorization evidence."""
+    audit = CURRENT_INTERNET_ONLY_AUDIT.get(str(address))
+    if audit is not None:
+        return {
+            "owner": audit["owner"],
+            "suspectedService": audit["suspectedService"],
+            "verified": bool(covered and selected_file and fqdn),
+        }
     if address == ipaddress.IPv4Address("20.85.108.33"):
         verified = (
             covered
@@ -2217,6 +2498,7 @@ def build_residual_coverage(
     entries: list[dict[str, Any]] = []
     for raw_address in RESIDUAL_IPS:
         address = ipaddress.IPv4Address(raw_address)
+        audit = CURRENT_INTERNET_ONLY_AUDIT.get(raw_address)
         matching_files = [
             filename
             for filename in ordered_files
@@ -2230,16 +2512,37 @@ def build_residual_coverage(
                 selected_file=None,
                 fqdn=None,
             )
+            reason = residual_noncoverage_reason(address)
+            category = (
+                audit["uncoveredCategory"]
+                if audit is not None
+                else (
+                    "CDN_SHARED_UNATTRIBUTED"
+                    if reason.startswith("Shared CDN address")
+                    else (
+                        "OWNER_ONLY_UNATTRIBUTED"
+                        if classification["owner"] is not None
+                        else "INTENTIONALLY_UNCOVERED"
+                    )
+                )
+            )
+            if category not in COVERAGE_CATEGORIES:
+                raise GenerationError(
+                    f"Invalid residual coverage category for {raw_address}: {category}"
+                )
             entries.append(
                 {
                     "ip": raw_address,
+                    "paloSource": audit["paloSource"] if audit else None,
                     **classification,
+                    "category": category,
+                    "confidence": audit["confidence"] if audit else "low",
                     "covered": False,
                     "edl": None,
                     "targetEdl": None,
                     "source": None,
                     "fqdn": None,
-                    "officialFqdn": None,
+                    "officialFqdn": audit["officialFqdn"] if audit else None,
                     "cname_chain": [],
                     "cnameChain": [],
                     "first_seen": None,
@@ -2247,18 +2550,27 @@ def build_residual_coverage(
                     "last_seen": None,
                     "lastSeen": None,
                     "observation_sources": [],
-                    "source_documentation": None,
-                    "reason": residual_noncoverage_reason(address),
+                    "source_documentation": (
+                        audit["officialSource"] if audit else None
+                    ),
+                    "officialSource": audit["officialSource"] if audit else None,
+                    "reason": reason,
                 }
             )
             continue
 
-        selected_file = (
-            INTUNE_WINDOWS_FILE
-            if raw_address in INTUNE_EVENT_RESIDUAL_IPS
+        if (
+            raw_address in INTUNE_EVENT_RESIDUAL_IPS
             and INTUNE_WINDOWS_FILE in matching_files
-            else matching_files[0]
-        )
+        ):
+            selected_file = INTUNE_WINDOWS_FILE
+        elif (
+            raw_address in M365_COMMON_DNS_RESIDUAL_IPS
+            and M365_SERVICE_FILES["Common"] in matching_files
+        ):
+            selected_file = M365_SERVICE_FILES["Common"]
+        else:
+            selected_file = matching_files[0]
         fqdns = sorted(
             set(address_fqdns.get(selected_file, {}).get(raw_address, []))
         )
@@ -2284,7 +2596,10 @@ def build_residual_coverage(
         )
         entry: dict[str, Any] = {
             "ip": raw_address,
+            "paloSource": audit["paloSource"] if audit else None,
             **classification,
+            "category": "COVERED_OFFICIAL",
+            "confidence": "high",
             "covered": True,
             "edl": selected_file,
             "source": source_by_file[selected_file],
@@ -2310,6 +2625,7 @@ def build_residual_coverage(
                 else []
             ),
             "source_documentation": source_documentation,
+            "officialSource": source_documentation,
         }
         if len(matching_files) > 1:
             entry["allEdls"] = matching_files
@@ -2331,12 +2647,30 @@ def build_residual_coverage(
         )
         entries.append(entry)
 
+    audit_entries = [
+        entry for entry in entries if entry["ip"] in CURRENT_INTERNET_ONLY_AUDIT
+    ]
+    if len(audit_entries) != len(CURRENT_INTERNET_ONLY_AUDIT):
+        raise GenerationError(
+            "The current INTERNET-ONLY residual audit is incomplete: "
+            f"expected {len(CURRENT_INTERNET_ONLY_AUDIT)} IPs, "
+            f"found {len(audit_entries)}"
+        )
+    audit_category_counts = {
+        category: sum(entry["category"] == category for entry in audit_entries)
+        for category in sorted(COVERAGE_CATEGORIES)
+    }
     document = {
         "generatedAt": generated_at,
         "policy": (
             "Coverage is reported only from generated EDL content; unmatched IPs "
             "are never added to force coverage"
         ),
+        "currentInternetOnlyAudit": {
+            "ipCount": len(audit_entries),
+            "ips": [entry["ip"] for entry in audit_entries],
+            "categoryCounts": audit_category_counts,
+        },
         "entries": entries,
     }
     return json.dumps(document, indent=2, ensure_ascii=False) + "\n"
@@ -2415,6 +2749,12 @@ def build_sources(
                 "clientRequestId": request_id,
                 "responseRecordCount": record_count,
                 "field": "ips",
+                "fields": ["ips", "urls"],
+                "note": (
+                    "All service-area EDLs use explicit ips; Microsoft 365 "
+                    "Common additionally validates *.office.com in urls and "
+                    "resolves only the audited word.office.com target"
+                ),
             },
             "defenderStandardConnectivity": {
                 "publisher": "Microsoft",
@@ -2486,6 +2826,13 @@ def build_index(
     <h1>Public service IPv4 EDLs</h1>
     <p>Listes IPv4 publiques générées et validées automatiquement depuis des sources officielles.</p>
     <div class="notice">
+      <p><strong>Microsoft 365 Common :</strong> les CIDR explicites du web service
+      sont complétés uniquement par les A publics observés pour
+      <code>word.office.com</code>, cible auditée du wildcard officiel
+      <code>*.office.com</code>. La provenance DNS est conservée 24 heures ; aucun
+      préfixe Azure ni <code>/32</code> manuel n'est ajouté.</p>
+    </div>
+    <div class="notice">
       <p><strong>Teams Media / Direct Routing :</strong> seules les plages commerciales
       <code>52.112.0.0/14</code> et <code>52.120.0.0/14</code> sont acceptées.
       Les plages GCC High, DoD ou toute plage inattendue font échouer la publication.</p>
@@ -2520,7 +2867,7 @@ def build_index(
     </table>
     <p>Dernière modification des listes : {html.escape(generated_at)}</p>
     <p><a href="sources.json">Provenance et métadonnées</a></p>
-    <p><a href="residual-ip-coverage.json">Couverture des IP résiduelles</a></p>
+    <p><a href="residual-ip-coverage.json">Couverture des IP résiduelles et matrice INTERNET-ONLY</a></p>
     <p><a href="https://github.com/hove-io/m365-edl">Code source, méthode et garde-fous</a></p>
   </body>
 </html>
@@ -2702,6 +3049,54 @@ def main() -> int:
         observed_at = dt.datetime.now(dt.timezone.utc)
 
         generated = extract_m365_networks(payload)
+        m365_common_file = M365_SERVICE_FILES["Common"]
+        m365_common_explicit_networks = list(generated[m365_common_file])
+        m365_common_documented_patterns = validate_m365_documented_urls(
+            payload,
+            service_area="Common",
+            required_patterns=set(M365_COMMON_WILDCARD_TARGETS),
+        )
+        (
+            m365_common_dns_hosts,
+            m365_common_dns_wildcards,
+            m365_common_dns_targets,
+        ) = expand_documented_hostnames(
+            m365_common_documented_patterns,
+            wildcard_targets=M365_COMMON_WILDCARD_TARGETS,
+            label="Microsoft 365 Common web endpoints",
+        )
+        (
+            _m365_common_current_networks,
+            m365_common_current_resolutions,
+            m365_common_cname_chains,
+            m365_common_unresolved,
+        ) = resolve_service_hostnames(
+            m365_common_dns_hosts,
+            label="Microsoft 365 Common web endpoints",
+            attempts=8,
+        )
+        m365_common_current_details = build_dns_observation_details(
+            authorized_hostnames=set(m365_common_dns_hosts),
+            resolutions=m365_common_current_resolutions,
+            cname_chains=m365_common_cname_chains,
+            observation_source="system-resolver",
+        )
+        (
+            m365_common_dns_networks,
+            m365_common_resolutions,
+            m365_common_dns_history,
+            m365_common_expired_records,
+        ) = build_dns_history(
+            previous_sources=previous_sources,
+            filename=m365_common_file,
+            authorized_hostnames=set(m365_common_dns_hosts),
+            current_details=m365_common_current_details,
+            observed_at=observed_at,
+            label="Microsoft 365 Common web endpoints",
+        )
+        generated[m365_common_file] = sort_networks(
+            [*m365_common_explicit_networks, *m365_common_dns_networks]
+        )
         defender_hostnames, defender_wildcards, wildcard_targets = (
             extract_defender_hostnames(defender_standard, defender_antivirus)
         )
@@ -3068,6 +3463,7 @@ def main() -> int:
         generated[MICROSOFT_EDGE_WINDOWS_FILE] = microsoft_service_networks
 
         resolutions_by_file = {
+            m365_common_file: m365_common_resolutions,
             DEFENDER_FILE: defender_resolutions,
             INTUNE_WINDOWS_FILE: intune_event_resolutions,
             APPLE_UPDATES_FILE: apple_updates_resolutions,
@@ -3079,6 +3475,7 @@ def main() -> int:
             MICROSOFT_EDGE_WINDOWS_FILE: microsoft_service_resolutions,
         }
         cname_chains_by_file = {
+            m365_common_file: m365_common_cname_chains,
             INTUNE_WINDOWS_FILE: intune_event_cname_chains,
             APPLE_UPDATES_FILE: apple_updates_cname_chains,
             APPLE_CONTENT_FILE: apple_content_cname_chains,
@@ -3089,6 +3486,7 @@ def main() -> int:
             MICROSOFT_EDGE_WINDOWS_FILE: microsoft_service_cname_chains,
         }
         dns_history_by_file = {
+            m365_common_file: m365_common_dns_history,
             INTUNE_WINDOWS_FILE: intune_event_dns_history,
             APPLE_UPDATES_FILE: apple_updates_dns_history,
             APPLE_CONTENT_FILE: apple_content_dns_history,
@@ -3195,6 +3593,35 @@ def main() -> int:
             },
         }
         additional_files: dict[str, dict[str, Any]] = {
+            m365_common_file: {
+                "serviceArea": "Common",
+                "cidrCount": len(generated[m365_common_file]),
+                "explicitCidrCount": len(m365_common_explicit_networks),
+                "method": (
+                    "Combine Microsoft 365 Common ips CIDRs with public A records "
+                    "from an audited concrete target under the official "
+                    "*.office.com URL pattern, retained for 24 hours"
+                ),
+                "officialUrlPatterns": m365_common_dns_wildcards,
+                "wildcardResolutionTargets": {
+                    pattern: list(targets)
+                    for pattern, targets in m365_common_dns_targets.items()
+                },
+                "resolvedHostnames": m365_common_resolutions,
+                "currentResolvedHostnames": m365_common_current_resolutions,
+                "cnameChains": m365_common_cname_chains,
+                "dnsHistory": {
+                    "gracePeriodHours": int(
+                        DNS_HISTORY_GRACE_PERIOD.total_seconds() // 3600
+                    ),
+                    "recordsByHostname": m365_common_dns_history,
+                    "expiredThisRun": m365_common_expired_records,
+                },
+                "unresolvedHostnames": m365_common_unresolved,
+                "dnsAttemptsPerHostname": 8,
+                "manualIpOverrides": False,
+                "globalAzureOrAs8075RangesIncluded": False,
+            },
             INTUNE_WINDOWS_FILE: {
                 "cidrCount": len(intune_windows_networks),
                 "explicitCidrCount": len(intune_explicit_networks),

@@ -37,9 +37,16 @@ Les quatre listes M365 proviennent du web service officiel :
 https://endpoints.office.com/endpoints/worldwide
 ```
 
-Le générateur filtre uniquement le champ `ips` par `serviceArea`. Microsoft
-expose officiellement `Common`, `Exchange`, `SharePoint` et `Skype` ; `Skype`
-alimente ici la liste Teams/Skype.
+Le générateur filtre le champ `ips` par `serviceArea`. Microsoft expose
+officiellement `Common`, `Exchange`, `SharePoint` et `Skype` ; `Skype` alimente
+ici la liste Teams/Skype.
+
+La liste `Common` complète ses CIDR explicites par une seule cible concrète et
+auditée, `word.office.com`, sous le wildcard officiel `*.office.com` publié par
+le même web service. Elle est résolue huit fois par run et ses A publics sont
+conservés pendant 24 heures avec leur chaîne CNAME, `firstSeen` et `lastSeen`.
+Cette extension qualifie les frontaux Office web sans importer un préfixe
+Microsoft/Azure ni ajouter un `/32` manuel.
 
 Documentation : [Microsoft 365 IP Address and URL web service](https://learn.microsoft.com/microsoft-365/enterprise/microsoft-365-ip-web-service?view=o365-worldwide)
 
@@ -277,10 +284,15 @@ Le rapport public
 [`residual-ip-coverage.json`](https://hove-io.github.io/m365-edl/residual-ip-coverage.json)
 indique pour chaque IP observée si elle est couverte, par quelle EDL et par
 quelle source/FQDN. Une IP sans preuve officielle reste `covered: false`.
-Chaque entrée expose aussi `cname_chain` et `source_documentation` ; une chaîne
-vide reste explicite lorsque le FQDN répond directement. Les alias explicites
+Chaque entrée expose aussi `paloSource`, `officialSource`, `category`,
+`confidence`, `cname_chain` et `source_documentation` ; une chaîne vide reste
+explicite lorsque le FQDN répond directement. Les alias explicites
 `officialFqdn`, `cnameChain`, `firstSeen`, `lastSeen` et `targetEdl` facilitent
 également l'audit automatique des canaris sans supprimer le schéma historique.
+Le bloc `currentInternetOnlyAudit` recense les 15 destinations de la passe
+courante et les classe exactement dans `COVERED_OFFICIAL`,
+`OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED`, `CDN_SHARED_UNATTRIBUTED`,
+`OWNER_ONLY_UNATTRIBUTED` ou `INTENTIONALLY_UNCOVERED`.
 Pour les quatre EDL Apple et l'EDL GitHub Actions, `first_seen`, `last_seen` et
 `observation_sources` documentent en plus la fenêtre glissante. Le détail
 persistant se trouve dans le bloc `dnsHistory` du fichier concerné dans
