@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T06:44:46.661962Z",
+  "generatedAt": "2026-08-22T06:53:23.365665Z",
   "policy": "Coverage is reported only from generated EDL content; unmatched IPs are never added to force coverage",
   "entries": [
     {
@@ -147,11 +147,10 @@
     },
     {
       "ip": "52.168.117.169",
-      "covered": false,
-      "edl": null,
-      "source": null,
-      "fqdn": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "covered": true,
+      "edl": "microsoft-intune-windows-ipv4.txt",
+      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
+      "fqdn": "v10c.events.data.microsoft.com"
     },
     {
       "ip": "52.168.117.170",
