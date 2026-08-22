@@ -107,9 +107,14 @@ section **Consolidated Endpoint List**. Elle combine :
 Le wildcard n'est jamais résolu artificiellement et aucune IP observée n'est
 ajoutée en dur. Le générateur valide sa présence dans la source Microsoft, puis
 résout huit fois des cibles concrètes auditées appartenant à ce wildcard
-(`events`, `functional`, `self`, `browser`, `mobile`, `v10`, `v10c`, `v20` et
-leurs variantes `au`, `eu`, `uk` et `us`). Les résultats sont publiés en `/32`
-et consignés dans `sources.json`.
+(`events`, `functional`, `self`, `browser`, `mobile`, `v10`, `v10c`, `v20`,
+`watson` et `umwatsonc`, ainsi que leurs variantes `au`, `eu`, `uk` et `us`).
+Les résultats sont publiés en `/32` et consignés dans `sources.json`.
+
+Les cibles `watson.events.data.microsoft.com` et
+`umwatsonc.events.data.microsoft.com` sont en plus validées à chaque run contre
+les documentations Microsoft [Windows diagnostic endpoints](https://learn.microsoft.com/windows/privacy/windows-11-endpoints-non-enterprise-editions)
+et [Configuration Manager internet endpoints](https://learn.microsoft.com/intune/configmgr/core/plan-design/network/internet-endpoints).
 
 Comme ces backends OneDS tournent rapidement, chaque couple FQDN/IP reste actif
 pendant 24 heures après sa dernière observation DNS. Sa chaîne CNAME,
@@ -273,7 +278,9 @@ Le rapport public
 indique pour chaque IP observée si elle est couverte, par quelle EDL et par
 quelle source/FQDN. Une IP sans preuve officielle reste `covered: false`.
 Chaque entrée expose aussi `cname_chain` et `source_documentation` ; une chaîne
-vide reste explicite lorsque le FQDN répond directement.
+vide reste explicite lorsque le FQDN répond directement. Les alias explicites
+`officialFqdn`, `cnameChain`, `firstSeen`, `lastSeen` et `targetEdl` facilitent
+également l'audit automatique des canaris sans supprimer le schéma historique.
 Pour les quatre EDL Apple et l'EDL GitHub Actions, `first_seen`, `last_seen` et
 `observation_sources` documentent en plus la fenêtre glissante. Le détail
 persistant se trouve dans le bloc `dnsHistory` du fichier concerné dans

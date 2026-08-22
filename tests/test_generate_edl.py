@@ -13,6 +13,7 @@ from scripts.generate_edl import (
     GITHUB_ACTIONS_FILE,
     GITHUB_ACTIONS_REQUIRED_HOSTS,
     INTUNE_EVENT_RESIDUAL_IPS,
+    INTUNE_EVENT_EXACT_SOURCE_REQUIREMENTS,
     INTUNE_EVENT_WILDCARD_TARGETS,
     INTUNE_WINDOWS_FILE,
     MICROSOFT_DELIVERY_OPTIMIZATION_URL,
@@ -126,6 +127,19 @@ IP Subnets
         self.assertIn("browser.events.data.microsoft.com", hosts)
         self.assertIn("self.events.data.microsoft.com", hosts)
         self.assertIn("v20.events.data.microsoft.com", hosts)
+        self.assertIn("watson.events.data.microsoft.com", hosts)
+        self.assertIn("umwatsonc.events.data.microsoft.com", hosts)
+        self.assertEqual(
+            {
+                hostname
+                for hostnames in INTUNE_EVENT_EXACT_SOURCE_REQUIREMENTS.values()
+                for hostname in hostnames
+            },
+            {
+                "watson.events.data.microsoft.com",
+                "umwatsonc.events.data.microsoft.com",
+            },
+        )
 
     def test_intune_history_seeds_previous_snapshot_and_retains_it_24_hours(
         self,
@@ -543,6 +557,7 @@ class ResidualCoverageTests(unittest.TestCase):
         "4.150.223.98",
         "4.150.223.112",
         "20.184.175.2",
+        "20.42.72.131",
     }
 
     def test_tracks_requested_ips_and_emits_provenance_schema(self) -> None:
@@ -585,6 +600,12 @@ class ResidualCoverageTests(unittest.TestCase):
                     "owner",
                     "suspectedService",
                     "verified",
+                    "officialFqdn",
+                    "cnameChain",
+                    "firstSeen",
+                    "lastSeen",
+                    "targetEdl",
+                    "reason",
                 }.issubset(entries[address])
             )
         self.assertTrue(entries["72.153.5.61"]["covered"])
@@ -597,6 +618,9 @@ class ResidualCoverageTests(unittest.TestCase):
         self.assertFalse(entries["20.184.175.2"]["covered"])
         self.assertFalse(entries["20.184.175.2"]["verified"])
         self.assertEqual(entries["20.184.175.2"]["owner"], "Microsoft/Azure")
+        self.assertFalse(entries["20.42.72.131"]["covered"])
+        self.assertFalse(entries["20.42.72.131"]["verified"])
+        self.assertIsNone(entries["20.42.72.131"]["officialFqdn"])
 
     def test_intune_telemetry_residual_requires_dns_provenance(self) -> None:
         observed_at = "2026-08-22T12:00:00Z"
@@ -636,6 +660,9 @@ class ResidualCoverageTests(unittest.TestCase):
         self.assertTrue(entry["verified"])
         self.assertEqual(entry["edl"], INTUNE_WINDOWS_FILE)
         self.assertEqual(entry["fqdn"], hostname)
+        self.assertEqual(entry["officialFqdn"], hostname)
+        self.assertEqual(entry["targetEdl"], INTUNE_WINDOWS_FILE)
+        self.assertEqual(entry["firstSeen"], observed_at)
 
     def test_github_actions_canary_is_verified_only_with_dns_provenance(self) -> None:
         observed_at = "2026-08-22T12:00:00Z"

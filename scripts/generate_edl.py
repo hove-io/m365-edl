@@ -77,6 +77,14 @@ MICROSOFT_DELIVERY_OPTIMIZATION_URL = (
     "https://learn.microsoft.com/en-us/windows/deployment/do/"
     "delivery-optimization-workflow"
 )
+WINDOWS_DIAGNOSTIC_ENDPOINTS_URL = (
+    "https://learn.microsoft.com/en-us/windows/privacy/"
+    "windows-11-endpoints-non-enterprise-editions"
+)
+CONFIGMGR_INTERNET_ENDPOINTS_URL = (
+    "https://learn.microsoft.com/en-us/intune/configmgr/core/plan-design/"
+    "network/internet-endpoints"
+)
 
 MAX_SOURCE_BYTES = 10 * 1024 * 1024
 M365_SERVICE_FILES = {
@@ -147,6 +155,7 @@ RESIDUAL_IPS = (
     "52.85.118.61",
     "52.85.118.108",
     "20.42.65.85",
+    "20.42.72.131",
     "4.150.223.96",
     "4.150.223.98",
     "4.150.223.104",
@@ -209,6 +218,7 @@ INTUNE_EVENT_RESIDUAL_IPS = {
     "4.150.223.98",
     "4.150.223.112",
     "20.184.175.2",
+    "20.42.72.131",
     "51.132.193.104",
 }
 
@@ -406,7 +416,13 @@ INTUNE_EVENT_WILDCARD_TARGETS = {
         "eu-v20.events.data.microsoft.com",
         "uk-v20.events.data.microsoft.com",
         "us-v20.events.data.microsoft.com",
+        "umwatsonc.events.data.microsoft.com",
+        "watson.events.data.microsoft.com",
     ),
+}
+INTUNE_EVENT_EXACT_SOURCE_REQUIREMENTS = {
+    WINDOWS_DIAGNOSTIC_ENDPOINTS_URL: {"watson.events.data.microsoft.com"},
+    CONFIGMGR_INTERNET_ENDPOINTS_URL: {"umwatsonc.events.data.microsoft.com"},
 }
 
 EXPECTED_TEAMS_MEDIA_NETWORKS = {
@@ -590,6 +606,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--microsoft-windows-file", type=Path, required=True)
     parser.add_argument(
         "--microsoft-delivery-optimization-file", type=Path, required=True
+    )
+    parser.add_argument(
+        "--windows-diagnostic-endpoints-file", type=Path, required=True
+    )
+    parser.add_argument(
+        "--configmgr-internet-endpoints-file", type=Path, required=True
     )
     return parser.parse_args()
 
@@ -2214,11 +2236,16 @@ def build_residual_coverage(
                     **classification,
                     "covered": False,
                     "edl": None,
+                    "targetEdl": None,
                     "source": None,
                     "fqdn": None,
+                    "officialFqdn": None,
                     "cname_chain": [],
+                    "cnameChain": [],
                     "first_seen": None,
+                    "firstSeen": None,
                     "last_seen": None,
+                    "lastSeen": None,
                     "observation_sources": [],
                     "source_documentation": None,
                     "reason": residual_noncoverage_reason(address),
@@ -2238,6 +2265,10 @@ def build_residual_coverage(
         source_documentation = documentation_by_file.get(selected_file)
         if fqdns and fqdns[0].endswith(".prod.do.dsp.mp.microsoft.com"):
             source_documentation = MICROSOFT_DELIVERY_OPTIMIZATION_URL
+        elif fqdns and fqdns[0] == "watson.events.data.microsoft.com":
+            source_documentation = WINDOWS_DIAGNOSTIC_ENDPOINTS_URL
+        elif fqdns and fqdns[0] == "umwatsonc.events.data.microsoft.com":
+            source_documentation = CONFIGMGR_INTERNET_ENDPOINTS_URL
         history_record = (
             dns_history_by_file.get(selected_file, {})
             .get(fqdns[0], {})
@@ -2284,6 +2315,20 @@ def build_residual_coverage(
             entry["allEdls"] = matching_files
         if len(fqdns) > 1:
             entry["allFqdns"] = fqdns
+        entry.update(
+            {
+                "targetEdl": entry["edl"],
+                "officialFqdn": entry["fqdn"],
+                "cnameChain": entry["cname_chain"],
+                "firstSeen": entry["first_seen"],
+                "lastSeen": entry["last_seen"],
+                "reason": (
+                    "Covered by a DNS-observed official FQDN"
+                    if fqdns
+                    else "Covered by an explicit official source CIDR"
+                ),
+            }
+        )
         entries.append(entry)
 
     document = {
@@ -2450,8 +2495,9 @@ def build_index(
       familles FQDN officielles sont validées dans les sources Microsoft puis des
       cibles DNS auditées sont résolues à chaque exécution. L'EDL Intune conserve
       pendant 24 heures uniquement les IPv4 publiques réellement observées sous
-      <code>*.events.data.microsoft.com</code>. Aucune IP de logs ni plage Azure
-      globale n'est injectée manuellement.</p>
+      <code>*.events.data.microsoft.com</code>, y compris les diagnostics Windows
+      et Configuration Manager explicitement documentés. Aucune IP de logs ni
+      plage Azure globale n'est injectée manuellement.</p>
     </div>
     <div class="notice">
       <p><strong>Apple :</strong> les listes utilisent uniquement les A publics
@@ -2639,6 +2685,14 @@ def main() -> int:
             args.microsoft_delivery_optimization_file,
             label="Microsoft Delivery Optimization workflow source",
         )
+        windows_diagnostic_endpoints = load_text_source(
+            args.windows_diagnostic_endpoints_file,
+            label="Microsoft Windows diagnostic endpoints source",
+        )
+        configmgr_internet_endpoints = load_text_source(
+            args.configmgr_internet_endpoints_file,
+            label="Microsoft Configuration Manager internet endpoints source",
+        )
         previous_sources_path = args.output_dir / "sources.json"
         previous_sources = (
             load_json_source(previous_sources_path, label="previous sources.json")
@@ -2667,6 +2721,20 @@ def main() -> int:
                 "Intune consolidated FQDN block no longer contains required "
                 "wildcards: " + ", ".join(sorted(missing_intune_wildcards))
             )
+        validate_documented_hostnames(
+            windows_diagnostic_endpoints,
+            INTUNE_EVENT_EXACT_SOURCE_REQUIREMENTS[
+                WINDOWS_DIAGNOSTIC_ENDPOINTS_URL
+            ],
+            label="Microsoft Windows diagnostic endpoints",
+        )
+        validate_documented_hostnames(
+            configmgr_internet_endpoints,
+            INTUNE_EVENT_EXACT_SOURCE_REQUIREMENTS[
+                CONFIGMGR_INTERNET_ENDPOINTS_URL
+            ],
+            label="Microsoft Configuration Manager internet endpoints",
+        )
         (
             intune_event_hosts,
             intune_event_wildcards,
@@ -3086,6 +3154,26 @@ def main() -> int:
                 "url": DELL_UPDATE_URL,
                 "documentationUrl": DELL_UPDATE_DOCUMENTATION_URL,
                 "sha256": hashlib.sha256(dell_update).hexdigest(),
+            },
+            "windowsDiagnosticEndpoints": {
+                "publisher": "Microsoft",
+                "url": WINDOWS_DIAGNOSTIC_ENDPOINTS_URL,
+                "sha256": source_hash(windows_diagnostic_endpoints),
+                "validatedHostnames": sorted(
+                    INTUNE_EVENT_EXACT_SOURCE_REQUIREMENTS[
+                        WINDOWS_DIAGNOSTIC_ENDPOINTS_URL
+                    ]
+                ),
+            },
+            "configurationManagerInternetEndpoints": {
+                "publisher": "Microsoft",
+                "url": CONFIGMGR_INTERNET_ENDPOINTS_URL,
+                "sha256": source_hash(configmgr_internet_endpoints),
+                "validatedHostnames": sorted(
+                    INTUNE_EVENT_EXACT_SOURCE_REQUIREMENTS[
+                        CONFIGMGR_INTERNET_ENDPOINTS_URL
+                    ]
+                ),
             },
             "microsoftEdgeEndpoints": {
                 "publisher": "Microsoft",
