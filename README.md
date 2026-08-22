@@ -127,6 +127,15 @@ téléchargeables Xcode (`devimages-cdn.apple.com` et
 cibles concrètes APNs sont validées contre la documentation Apple Developer
 officielle.
 
+L'EDL Xcode n'est pas un snapshot DNS unique. À chaque exécution, le workflow
+effectue huit résolutions par FQDN avec le résolveur système et huit observations
+par FQDN depuis chacune de deux vues DNS françaises contrôlées via Google DNS
+over HTTPS (`82.64.0.0/11` et `82.66.0.0/16` en EDNS Client Subnet). Il agrège
+uniquement les A publics retournés pour les deux FQDN Apple autorisés. Chaque
+couple FQDN/IP est conservé pendant 24 heures depuis sa dernière observation,
+puis supprimé automatiquement s'il n'est plus vu. Cette fenêtre absorbe les
+rotations DNS rapides sans autoriser un préfixe Apple ou CDN.
+
 Le préfixe global `17.0.0.0/8` n'est jamais utilisé. Lorsqu'un FQDN Apple est
 hébergé par un CDN, seule l'IPv4 obtenue par sa résolution est conservée. Les
 wildcards ne sont pas exhaustivement convertibles : une EDL Domain/URL et une
@@ -209,10 +218,12 @@ Il applique les contrôles suivants à chaque liste :
 5. refus de tout fichier vide ;
 6. blocage d'une baisse de plus de 50 % du nombre d'entrées ;
 7. jusqu'à huit résolutions DNS par FQDN Microsoft dynamique (trois pour les
-   autres sources), avec un court intervalle entre les requêtes, agrégation des
-   A et journalisation de chaque mapping FQDN → chaîne CNAME → IPv4 ;
+   autres sources ; huit résolutions système et huit observations par vue DNS
+   contrôlée pour Xcode), avec un court intervalle entre les requêtes, agrégation des A et
+   journalisation de chaque mapping FQDN → chaîne CNAME → IPv4 ;
 8. génération atomique de l'ensemble ;
-9. commit et publication uniquement lorsqu'une EDL a changé.
+9. commit et publication uniquement lorsqu'une EDL ou une observation DNS
+   persistante (`last_seen`) a changé.
 
 Des tests de régression vérifient les deux structures Microsoft Learn pour
 Teams Media et confirment qu'une plage commerciale inattendue reste bloquée.
@@ -237,6 +248,9 @@ indique pour chaque IP observée si elle est couverte, par quelle EDL et par
 quelle source/FQDN. Une IP sans preuve officielle reste `covered: false`.
 Chaque entrée expose aussi `cname_chain` et `source_documentation` ; une chaîne
 vide reste explicite lorsque le FQDN répond directement.
+Pour Xcode, `first_seen`, `last_seen` et `observation_sources` documentent en
+plus la fenêtre glissante. Le détail persistant se trouve dans
+`files.apple-xcode-developer-ipv4.txt.dnsHistory` de `sources.json`.
 
 ## Exploitation Palo Alto
 

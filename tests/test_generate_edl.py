@@ -1,3 +1,4 @@
+import datetime as dt
 import ipaddress
 import json
 import unittest
@@ -6,15 +7,21 @@ from unittest.mock import patch
 from scripts.generate_edl import (
     APPLE_SECTION_REQUIREMENTS,
     APPLE_XCODE_HOSTS,
+    APPLE_XCODE_FILE,
     GenerationError,
     INTUNE_EVENT_WILDCARD_TARGETS,
     MICROSOFT_DELIVERY_OPTIMIZATION_URL,
     MICROSOFT_EDGE_WINDOWS_FILE,
     RESIDUAL_IPS,
     WINDOWS_UPDATE_WILDCARD_TARGETS,
+    XCODE_DNS_ATTEMPTS,
+    XCODE_DOH_ECS_SUBNETS,
+    XCODE_DOH_RESOLVER,
     build_residual_coverage,
+    build_xcode_dns_history,
     expand_documented_hostnames,
     extract_apple_section_hostnames,
+    extract_xcode_doh_observations,
     extract_intune_consolidated_hostnames,
     extract_intune_windows_networks,
     extract_teams_media_networks,
@@ -191,6 +198,167 @@ class DnsProvenanceTests(unittest.TestCase):
         sleep.assert_called_once()
 
 
+class XcodeDnsHistoryTests(unittest.TestCase):
+    @staticmethod
+    def observation_source() -> str:
+        lines = []
+        for attempt in range(1, XCODE_DNS_ATTEMPTS + 1):
+            for hostname in sorted(APPLE_XCODE_HOSTS):
+                for subnet in XCODE_DOH_ECS_SUBNETS:
+                    address = (
+                        "17.253.29.140"
+                        if hostname == "devimages-cdn.apple.com"
+                        else "17.253.29.135"
+                    )
+                    cname = (
+                        "devimages-cdn-origin-apple-com.v.aaplimg.com."
+                        if hostname == "devimages-cdn.apple.com"
+                        else "dd-cdn-origin-apple-com.v.aaplimg.com."
+                    )
+                    lines.append(
+                        json.dumps(
+                            {
+                                "fqdn": hostname,
+                                "ecsSubnet": subnet,
+                                "resolver": XCODE_DOH_RESOLVER,
+                                "attempt": attempt,
+                                "response": {
+                                    "Status": 0,
+                                    "edns_client_subnet": subnet,
+                                    "Question": [{"name": hostname, "type": 1}],
+                                    "Answer": [
+                                        {
+                                            "name": hostname,
+                                            "type": 5,
+                                            "data": cname,
+                                        },
+                                        {
+                                            "name": cname,
+                                            "type": 1,
+                                            "data": address,
+                                        },
+                                    ],
+                                },
+                            }
+                        )
+                    )
+        return "\n".join(lines) + "\n"
+
+    def test_validates_all_doh_series_and_records_cname_provenance(self) -> None:
+        resolutions, details, counts = extract_xcode_doh_observations(
+            self.observation_source()
+        )
+
+        self.assertEqual(
+            resolutions["download.developer.apple.com"], ["17.253.29.135"]
+        )
+        self.assertEqual(
+            details["download.developer.apple.com"]["17.253.29.135"][
+                "cnameChain"
+            ],
+            ["dd-cdn-origin-apple-com.v.aaplimg.com"],
+        )
+        self.assertTrue(
+            all(count == XCODE_DNS_ATTEMPTS for count in counts.values())
+        )
+
+    def test_rejects_an_unauthorized_observation_hostname(self) -> None:
+        source = self.observation_source().replace(
+            '"fqdn": "devimages-cdn.apple.com"',
+            '"fqdn": "unapproved.apple.com"',
+            1,
+        )
+        with self.assertRaisesRegex(GenerationError, "Unauthorized Xcode"):
+            extract_xcode_doh_observations(source)
+
+    def test_ignores_a_records_outside_the_validated_cname_chain(self) -> None:
+        lines = self.observation_source().splitlines()
+        first = json.loads(lines[0])
+        first["response"]["Answer"].append(
+            {"name": "unrelated.example.com.", "type": 1, "data": "8.8.8.8"}
+        )
+        lines[0] = json.dumps(first)
+
+        resolutions, _, _ = extract_xcode_doh_observations("\n".join(lines))
+
+        self.assertNotIn(
+            "8.8.8.8",
+            {
+                address
+                for addresses in resolutions.values()
+                for address in addresses
+            },
+        )
+
+    def test_retains_recent_dns_records_and_expires_them_after_24_hours(self) -> None:
+        observed_at = dt.datetime(2026, 8, 22, 12, tzinfo=dt.timezone.utc)
+        previous_sources = {
+            "generatedAt": "2026-08-22T00:00:00Z",
+            "files": {
+                APPLE_XCODE_FILE: {
+                    "resolvedHostnames": {
+                        "devimages-cdn.apple.com": ["17.253.5.131"],
+                        "download.developer.apple.com": ["17.253.5.142"],
+                    },
+                    "cnameChains": {
+                        "devimages-cdn.apple.com": [
+                            "devimages-cdn-origin-apple-com.v.aaplimg.com"
+                        ],
+                        "download.developer.apple.com": [
+                            "dd-cdn-origin-apple-com.v.aaplimg.com"
+                        ],
+                    },
+                }
+            },
+        }
+        current = {
+            "devimages-cdn.apple.com": {
+                "17.253.29.140": {
+                    "cnameChain": [
+                        "devimages-cdn-origin-apple-com.v.aaplimg.com"
+                    ],
+                    "observationSources": ["google-doh-ecs:82.64.0.0/11"],
+                }
+            },
+            "download.developer.apple.com": {
+                "17.253.29.135": {
+                    "cnameChain": ["dd-cdn-origin-apple-com.v.aaplimg.com"],
+                    "observationSources": ["google-doh-ecs:82.66.0.0/16"],
+                }
+            },
+        }
+
+        networks, resolutions, history, expired = build_xcode_dns_history(
+            previous_sources=previous_sources,
+            current_details=current,
+            observed_at=observed_at,
+        )
+
+        self.assertIn(
+            ipaddress.IPv4Network("17.253.5.131/32"), networks
+        )
+        self.assertIn(
+            "17.253.29.135", resolutions["download.developer.apple.com"]
+        )
+        self.assertEqual(
+            history["download.developer.apple.com"]["17.253.29.135"][
+                "firstSeen"
+            ],
+            "2026-08-22T12:00:00Z",
+        )
+        self.assertEqual(expired, [])
+
+        _, expired_resolutions, _, expired = build_xcode_dns_history(
+            previous_sources=previous_sources,
+            current_details=current,
+            observed_at=dt.datetime(2026, 8, 23, 1, tzinfo=dt.timezone.utc),
+        )
+        self.assertNotIn(
+            "17.253.5.131", expired_resolutions["devimages-cdn.apple.com"]
+        )
+        self.assertTrue(any(record["ip"] == "17.253.5.131" for record in expired))
+
+
 class ResidualCoverageTests(unittest.TestCase):
     REQUIRED_IPS = {
         "72.153.5.61",
@@ -209,6 +377,15 @@ class ResidualCoverageTests(unittest.TestCase):
         "23.58.84.19",
         "151.101.1.64",
         "151.101.129.64",
+        "17.253.29.135",
+        "17.253.29.147",
+        "17.253.29.140",
+        "17.253.29.151",
+        "17.253.37.209",
+        "17.253.37.210",
+        "17.248.209.46",
+        "17.188.171.202",
+        "17.111.103.20",
     }
 
     def test_tracks_requested_ips_and_emits_provenance_schema(self) -> None:
@@ -231,6 +408,7 @@ class ResidualCoverageTests(unittest.TestCase):
                         "array504.prod.do.dsp.mp.microsoft.com": []
                     }
                 },
+                dns_history_by_file={},
             )
         )
         entries = {entry["ip"]: entry for entry in document["entries"]}
@@ -244,6 +422,8 @@ class ResidualCoverageTests(unittest.TestCase):
                     "edl",
                     "fqdn",
                     "cname_chain",
+                    "first_seen",
+                    "last_seen",
                     "source_documentation",
                 }.issubset(entries[address])
             )

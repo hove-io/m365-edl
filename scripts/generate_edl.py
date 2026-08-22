@@ -97,6 +97,10 @@ DROPBOX_FILE = "dropbox-ipv4.txt"
 DELL_UPDATE_FILE = "dell-update-ipv4.txt"
 MICROSOFT_EDGE_WINDOWS_FILE = "microsoft-edge-windows-services-ipv4.txt"
 RESIDUAL_COVERAGE_FILE = "residual-ip-coverage.json"
+XCODE_DNS_GRACE_PERIOD = dt.timedelta(hours=24)
+XCODE_DNS_ATTEMPTS = 8
+XCODE_DOH_RESOLVER = "https://dns.google/resolve"
+XCODE_DOH_ECS_SUBNETS = ("82.64.0.0/11", "82.66.0.0/16")
 
 PUBLICATIONS = (
     ("Microsoft 365 Common", "m365-common-ipv4.txt"),
@@ -164,6 +168,15 @@ RESIDUAL_IPS = (
     "150.171.28.11",
     "17.248.209.16",
     "17.253.37.204",
+    "17.253.29.135",
+    "17.253.29.147",
+    "17.253.29.140",
+    "17.253.29.151",
+    "17.253.37.209",
+    "17.253.37.210",
+    "17.248.209.46",
+    "17.188.171.202",
+    "17.111.103.20",
     "95.101.137.16",
     "95.101.137.21",
     "95.101.137.23",
@@ -539,6 +552,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--intune-endpoints-file", type=Path, required=True)
     parser.add_argument("--apple-enterprise-file", type=Path, required=True)
     parser.add_argument("--apple-apns-file", type=Path, required=True)
+    parser.add_argument(
+        "--apple-xcode-dns-observations-file", type=Path, required=True
+    )
     parser.add_argument("--github-meta-file", type=Path, required=True)
     parser.add_argument("--dropbox-firewall-file", type=Path, required=True)
     parser.add_argument("--dropbox-arin-file", type=Path, required=True)
@@ -1170,6 +1186,423 @@ def resolve_service_hostnames(
     return sort_networks(networks), resolutions, cname_chains, unresolved
 
 
+def parse_utc_timestamp(value: Any, *, label: str) -> dt.datetime:
+    if not isinstance(value, str):
+        raise GenerationError(f"{label} must be an ISO-8601 string")
+    try:
+        parsed = dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as error:
+        raise GenerationError(f"Invalid {label}: {value!r}") from error
+    if parsed.tzinfo is None:
+        raise GenerationError(f"{label} must include a timezone")
+    return parsed.astimezone(dt.timezone.utc)
+
+
+def format_utc_timestamp(value: dt.datetime) -> str:
+    return value.astimezone(dt.timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def extract_xcode_doh_observations(
+    source: str,
+) -> tuple[
+    dict[str, list[str]],
+    dict[str, dict[str, dict[str, Any]]],
+    dict[str, int],
+]:
+    """Validate controlled DNS-over-HTTPS observations for official Xcode FQDNs."""
+    addresses_by_hostname: dict[str, set[str]] = {
+        hostname: set() for hostname in APPLE_XCODE_HOSTS
+    }
+    details: dict[str, dict[str, dict[str, Any]]] = {
+        hostname: {} for hostname in APPLE_XCODE_HOSTS
+    }
+    attempts: dict[tuple[str, str], set[int]] = {}
+
+    for line_number, line in enumerate(source.splitlines(), start=1):
+        if not line.strip():
+            continue
+        try:
+            observation = json.loads(line)
+        except json.JSONDecodeError as error:
+            raise GenerationError(
+                f"Invalid Xcode DNS observation JSON at line {line_number}: {error}"
+            ) from error
+        if not isinstance(observation, dict):
+            raise GenerationError(
+                f"Xcode DNS observation line {line_number} must be an object"
+            )
+        hostname = observation.get("fqdn")
+        ecs_subnet = observation.get("ecsSubnet")
+        resolver = observation.get("resolver")
+        attempt = observation.get("attempt")
+        response = observation.get("response")
+        if hostname not in APPLE_XCODE_HOSTS:
+            raise GenerationError(
+                f"Unauthorized Xcode DNS observation hostname: {hostname!r}"
+            )
+        if ecs_subnet not in XCODE_DOH_ECS_SUBNETS:
+            raise GenerationError(
+                f"Unauthorized Xcode DNS ECS subnet: {ecs_subnet!r}"
+            )
+        if resolver != XCODE_DOH_RESOLVER:
+            raise GenerationError(
+                f"Unexpected Xcode DNS resolver: {resolver!r}"
+            )
+        if not isinstance(attempt, int) or not 1 <= attempt <= XCODE_DNS_ATTEMPTS:
+            raise GenerationError(
+                f"Invalid Xcode DNS attempt at line {line_number}: {attempt!r}"
+            )
+        if not isinstance(response, dict) or response.get("Status") != 0:
+            raise GenerationError(
+                f"Xcode DNS resolver returned an error at line {line_number}"
+            )
+        response_ecs_subnet = response.get("edns_client_subnet")
+        try:
+            requested_ecs = ipaddress.IPv4Network(ecs_subnet)
+            returned_ecs = ipaddress.IPv4Network(response_ecs_subnet)
+        except (ipaddress.AddressValueError, ipaddress.NetmaskValueError) as error:
+            raise GenerationError(
+                f"Invalid Xcode DNS ECS response at line {line_number}"
+            ) from error
+        if not returned_ecs.subnet_of(requested_ecs):
+            raise GenerationError(
+                f"Xcode DNS ECS response escaped the requested subnet at line {line_number}"
+            )
+        questions = response.get("Question")
+        if (
+            not isinstance(questions, list)
+            or len(questions) != 1
+            or not isinstance(questions[0], dict)
+            or questions[0].get("type") != 1
+            or not isinstance(questions[0].get("name"), str)
+            or questions[0]["name"].strip().lower().rstrip(".") != hostname
+        ):
+            raise GenerationError(
+                f"Xcode DNS response question mismatch at line {line_number}"
+            )
+        answers = response.get("Answer")
+        if not isinstance(answers, list):
+            raise GenerationError(
+                f"Xcode DNS response has no Answer list at line {line_number}"
+            )
+
+        cname_targets: dict[str, str] = {}
+        addresses_by_owner: dict[str, list[str]] = {}
+        for answer in answers:
+            if not isinstance(answer, dict):
+                raise GenerationError(
+                    f"Invalid Xcode DNS answer at line {line_number}"
+                )
+            record_type = answer.get("type")
+            data = answer.get("data")
+            owner = answer.get("name")
+            if not isinstance(data, str) or not isinstance(owner, str):
+                continue
+            normalized = data.strip().lower().rstrip(".")
+            normalized_owner = owner.strip().lower().rstrip(".")
+            if not HOSTNAME_PATTERN.fullmatch(normalized_owner):
+                raise GenerationError(
+                    f"Invalid Xcode DNS answer owner at line {line_number}: {owner!r}"
+                )
+            if record_type == 5:
+                if not HOSTNAME_PATTERN.fullmatch(normalized):
+                    raise GenerationError(
+                        f"Invalid Xcode DNS CNAME at line {line_number}: {data!r}"
+                    )
+                previous_target = cname_targets.setdefault(
+                    normalized_owner, normalized
+                )
+                if previous_target != normalized:
+                    raise GenerationError(
+                        f"Conflicting Xcode DNS CNAMEs at line {line_number}"
+                    )
+            elif record_type == 1:
+                try:
+                    address = ipaddress.IPv4Address(normalized)
+                except ipaddress.AddressValueError as error:
+                    raise GenerationError(
+                        f"Invalid Xcode DNS A record at line {line_number}: {data!r}"
+                    ) from error
+                validate_ipv4_network(
+                    ipaddress.IPv4Network(f"{address}/32"),
+                    context=f"Xcode DNS-over-HTTPS {hostname}",
+                )
+                addresses_by_owner.setdefault(normalized_owner, []).append(
+                    str(address)
+                )
+
+        cname_chain: list[str] = []
+        terminal_name = hostname
+        visited = {hostname}
+        while terminal_name in cname_targets:
+            terminal_name = cname_targets[terminal_name]
+            if terminal_name in visited:
+                raise GenerationError(
+                    f"Xcode DNS CNAME loop at line {line_number}"
+                )
+            visited.add(terminal_name)
+            cname_chain.append(terminal_name)
+        addresses = addresses_by_owner.get(terminal_name, [])
+        if not addresses:
+            raise GenerationError(
+                "Xcode DNS response returned no public A record at the end of "
+                f"its CNAME chain at line {line_number}"
+            )
+
+        source_name = f"google-doh-ecs:{returned_ecs}"
+        for address in addresses:
+            addresses_by_hostname[hostname].add(address)
+            record = details[hostname].setdefault(
+                address,
+                {"cnameChain": list(cname_chain), "observationSources": []},
+            )
+            if len(cname_chain) > len(record["cnameChain"]):
+                record["cnameChain"] = list(cname_chain)
+            if source_name not in record["observationSources"]:
+                record["observationSources"].append(source_name)
+        attempts.setdefault((hostname, ecs_subnet), set()).add(attempt)
+
+    required_pairs = {
+        (hostname, subnet)
+        for hostname in APPLE_XCODE_HOSTS
+        for subnet in XCODE_DOH_ECS_SUBNETS
+    }
+    missing = required_pairs - set(attempts)
+    if missing:
+        raise GenerationError(
+            "Missing Xcode DNS observation series for: "
+            + ", ".join(f"{hostname}@{subnet}" for hostname, subnet in sorted(missing))
+        )
+    incomplete = {
+        pair: len(observed) for pair, observed in attempts.items()
+        if len(observed) != XCODE_DNS_ATTEMPTS
+    }
+    if incomplete:
+        raise GenerationError(
+            "Incomplete Xcode DNS observation series: "
+            + ", ".join(
+                f"{hostname}@{subnet}={count}/{XCODE_DNS_ATTEMPTS}"
+                for (hostname, subnet), count in sorted(incomplete.items())
+            )
+        )
+
+    resolutions = {
+        hostname: sorted(addresses, key=ipaddress.IPv4Address)
+        for hostname, addresses in sorted(addresses_by_hostname.items())
+    }
+    counts = {
+        f"{hostname}@{subnet}": len(values)
+        for (hostname, subnet), values in sorted(attempts.items())
+    }
+    return resolutions, details, counts
+
+
+def combine_xcode_observations(
+    *,
+    native_resolutions: dict[str, list[str]],
+    native_cname_chains: dict[str, list[str]],
+    doh_resolutions: dict[str, list[str]],
+    doh_details: dict[str, dict[str, dict[str, Any]]],
+) -> tuple[dict[str, list[str]], dict[str, dict[str, dict[str, Any]]]]:
+    combined: dict[str, set[str]] = {
+        hostname: set() for hostname in APPLE_XCODE_HOSTS
+    }
+    details: dict[str, dict[str, dict[str, Any]]] = {
+        hostname: {} for hostname in APPLE_XCODE_HOSTS
+    }
+    for hostname, addresses in native_resolutions.items():
+        for address in addresses:
+            combined[hostname].add(address)
+            details[hostname][address] = {
+                "cnameChain": list(native_cname_chains.get(hostname, [])),
+                "observationSources": ["system-resolver"],
+            }
+    for hostname, addresses in doh_resolutions.items():
+        for address in addresses:
+            combined[hostname].add(address)
+            incoming = doh_details[hostname][address]
+            record = details[hostname].setdefault(
+                address,
+                {
+                    "cnameChain": list(incoming["cnameChain"]),
+                    "observationSources": [],
+                },
+            )
+            if len(incoming["cnameChain"]) > len(record["cnameChain"]):
+                record["cnameChain"] = list(incoming["cnameChain"])
+            record["observationSources"] = sorted(
+                set(record["observationSources"])
+                | set(incoming["observationSources"])
+            )
+    resolutions = {
+        hostname: sorted(addresses, key=ipaddress.IPv4Address)
+        for hostname, addresses in sorted(combined.items())
+    }
+    return resolutions, details
+
+
+def build_xcode_dns_history(
+    *,
+    previous_sources: Any | None,
+    current_details: dict[str, dict[str, dict[str, Any]]],
+    observed_at: dt.datetime,
+) -> tuple[
+    list[ipaddress.IPv4Network],
+    dict[str, list[str]],
+    dict[str, dict[str, dict[str, Any]]],
+    list[dict[str, str]],
+]:
+    """Merge official Xcode DNS observations into a bounded 24-hour history."""
+    observed_at = observed_at.astimezone(dt.timezone.utc)
+    history: dict[str, dict[str, dict[str, Any]]] = {
+        hostname: {} for hostname in APPLE_XCODE_HOSTS
+    }
+    previous_file: dict[str, Any] = {}
+    previous_generated_at: dt.datetime | None = None
+    if previous_sources is not None:
+        if not isinstance(previous_sources, dict):
+            raise GenerationError("Previous sources.json must contain an object")
+        previous_generated_at = parse_utc_timestamp(
+            previous_sources.get("generatedAt"), label="previous generatedAt"
+        )
+        files = previous_sources.get("files")
+        if not isinstance(files, dict):
+            raise GenerationError("Previous sources.json has no files object")
+        candidate = files.get(APPLE_XCODE_FILE, {})
+        if not isinstance(candidate, dict):
+            raise GenerationError("Previous Xcode source metadata must be an object")
+        previous_file = candidate
+
+    previous_history = previous_file.get("dnsHistory")
+    if previous_history is not None:
+        if not isinstance(previous_history, dict):
+            raise GenerationError("Previous Xcode dnsHistory must be an object")
+        records_by_hostname = previous_history.get("recordsByHostname")
+        if not isinstance(records_by_hostname, dict):
+            raise GenerationError(
+                "Previous Xcode dnsHistory has no recordsByHostname object"
+            )
+        unexpected_hosts = set(records_by_hostname) - APPLE_XCODE_HOSTS
+        if unexpected_hosts:
+            raise GenerationError(
+                "Previous Xcode DNS history contains unauthorized hostnames: "
+                + ", ".join(sorted(unexpected_hosts))
+            )
+        for hostname, records in records_by_hostname.items():
+            if not isinstance(records, dict):
+                raise GenerationError(
+                    f"Previous Xcode DNS history for {hostname} must be an object"
+                )
+            for address, record in records.items():
+                if not isinstance(record, dict):
+                    raise GenerationError(
+                        f"Previous Xcode DNS history record {hostname}/{address} is invalid"
+                    )
+                network = validate_ipv4_network(
+                    ipaddress.IPv4Network(f"{address}/32", strict=True),
+                    context=f"previous Xcode DNS history {hostname}",
+                )
+                first_seen = parse_utc_timestamp(
+                    record.get("firstSeen"), label=f"firstSeen for {hostname}/{address}"
+                )
+                last_seen = parse_utc_timestamp(
+                    record.get("lastSeen"), label=f"lastSeen for {hostname}/{address}"
+                )
+                if first_seen > last_seen or last_seen > observed_at + dt.timedelta(minutes=5):
+                    raise GenerationError(
+                        f"Invalid Xcode DNS history timestamps for {hostname}/{address}"
+                    )
+                cname_chain = record.get("cnameChain", [])
+                sources = record.get("observationSources", [])
+                if not isinstance(cname_chain, list) or not all(
+                    isinstance(value, str) and HOSTNAME_PATTERN.fullmatch(value)
+                    for value in cname_chain
+                ):
+                    raise GenerationError(
+                        f"Invalid Xcode CNAME history for {hostname}/{address}"
+                    )
+                if not isinstance(sources, list) or not all(
+                    isinstance(value, str) and value for value in sources
+                ):
+                    raise GenerationError(
+                        f"Invalid Xcode observation sources for {hostname}/{address}"
+                    )
+                history[hostname][str(network.network_address)] = {
+                    "cnameChain": cname_chain,
+                    "firstSeen": format_utc_timestamp(first_seen),
+                    "lastSeen": format_utc_timestamp(last_seen),
+                    "observationSources": sorted(set(sources)),
+                }
+    elif previous_file and previous_generated_at is not None:
+        legacy_resolutions = previous_file.get("resolvedHostnames", {})
+        legacy_chains = previous_file.get("cnameChains", {})
+        if not isinstance(legacy_resolutions, dict) or not isinstance(
+            legacy_chains, dict
+        ):
+            raise GenerationError("Previous Xcode DNS metadata is malformed")
+        for hostname, addresses in legacy_resolutions.items():
+            if hostname not in APPLE_XCODE_HOSTS or not isinstance(addresses, list):
+                raise GenerationError("Previous Xcode DNS metadata is unauthorized")
+            for address in addresses:
+                network = validate_ipv4_network(
+                    ipaddress.IPv4Network(f"{address}/32", strict=True),
+                    context=f"legacy Xcode DNS history {hostname}",
+                )
+                history[hostname][str(network.network_address)] = {
+                    "cnameChain": list(legacy_chains.get(hostname, [])),
+                    "firstSeen": format_utc_timestamp(previous_generated_at),
+                    "lastSeen": format_utc_timestamp(previous_generated_at),
+                    "observationSources": ["previous-published-dns-snapshot"],
+                }
+
+    now_text = format_utc_timestamp(observed_at)
+    for hostname, records in current_details.items():
+        if hostname not in APPLE_XCODE_HOSTS:
+            raise GenerationError(f"Unauthorized current Xcode hostname: {hostname}")
+        for address, current in records.items():
+            validate_ipv4_network(
+                ipaddress.IPv4Network(f"{address}/32", strict=True),
+                context=f"current Xcode DNS observation {hostname}",
+            )
+            existing = history[hostname].get(address)
+            history[hostname][address] = {
+                "cnameChain": list(current["cnameChain"]),
+                "firstSeen": existing["firstSeen"] if existing else now_text,
+                "lastSeen": now_text,
+                "observationSources": sorted(
+                    set(current["observationSources"])
+                    | set(existing["observationSources"] if existing else [])
+                ),
+            }
+
+    expired: list[dict[str, str]] = []
+    for hostname in sorted(history):
+        for address, record in list(history[hostname].items()):
+            last_seen = parse_utc_timestamp(
+                record["lastSeen"], label=f"lastSeen for {hostname}/{address}"
+            )
+            if observed_at - last_seen > XCODE_DNS_GRACE_PERIOD:
+                expired.append(
+                    {"fqdn": hostname, "ip": address, "lastSeen": record["lastSeen"]}
+                )
+                del history[hostname][address]
+
+    networks: set[ipaddress.IPv4Network] = set()
+    active_resolutions: dict[str, list[str]] = {}
+    for hostname, records in sorted(history.items()):
+        active_resolutions[hostname] = sorted(records, key=ipaddress.IPv4Address)
+        for address in records:
+            networks.add(
+                validate_ipv4_network(
+                    ipaddress.IPv4Network(f"{address}/32", strict=True),
+                    context=f"active Xcode DNS history {hostname}",
+                )
+            )
+    if not networks:
+        raise GenerationError("Xcode DNS history produced an empty IPv4 EDL")
+    return sort_networks(networks), active_resolutions, history, expired
+
+
 def extract_github_networks(
     payload: Any,
 ) -> tuple[list[ipaddress.IPv4Network], dict[str, int]]:
@@ -1426,6 +1859,15 @@ def residual_noncoverage_reason(address: ipaddress.IPv4Address) -> str:
         ipaddress.IPv4Address("17.248.209.16"),
         ipaddress.IPv4Address("17.253.29.146"),
         ipaddress.IPv4Address("17.253.37.204"),
+        ipaddress.IPv4Address("17.253.29.135"),
+        ipaddress.IPv4Address("17.253.29.147"),
+        ipaddress.IPv4Address("17.253.29.140"),
+        ipaddress.IPv4Address("17.253.29.151"),
+        ipaddress.IPv4Address("17.253.37.209"),
+        ipaddress.IPv4Address("17.253.37.210"),
+        ipaddress.IPv4Address("17.248.209.46"),
+        ipaddress.IPv4Address("17.188.171.202"),
+        ipaddress.IPv4Address("17.111.103.20"),
     }:
         return "Apple address not returned by an in-scope official FQDN"
     return (
@@ -1440,6 +1882,9 @@ def build_residual_coverage(
     generated: dict[str, list[ipaddress.IPv4Network]],
     resolutions_by_file: dict[str, dict[str, list[str]]],
     cname_chains_by_file: dict[str, dict[str, list[str]]],
+    dns_history_by_file: dict[
+        str, dict[str, dict[str, dict[str, Any]]]
+    ],
 ) -> str:
     source_by_file = {
         "m365-common-ipv4.txt": "Microsoft 365 endpoint web service: Common",
@@ -1508,6 +1953,9 @@ def build_residual_coverage(
                     "source": None,
                     "fqdn": None,
                     "cname_chain": [],
+                    "first_seen": None,
+                    "last_seen": None,
+                    "observation_sources": [],
                     "source_documentation": None,
                     "reason": residual_noncoverage_reason(address),
                 }
@@ -1521,6 +1969,13 @@ def build_residual_coverage(
         source_documentation = documentation_by_file.get(selected_file)
         if fqdns and fqdns[0].endswith(".prod.do.dsp.mp.microsoft.com"):
             source_documentation = MICROSOFT_DELIVERY_OPTIMIZATION_URL
+        history_record = (
+            dns_history_by_file.get(selected_file, {})
+            .get(fqdns[0], {})
+            .get(raw_address)
+            if fqdns
+            else None
+        )
         entry: dict[str, Any] = {
             "ip": raw_address,
             "covered": True,
@@ -1528,8 +1983,23 @@ def build_residual_coverage(
             "source": source_by_file[selected_file],
             "fqdn": fqdns[0] if fqdns else None,
             "cname_chain": (
-                cname_chains_by_file.get(selected_file, {}).get(fqdns[0], [])
-                if fqdns
+                history_record["cnameChain"]
+                if history_record is not None
+                else (
+                    cname_chains_by_file.get(selected_file, {}).get(fqdns[0], [])
+                    if fqdns
+                    else []
+                )
+            ),
+            "first_seen": (
+                history_record["firstSeen"] if history_record is not None else None
+            ),
+            "last_seen": (
+                history_record["lastSeen"] if history_record is not None else None
+            ),
+            "observation_sources": (
+                history_record["observationSources"]
+                if history_record is not None
                 else []
             ),
             "source_documentation": source_documentation,
@@ -1710,7 +2180,9 @@ def build_index(
       <p><strong>Apple :</strong> les listes utilisent uniquement les A publics
       courants des FQDN présents dans la source Apple. Les services Device setup
       et Device management sont regroupés, tandis que les téléchargements Xcode
-      sont isolés. Aucun <code>17.0.0.0/8</code> ni range CDN global n'est ajouté.
+      sont isolés. L'EDL Xcode conserve pendant 24 heures uniquement les IPv4
+      réellement observées via les deux FQDN officiels, avec leur chaîne CNAME.
+      Aucun <code>17.0.0.0/8</code> ni range CDN global n'est ajouté.
       Apple recommande d'exempter ces FQDN de l'inspection HTTPS.</p>
     </div>
     <table>
@@ -1729,6 +2201,7 @@ def build_index(
 def publish(
     *,
     output_dir: Path,
+    generated_at: str,
     payload: list[Any],
     request_id: str,
     request_url: str,
@@ -1745,6 +2218,9 @@ def publish(
     additional_files: dict[str, dict[str, Any]],
     resolutions_by_file: dict[str, dict[str, list[str]]],
     cname_chains_by_file: dict[str, dict[str, list[str]]],
+    dns_history_by_file: dict[
+        str, dict[str, dict[str, dict[str, Any]]]
+    ],
 ) -> bool:
     check_drop_guard(output_dir, generated)
     rendered = {filename: render_edl(items) for filename, items in generated.items()}
@@ -1754,24 +2230,8 @@ def publish(
         or (output_dir / filename).read_text(encoding="ascii") != content
         for filename, content in rendered.items()
     )
-    support_missing = any(
-        not (output_dir / name).exists()
-        for name in (
-            "sources.json",
-            RESIDUAL_COVERAGE_FILE,
-            "index.html",
-            ".nojekyll",
-        )
-    )
-
     for filename, networks in generated.items():
         print(f"{filename}: {len(networks)} IPv4 CIDRs")
-
-    if not edl_changed and not support_missing:
-        print("No EDL content change detected; keeping the previous publication")
-        return False
-
-    generated_at = dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z")
     sources = build_sources(
         generated_at=generated_at,
         request_id=request_id,
@@ -1794,8 +2254,23 @@ def publish(
         generated=generated,
         resolutions_by_file=resolutions_by_file,
         cname_chains_by_file=cname_chains_by_file,
+        dns_history_by_file=dns_history_by_file,
     )
     index = build_index(generated_at, generated)
+    support_rendered = {
+        "sources.json": sources,
+        RESIDUAL_COVERAGE_FILE: residual_coverage,
+        "index.html": index,
+        ".nojekyll": "",
+    }
+    support_changed = any(
+        not (output_dir / filename).exists()
+        or (output_dir / filename).read_text(encoding="utf-8") != content
+        for filename, content in support_rendered.items()
+    )
+    if not edl_changed and not support_changed:
+        print("No publication content change detected; keeping the previous files")
+        return False
 
     output_dir.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(
@@ -1804,12 +2279,8 @@ def publish(
         temporary = Path(temporary_directory)
         for filename, content in rendered.items():
             (temporary / filename).write_text(content, encoding="ascii")
-        (temporary / "sources.json").write_text(sources, encoding="utf-8")
-        (temporary / RESIDUAL_COVERAGE_FILE).write_text(
-            residual_coverage, encoding="utf-8"
-        )
-        (temporary / "index.html").write_text(index, encoding="utf-8")
-        (temporary / ".nojekyll").write_text("", encoding="ascii")
+        for filename, content in support_rendered.items():
+            (temporary / filename).write_text(content, encoding="utf-8")
 
         output_dir.mkdir(parents=True, exist_ok=True)
         for filename in (
@@ -1853,6 +2324,10 @@ def main() -> int:
             args.apple_apns_file,
             label="Apple APNs endpoint source",
         )
+        apple_xcode_dns_observations = load_text_source(
+            args.apple_xcode_dns_observations_file,
+            label="Apple Xcode DNS-over-HTTPS observations",
+        )
         github_meta = load_json_source(
             args.github_meta_file,
             label="GitHub Meta API response",
@@ -1881,6 +2356,13 @@ def main() -> int:
             args.microsoft_delivery_optimization_file,
             label="Microsoft Delivery Optimization workflow source",
         )
+        previous_sources_path = args.output_dir / "sources.json"
+        previous_sources = (
+            load_json_source(previous_sources_path, label="previous sources.json")
+            if previous_sources_path.exists()
+            else None
+        )
+        observed_at = dt.datetime.now(dt.timezone.utc)
 
         generated = extract_m365_networks(payload)
         defender_hostnames, defender_wildcards, wildcard_targets = (
@@ -1987,13 +2469,43 @@ def main() -> int:
             )
         )
         (
-            apple_xcode_networks,
-            apple_xcode_resolutions,
-            apple_xcode_cname_chains,
+            _apple_xcode_native_networks,
+            apple_xcode_native_resolutions,
+            apple_xcode_native_cname_chains,
             apple_xcode_unresolved,
         ) = resolve_service_hostnames(
-            apple_xcode_hosts, label="Apple Xcode developer downloads"
+            apple_xcode_hosts,
+            label="Apple Xcode developer downloads",
+            attempts=XCODE_DNS_ATTEMPTS,
         )
+        (
+            apple_xcode_doh_resolutions,
+            apple_xcode_doh_details,
+            apple_xcode_doh_attempt_counts,
+        ) = extract_xcode_doh_observations(apple_xcode_dns_observations)
+        (
+            apple_xcode_current_resolutions,
+            apple_xcode_current_details,
+        ) = combine_xcode_observations(
+            native_resolutions=apple_xcode_native_resolutions,
+            native_cname_chains=apple_xcode_native_cname_chains,
+            doh_resolutions=apple_xcode_doh_resolutions,
+            doh_details=apple_xcode_doh_details,
+        )
+        (
+            apple_xcode_networks,
+            apple_xcode_resolutions,
+            apple_xcode_dns_history,
+            apple_xcode_expired_records,
+        ) = build_xcode_dns_history(
+            previous_sources=previous_sources,
+            current_details=apple_xcode_current_details,
+            observed_at=observed_at,
+        )
+        apple_xcode_cname_chains = {
+            hostname: list(apple_xcode_native_cname_chains.get(hostname, []))
+            for hostname in apple_xcode_hosts
+        }
 
         apple_device_setup_documented = extract_apple_section_hostnames(
             apple_enterprise, section_id="devicesetup"
@@ -2113,6 +2625,9 @@ def main() -> int:
             DELL_UPDATE_FILE: dell_cname_chains,
             MICROSOFT_EDGE_WINDOWS_FILE: microsoft_service_cname_chains,
         }
+        dns_history_by_file = {
+            APPLE_XCODE_FILE: apple_xcode_dns_history,
+        }
 
         additional_sources: dict[str, dict[str, Any]] = {
             "appleEnterpriseNetworks": {
@@ -2131,6 +2646,16 @@ def main() -> int:
                 "url": APPLE_APNS_URL,
                 "sha256": source_hash(apple_apns),
                 "purpose": "Audited concrete targets for *.push.apple.com",
+            },
+            "appleXcodeDnsObservations": {
+                "resolver": XCODE_DOH_RESOLVER,
+                "ecsSubnets": list(XCODE_DOH_ECS_SUBNETS),
+                "attemptsPerHostnameAndSubnet": XCODE_DNS_ATTEMPTS,
+                "sha256": source_hash(apple_xcode_dns_observations),
+                "purpose": (
+                    "Collect multiple current public A records for the two "
+                    "official Apple Xcode FQDNs from controlled France DNS views"
+                ),
             },
             "githubMeta": {
                 "publisher": "GitHub",
@@ -2256,15 +2781,28 @@ def main() -> int:
                 "cidrCount": len(apple_xcode_networks),
                 "method": (
                     "Resolve only the Xcode downloadable-component FQDNs from "
-                    "Apple's official Apps and additional content table to IPv4 /32"
+                    "Apple's official Apps and additional content table, then "
+                    "retain DNS-proven IPv4 /32 records for a rolling 24-hour window"
                 ),
                 "documentedHostnames": apple_xcode_documented,
                 "wildcardPatterns": apple_xcode_wildcards,
                 "wildcardResolutionTargets": apple_xcode_targets,
                 "resolvedHostnames": apple_xcode_resolutions,
+                "currentResolvedHostnames": apple_xcode_current_resolutions,
+                "nativeResolvedHostnames": apple_xcode_native_resolutions,
+                "dohResolvedHostnames": apple_xcode_doh_resolutions,
                 "cnameChains": apple_xcode_cname_chains,
+                "dnsObservationAttempts": apple_xcode_doh_attempt_counts,
+                "dnsHistory": {
+                    "gracePeriodHours": int(
+                        XCODE_DNS_GRACE_PERIOD.total_seconds() // 3600
+                    ),
+                    "recordsByHostname": apple_xcode_dns_history,
+                    "expiredThisRun": apple_xcode_expired_records,
+                },
                 "unresolvedHostnames": apple_xcode_unresolved,
                 "forbiddenFallback": "17.0.0.0/8 or global CDN ranges",
+                "manualIpOverrides": False,
             },
             GITHUB_FILE: {
                 "cidrCount": len(github_networks),
@@ -2327,6 +2865,7 @@ def main() -> int:
 
         publish(
             output_dir=args.output_dir,
+            generated_at=format_utc_timestamp(observed_at),
             payload=payload,
             request_id=request_id,
             request_url=args.request_url,
@@ -2343,6 +2882,7 @@ def main() -> int:
             additional_files=additional_files,
             resolutions_by_file=resolutions_by_file,
             cname_chains_by_file=cname_chains_by_file,
+            dns_history_by_file=dns_history_by_file,
         )
     except GenerationError as error:
         print(f"ERROR: {error}", file=sys.stderr)
