@@ -1,31 +1,23 @@
 {
-  "generatedAt": "2026-08-22T12:53:50.517453Z",
+  "generatedAt": "2026-08-22T13:24:45.428787Z",
   "policy": "Coverage is reported only from generated EDL content; unmatched IPs are never added to force coverage",
   "currentInternetOnlyAudit": {
-    "ipCount": 15,
+    "ipCount": 7,
     "ips": [
-      "52.85.118.49",
-      "52.85.118.108",
-      "4.150.223.107",
-      "20.184.175.3",
+      "20.42.65.88",
+      "20.184.175.21",
+      "51.116.246.106",
       "150.171.22.17",
-      "104.208.16.94",
-      "23.200.213.147",
-      "13.107.6.156",
-      "20.105.245.153",
-      "17.145.0.2",
-      "17.248.209.54",
-      "95.101.137.28",
-      "95.101.137.33",
-      "52.222.169.45",
-      "52.222.169.104"
+      "48.209.138.189",
+      "48.209.138.168",
+      "20.105.245.153"
     ],
     "categoryCounts": {
-      "CDN_SHARED_UNATTRIBUTED": 7,
-      "COVERED_OFFICIAL": 2,
+      "CDN_SHARED_UNATTRIBUTED": 0,
+      "COVERED_OFFICIAL": 5,
       "INTENTIONALLY_UNCOVERED": 0,
-      "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED": 3,
-      "OWNER_ONLY_UNATTRIBUTED": 3
+      "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED": 1,
+      "OWNER_ONLY_UNATTRIBUTED": 1
     }
   },
   "entries": [
@@ -56,9 +48,9 @@
     },
     {
       "ip": "52.85.118.49",
-      "paloSource": "10.50.83.126",
-      "owner": "AWS CloudFront (AS16509)",
-      "suspectedService": "Unattributed shared CloudFront distribution",
+      "paloSource": null,
+      "owner": null,
+      "suspectedService": null,
       "verified": false,
       "category": "CDN_SHARED_UNATTRIBUTED",
       "confidence": "low",
@@ -77,7 +69,7 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "Shared CloudFront address without a demonstrated official client FQDN; CloudFront ownership alone is not authorization"
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
     {
       "ip": "52.85.118.61",
@@ -106,9 +98,9 @@
     },
     {
       "ip": "52.85.118.108",
-      "paloSource": "10.50.83.125",
-      "owner": "AWS CloudFront (AS16509)",
-      "suspectedService": "Possible AWS CodeBuild console on shared CloudFront",
+      "paloSource": null,
+      "owner": null,
+      "suspectedService": null,
       "verified": false,
       "category": "CDN_SHARED_UNATTRIBUTED",
       "confidence": "low",
@@ -127,7 +119,7 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "Historical CodeBuild names on a shared CloudFront address do not identify this TLS flow or authorize the whole distribution"
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
     {
       "ip": "20.42.65.85",
@@ -163,19 +155,19 @@
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
-      "ip": "20.42.72.131",
-      "paloSource": null,
-      "owner": "Microsoft/Azure",
+      "ip": "20.42.65.88",
+      "paloSource": "10.50.84.24",
+      "owner": "Microsoft/Azure (AS8075)",
       "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
       "verified": false,
-      "category": "OWNER_ONLY_UNATTRIBUTED",
-      "confidence": "low",
+      "category": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+      "confidence": "high",
       "covered": false,
       "edl": null,
       "targetEdl": null,
       "source": null,
       "fqdn": null,
-      "officialFqdn": null,
+      "officialFqdn": "*.events.data.microsoft.com",
       "cname_chain": [],
       "cnameChain": [],
       "first_seen": null,
@@ -183,9 +175,42 @@
       "last_seen": null,
       "lastSeen": null,
       "observation_sources": [],
-      "source_documentation": null,
-      "officialSource": null,
-      "reason": "Probable Microsoft telemetry address not returned during the current or rolling 24-hour DNS window by an authorized *.events.data.microsoft.com target"
+      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "reason": "The official events.data.microsoft.com family has returned this address historically, but it was not observed in the current or rolling 24-hour authorized DNS window"
+    },
+    {
+      "ip": "20.42.72.131",
+      "paloSource": null,
+      "owner": "Microsoft/Azure",
+      "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "microsoft-intune-windows-ipv4.txt",
+      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
+      "fqdn": "mobile.events.data.microsoft.com",
+      "cname_chain": [
+        "mobile.events.data.trafficmanager.net",
+        "onedscolprdeus00.eastus.cloudapp.azure.com"
+      ],
+      "first_seen": "2026-08-22T13:24:45.428787Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/0"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "targetEdl": "microsoft-intune-windows-ipv4.txt",
+      "officialFqdn": "mobile.events.data.microsoft.com",
+      "cnameChain": [
+        "mobile.events.data.trafficmanager.net",
+        "onedscolprdeus00.eastus.cloudapp.azure.com"
+      ],
+      "firstSeen": "2026-08-22T13:24:45.428787Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
+      "reason": "Covered by a DNS-observed official FQDN"
     },
     {
       "ip": "4.150.223.96",
@@ -210,6 +235,11 @@
       ],
       "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
       "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "allFqdns": [
+        "browser.events.data.microsoft.com",
+        "us-v20.events.data.microsoft.com",
+        "v20.events.data.microsoft.com"
+      ],
       "targetEdl": "microsoft-intune-windows-ipv4.txt",
       "officialFqdn": "browser.events.data.microsoft.com",
       "cnameChain": [
@@ -225,25 +255,33 @@
       "paloSource": null,
       "owner": "Microsoft/Azure",
       "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
-      "verified": false,
-      "category": "OWNER_ONLY_UNATTRIBUTED",
-      "confidence": "low",
-      "covered": false,
-      "edl": null,
-      "targetEdl": null,
-      "source": null,
-      "fqdn": null,
-      "officialFqdn": null,
-      "cname_chain": [],
-      "cnameChain": [],
-      "first_seen": null,
-      "firstSeen": null,
-      "last_seen": null,
-      "lastSeen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "officialSource": null,
-      "reason": "Probable Microsoft telemetry address not returned during the current or rolling 24-hour DNS window by an authorized *.events.data.microsoft.com target"
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "microsoft-intune-windows-ipv4.txt",
+      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
+      "fqdn": "browser.events.data.microsoft.com",
+      "cname_chain": [
+        "browser.events.data.trafficmanager.net",
+        "onedscolprdcus61.centralus.cloudapp.azure.com"
+      ],
+      "first_seen": "2026-08-22T13:24:45.428787Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/0"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "targetEdl": "microsoft-intune-windows-ipv4.txt",
+      "officialFqdn": "browser.events.data.microsoft.com",
+      "cnameChain": [
+        "browser.events.data.trafficmanager.net",
+        "onedscolprdcus61.centralus.cloudapp.azure.com"
+      ],
+      "firstSeen": "2026-08-22T13:24:45.428787Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
+      "reason": "Covered by a DNS-observed official FQDN"
     },
     {
       "ip": "4.150.223.104",
@@ -286,8 +324,8 @@
     },
     {
       "ip": "4.150.223.107",
-      "paloSource": "10.50.82.50",
-      "owner": "Microsoft/Azure (AS8075)",
+      "paloSource": null,
+      "owner": "Microsoft/Azure",
       "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
       "verified": true,
       "category": "COVERED_OFFICIAL",
@@ -301,12 +339,19 @@
         "onedscolprdcus67.centralus.cloudapp.azure.com"
       ],
       "first_seen": "2026-08-22T12:30:28.378421Z",
-      "last_seen": "2026-08-22T12:30:28.378421Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
       "observation_sources": [
+        "google-doh-ecs:82.64.0.0/0",
         "system-resolver"
       ],
       "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
       "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "allFqdns": [
+        "events.data.microsoft.com",
+        "functional.events.data.microsoft.com",
+        "v10.events.data.microsoft.com",
+        "v20.events.data.microsoft.com"
+      ],
       "targetEdl": "microsoft-intune-windows-ipv4.txt",
       "officialFqdn": "events.data.microsoft.com",
       "cnameChain": [
@@ -314,7 +359,7 @@
         "onedscolprdcus67.centralus.cloudapp.azure.com"
       ],
       "firstSeen": "2026-08-22T12:30:28.378421Z",
-      "lastSeen": "2026-08-22T12:30:28.378421Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -355,25 +400,33 @@
       "paloSource": null,
       "owner": null,
       "suspectedService": null,
-      "verified": false,
-      "category": "INTENTIONALLY_UNCOVERED",
-      "confidence": "low",
-      "covered": false,
-      "edl": null,
-      "targetEdl": null,
-      "source": null,
-      "fqdn": null,
-      "officialFqdn": null,
-      "cname_chain": [],
-      "cnameChain": [],
-      "first_seen": null,
-      "firstSeen": null,
-      "last_seen": null,
-      "lastSeen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "officialSource": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "microsoft-intune-windows-ipv4.txt",
+      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
+      "fqdn": "events.data.microsoft.com",
+      "cname_chain": [
+        "global.asimov.events.data.trafficmanager.net",
+        "onedscolprdcus62.centralus.cloudapp.azure.com"
+      ],
+      "first_seen": "2026-08-22T13:24:45.428787Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/0"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "targetEdl": "microsoft-intune-windows-ipv4.txt",
+      "officialFqdn": "events.data.microsoft.com",
+      "cnameChain": [
+        "global.asimov.events.data.trafficmanager.net",
+        "onedscolprdcus62.centralus.cloudapp.azure.com"
+      ],
+      "firstSeen": "2026-08-22T13:24:45.428787Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
+      "reason": "Covered by a DNS-observed official FQDN"
     },
     {
       "ip": "20.184.175.2",
@@ -402,28 +455,74 @@
     },
     {
       "ip": "20.184.175.3",
-      "paloSource": "10.50.84.3",
-      "owner": "Microsoft/Azure (AS8075)",
+      "paloSource": null,
+      "owner": "Microsoft/Azure",
       "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
-      "verified": false,
-      "category": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
-      "confidence": "medium",
-      "covered": false,
-      "edl": null,
-      "targetEdl": null,
-      "source": null,
-      "fqdn": null,
-      "officialFqdn": "*.events.data.microsoft.com",
-      "cname_chain": [],
-      "cnameChain": [],
-      "first_seen": null,
-      "firstSeen": null,
-      "last_seen": null,
-      "lastSeen": null,
-      "observation_sources": [],
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "microsoft-intune-windows-ipv4.txt",
+      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
+      "fqdn": "mobile.events.data.microsoft.com",
+      "cname_chain": [
+        "mobile.events.data.trafficmanager.net",
+        "onedscolprdwus66.westus.cloudapp.azure.com"
+      ],
+      "first_seen": "2026-08-22T13:24:45.428787Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/0",
+        "google-doh-ecs:82.66.0.0/0"
+      ],
       "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
       "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
-      "reason": "Microsoft telemetry is a plausible attribution, but no authorized *.events.data.microsoft.com target returned this address in the current or rolling 24-hour DNS window"
+      "targetEdl": "microsoft-intune-windows-ipv4.txt",
+      "officialFqdn": "mobile.events.data.microsoft.com",
+      "cnameChain": [
+        "mobile.events.data.trafficmanager.net",
+        "onedscolprdwus66.westus.cloudapp.azure.com"
+      ],
+      "firstSeen": "2026-08-22T13:24:45.428787Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
+      "reason": "Covered by a DNS-observed official FQDN"
+    },
+    {
+      "ip": "20.184.175.21",
+      "paloSource": "10.50.82.50",
+      "owner": "Microsoft/Azure (AS8075)",
+      "suspectedService": "Unresolved Microsoft/Azure service",
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "microsoft-intune-windows-ipv4.txt",
+      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
+      "fqdn": "browser.events.data.microsoft.com",
+      "cname_chain": [
+        "browser.events.data.trafficmanager.net",
+        "onedscolprdwus60.westus.cloudapp.azure.com"
+      ],
+      "first_seen": "2026-08-22T13:24:45.428787Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/0"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "allFqdns": [
+        "browser.events.data.microsoft.com",
+        "self.events.data.microsoft.com"
+      ],
+      "targetEdl": "microsoft-intune-windows-ipv4.txt",
+      "officialFqdn": "browser.events.data.microsoft.com",
+      "cnameChain": [
+        "browser.events.data.trafficmanager.net",
+        "onedscolprdwus60.westus.cloudapp.azure.com"
+      ],
+      "firstSeen": "2026-08-22T13:24:45.428787Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
+      "reason": "Covered by a DNS-observed official FQDN"
     },
     {
       "ip": "51.132.193.104",
@@ -459,10 +558,81 @@
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
+      "ip": "51.116.246.106",
+      "paloSource": "10.50.83.22",
+      "owner": "Microsoft/Azure (AS8075)",
+      "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "microsoft-intune-windows-ipv4.txt",
+      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
+      "fqdn": "eu-mobile.events.data.microsoft.com",
+      "cname_chain": [
+        "eu.events.data.trafficmanager.net",
+        "onedscolprdgwc06.germanywestcentral.cloudapp.azure.com"
+      ],
+      "first_seen": "2026-08-22T13:24:45.428787Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/0"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "targetEdl": "microsoft-intune-windows-ipv4.txt",
+      "officialFqdn": "eu-mobile.events.data.microsoft.com",
+      "cnameChain": [
+        "eu.events.data.trafficmanager.net",
+        "onedscolprdgwc06.germanywestcentral.cloudapp.azure.com"
+      ],
+      "firstSeen": "2026-08-22T13:24:45.428787Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
+      "reason": "Covered by a DNS-observed official FQDN"
+    },
+    {
       "ip": "150.171.22.17",
       "paloSource": "10.50.84.3",
       "owner": "Microsoft/Azure (AS8075)",
-      "suspectedService": "Microsoft ECS/Office configuration infrastructure",
+      "suspectedService": "Microsoft Edge configuration service",
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "microsoft-edge-windows-services-ipv4.txt",
+      "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
+      "fqdn": "config.edge.skype.com",
+      "cname_chain": [
+        "config.edge.skype.com.trafficmanager.net",
+        "ln-0007.config.skype.com",
+        "config-edge-skype.ln-0007.ln-msedge.net",
+        "ln-0007.ln-msedge.net"
+      ],
+      "first_seen": "2026-08-22T13:24:45.428787Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/0",
+        "google-doh-ecs:82.66.0.0/0"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/deployedge/microsoft-edge-security-endpoints",
+      "officialSource": "https://learn.microsoft.com/en-us/deployedge/microsoft-edge-security-endpoints",
+      "targetEdl": "microsoft-edge-windows-services-ipv4.txt",
+      "officialFqdn": "config.edge.skype.com",
+      "cnameChain": [
+        "config.edge.skype.com.trafficmanager.net",
+        "ln-0007.config.skype.com",
+        "config-edge-skype.ln-0007.ln-msedge.net",
+        "ln-0007.ln-msedge.net"
+      ],
+      "firstSeen": "2026-08-22T13:24:45.428787Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
+      "reason": "Covered by a DNS-observed official FQDN"
+    },
+    {
+      "ip": "104.208.16.94",
+      "paloSource": null,
+      "owner": "Microsoft/Azure",
+      "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
       "verified": false,
       "category": "OWNER_ONLY_UNATTRIBUTED",
       "confidence": "low",
@@ -481,32 +651,7 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "Microsoft ownership and historical ECS infrastructure names are only clues; no in-scope official commercial FQDN currently maps this address"
-    },
-    {
-      "ip": "104.208.16.94",
-      "paloSource": "10.50.83.87",
-      "owner": "Microsoft/Azure (AS8075)",
-      "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
-      "verified": false,
-      "category": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
-      "confidence": "medium",
-      "covered": false,
-      "edl": null,
-      "targetEdl": null,
-      "source": null,
-      "fqdn": null,
-      "officialFqdn": "*.events.data.microsoft.com",
-      "cname_chain": [],
-      "cnameChain": [],
-      "first_seen": null,
-      "firstSeen": null,
-      "last_seen": null,
-      "lastSeen": null,
-      "observation_sources": [],
-      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
-      "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
-      "reason": "Microsoft telemetry is a plausible attribution, but no authorized *.events.data.microsoft.com target returned this address in the current or rolling 24-hour DNS window"
+      "reason": "Probable Microsoft telemetry address not returned during the current or rolling 24-hour DNS window by an authorized *.events.data.microsoft.com target"
     },
     {
       "ip": "23.103.234.43",
@@ -571,16 +716,19 @@
       "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
       "fqdn": "array504.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
-      "first_seen": null,
-      "last_seen": null,
-      "observation_sources": [],
+      "first_seen": "2026-08-22T12:53:50.517453Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
+      "observation_sources": [
+        "previous-published-dns-snapshot",
+        "system-resolver"
+      ],
       "source_documentation": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow",
       "officialSource": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow",
       "targetEdl": "microsoft-edge-windows-services-ipv4.txt",
       "officialFqdn": "array504.prod.do.dsp.mp.microsoft.com",
       "cnameChain": [],
-      "firstSeen": null,
-      "lastSeen": null,
+      "firstSeen": "2026-08-22T12:53:50.517453Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -596,16 +744,19 @@
       "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
       "fqdn": "array508.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
-      "first_seen": null,
-      "last_seen": null,
-      "observation_sources": [],
+      "first_seen": "2026-08-22T12:53:50.517453Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
+      "observation_sources": [
+        "previous-published-dns-snapshot",
+        "system-resolver"
+      ],
       "source_documentation": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow",
       "officialSource": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow",
       "targetEdl": "microsoft-edge-windows-services-ipv4.txt",
       "officialFqdn": "array508.prod.do.dsp.mp.microsoft.com",
       "cnameChain": [],
-      "firstSeen": null,
-      "lastSeen": null,
+      "firstSeen": "2026-08-22T12:53:50.517453Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -621,16 +772,19 @@
       "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
       "fqdn": "array516.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
-      "first_seen": null,
-      "last_seen": null,
-      "observation_sources": [],
+      "first_seen": "2026-08-22T12:53:50.517453Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
+      "observation_sources": [
+        "previous-published-dns-snapshot",
+        "system-resolver"
+      ],
       "source_documentation": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow",
       "officialSource": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow",
       "targetEdl": "microsoft-edge-windows-services-ipv4.txt",
       "officialFqdn": "array516.prod.do.dsp.mp.microsoft.com",
       "cnameChain": [],
-      "firstSeen": null,
-      "lastSeen": null,
+      "firstSeen": "2026-08-22T12:53:50.517453Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -671,16 +825,19 @@
       "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
       "fqdn": "array808.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
-      "first_seen": null,
-      "last_seen": null,
-      "observation_sources": [],
+      "first_seen": "2026-08-22T12:53:50.517453Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
+      "observation_sources": [
+        "previous-published-dns-snapshot",
+        "system-resolver"
+      ],
       "source_documentation": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow",
       "officialSource": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow",
       "targetEdl": "microsoft-edge-windows-services-ipv4.txt",
       "officialFqdn": "array808.prod.do.dsp.mp.microsoft.com",
       "cnameChain": [],
-      "firstSeen": null,
-      "lastSeen": null,
+      "firstSeen": "2026-08-22T12:53:50.517453Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -774,7 +931,7 @@
         "tokenghubeus21.actions.githubusercontent.com"
       ],
       "first_seen": "2026-08-22T09:29:05.060917Z",
-      "last_seen": "2026-08-22T12:53:50.517453Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
       "observation_sources": [
         "system-resolver"
       ],
@@ -786,33 +943,83 @@
         "tokenghubeus21.actions.githubusercontent.com"
       ],
       "firstSeen": "2026-08-22T09:29:05.060917Z",
-      "lastSeen": "2026-08-22T12:53:50.517453Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
       "ip": "48.209.138.189",
-      "paloSource": null,
-      "owner": null,
-      "suspectedService": null,
-      "verified": false,
-      "category": "INTENTIONALLY_UNCOVERED",
-      "confidence": "low",
-      "covered": false,
-      "edl": null,
-      "targetEdl": null,
-      "source": null,
-      "fqdn": null,
-      "officialFqdn": null,
-      "cname_chain": [],
-      "cnameChain": [],
-      "first_seen": null,
-      "firstSeen": null,
-      "last_seen": null,
-      "lastSeen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "officialSource": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "paloSource": "10.50.84.24",
+      "owner": "Microsoft/Azure (AS8075)",
+      "suspectedService": "Windows dynamic settings service",
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "microsoft-edge-windows-services-ipv4.txt",
+      "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
+      "fqdn": "settings-win.data.microsoft.com",
+      "cname_chain": [
+        "atm-settingsfe-prod-geo2.trafficmanager.net",
+        "settings-prod-neu-2-tagged.northeurope.cloudapp.azure.com"
+      ],
+      "first_seen": "2026-08-22T13:24:45.428787Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/14",
+        "google-doh-ecs:82.66.0.0/14"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/windows/privacy/manage-windows-11-endpoints",
+      "officialSource": "https://learn.microsoft.com/en-us/windows/privacy/manage-windows-11-endpoints",
+      "allFqdns": [
+        "settings-win.data.microsoft.com",
+        "settings.data.microsoft.com"
+      ],
+      "targetEdl": "microsoft-edge-windows-services-ipv4.txt",
+      "officialFqdn": "settings-win.data.microsoft.com",
+      "cnameChain": [
+        "atm-settingsfe-prod-geo2.trafficmanager.net",
+        "settings-prod-neu-2-tagged.northeurope.cloudapp.azure.com"
+      ],
+      "firstSeen": "2026-08-22T13:24:45.428787Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
+      "reason": "Covered by a DNS-observed official FQDN"
+    },
+    {
+      "ip": "48.209.138.168",
+      "paloSource": "10.50.83.87",
+      "owner": "Microsoft/Azure (AS8075)",
+      "suspectedService": "Windows dynamic settings service",
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "microsoft-edge-windows-services-ipv4.txt",
+      "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
+      "fqdn": "settings-win.data.microsoft.com",
+      "cname_chain": [
+        "atm-settingsfe-prod-geo2.trafficmanager.net",
+        "settings-prod-neu-3-tagged.northeurope.cloudapp.azure.com"
+      ],
+      "first_seen": "2026-08-22T13:24:45.428787Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
+      "observation_sources": [
+        "google-doh-ecs:82.66.0.0/14"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/windows/privacy/manage-windows-11-endpoints",
+      "officialSource": "https://learn.microsoft.com/en-us/windows/privacy/manage-windows-11-endpoints",
+      "allFqdns": [
+        "settings-win.data.microsoft.com",
+        "settings.data.microsoft.com"
+      ],
+      "targetEdl": "microsoft-edge-windows-services-ipv4.txt",
+      "officialFqdn": "settings-win.data.microsoft.com",
+      "cnameChain": [
+        "atm-settingsfe-prod-geo2.trafficmanager.net",
+        "settings-prod-neu-3-tagged.northeurope.cloudapp.azure.com"
+      ],
+      "firstSeen": "2026-08-22T13:24:45.428787Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
+      "reason": "Covered by a DNS-observed official FQDN"
     },
     {
       "ip": "52.168.117.169",
@@ -844,8 +1051,41 @@
       "paloSource": null,
       "owner": null,
       "suspectedService": null,
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "microsoft-intune-windows-ipv4.txt",
+      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
+      "fqdn": "mobile.events.data.microsoft.com",
+      "cname_chain": [
+        "mobile.events.data.trafficmanager.net",
+        "onedscolprdeus13.eastus.cloudapp.azure.com"
+      ],
+      "first_seen": "2026-08-22T13:24:45.428787Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/0"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "targetEdl": "microsoft-intune-windows-ipv4.txt",
+      "officialFqdn": "mobile.events.data.microsoft.com",
+      "cnameChain": [
+        "mobile.events.data.trafficmanager.net",
+        "onedscolprdeus13.eastus.cloudapp.azure.com"
+      ],
+      "firstSeen": "2026-08-22T13:24:45.428787Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
+      "reason": "Covered by a DNS-observed official FQDN"
+    },
+    {
+      "ip": "23.200.213.147",
+      "paloSource": null,
+      "owner": null,
+      "suspectedService": null,
       "verified": false,
-      "category": "INTENTIONALLY_UNCOVERED",
+      "category": "CDN_SHARED_UNATTRIBUTED",
       "confidence": "low",
       "covered": false,
       "edl": null,
@@ -862,32 +1102,7 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
-    },
-    {
-      "ip": "23.200.213.147",
-      "paloSource": "10.50.84.3",
-      "owner": "Akamai (AS16625)",
-      "suspectedService": "Microsoft developer website on shared Akamai",
-      "verified": false,
-      "category": "CDN_SHARED_UNATTRIBUTED",
-      "confidence": "medium",
-      "covered": false,
-      "edl": null,
-      "targetEdl": null,
-      "source": null,
-      "fqdn": null,
-      "officialFqdn": null,
-      "cname_chain": [],
-      "cnameChain": [],
-      "first_seen": null,
-      "firstSeen": null,
-      "last_seen": null,
-      "lastSeen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "officialSource": null,
-      "reason": "Shared Akamai address with historical Microsoft developer names, but no authorized official service FQDN currently maps it"
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
     {
       "ip": "20.85.130.105",
@@ -905,7 +1120,7 @@
         "glb-c0e95bd587389a.github.com"
       ],
       "first_seen": "2026-08-22T09:29:05.060917Z",
-      "last_seen": "2026-08-22T12:53:50.517453Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
       "observation_sources": [
         "system-resolver"
       ],
@@ -923,7 +1138,7 @@
         "glb-c0e95bd587389a.github.com"
       ],
       "firstSeen": "2026-08-22T09:29:05.060917Z",
-      "lastSeen": "2026-08-22T12:53:50.517453Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -931,25 +1146,34 @@
       "paloSource": null,
       "owner": null,
       "suspectedService": null,
-      "verified": false,
-      "category": "INTENTIONALLY_UNCOVERED",
-      "confidence": "low",
-      "covered": false,
-      "edl": null,
-      "targetEdl": null,
-      "source": null,
-      "fqdn": null,
-      "officialFqdn": null,
-      "cname_chain": [],
-      "cnameChain": [],
-      "first_seen": null,
-      "firstSeen": null,
-      "last_seen": null,
-      "lastSeen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "officialSource": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "microsoft-edge-windows-services-ipv4.txt",
+      "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
+      "fqdn": "settings.data.microsoft.com",
+      "cname_chain": [
+        "atm-settingsfe-prod-geo2.trafficmanager.net",
+        "settings-prod-neu-1-tagged.northeurope.cloudapp.azure.com"
+      ],
+      "first_seen": "2026-08-22T13:24:45.428787Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/14",
+        "google-doh-ecs:82.66.0.0/14"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/windows/privacy/manage-windows-11-endpoints",
+      "officialSource": "https://learn.microsoft.com/en-us/windows/privacy/manage-windows-11-endpoints",
+      "targetEdl": "microsoft-edge-windows-services-ipv4.txt",
+      "officialFqdn": "settings.data.microsoft.com",
+      "cnameChain": [
+        "atm-settingsfe-prod-geo2.trafficmanager.net",
+        "settings-prod-neu-1-tagged.northeurope.cloudapp.azure.com"
+      ],
+      "firstSeen": "2026-08-22T13:24:45.428787Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
+      "reason": "Covered by a DNS-observed official FQDN"
     },
     {
       "ip": "17.253.29.146",
@@ -967,7 +1191,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "first_seen": "2026-08-22T09:00:08.705520Z",
-      "last_seen": "2026-08-22T12:53:50.517453Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24"
@@ -984,7 +1208,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "firstSeen": "2026-08-22T09:00:08.705520Z",
-      "lastSeen": "2026-08-22T12:53:50.517453Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1014,9 +1238,9 @@
     },
     {
       "ip": "13.107.6.156",
-      "paloSource": "10.50.84.3",
-      "owner": "Microsoft/Azure (AS8075)",
-      "suspectedService": "Microsoft 365 Office web front door",
+      "paloSource": null,
+      "owner": null,
+      "suspectedService": null,
       "verified": true,
       "category": "COVERED_OFFICIAL",
       "confidence": "high",
@@ -1030,7 +1254,7 @@
         "b-0004.b-msedge.net"
       ],
       "first_seen": "2026-08-22T12:30:28.378421Z",
-      "last_seen": "2026-08-22T12:53:50.517453Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
       "observation_sources": [
         "system-resolver"
       ],
@@ -1044,7 +1268,7 @@
         "b-0004.b-msedge.net"
       ],
       "firstSeen": "2026-08-22T12:30:28.378421Z",
-      "lastSeen": "2026-08-22T12:53:50.517453Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1188,9 +1412,12 @@
         "edge-microsoft-com.ax-0002.ax-msedge.net",
         "ax-0002.ax-msedge.net"
       ],
-      "first_seen": null,
-      "last_seen": null,
-      "observation_sources": [],
+      "first_seen": "2026-08-22T12:53:50.517453Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
+      "observation_sources": [
+        "previous-published-dns-snapshot",
+        "system-resolver"
+      ],
       "source_documentation": "https://learn.microsoft.com/en-us/windows/privacy/manage-windows-11-endpoints",
       "officialSource": "https://learn.microsoft.com/en-us/windows/privacy/manage-windows-11-endpoints",
       "targetEdl": "microsoft-edge-windows-services-ipv4.txt",
@@ -1199,8 +1426,8 @@
         "edge-microsoft-com.ax-0002.ax-msedge.net",
         "ax-0002.ax-msedge.net"
       ],
-      "firstSeen": null,
-      "lastSeen": null,
+      "firstSeen": "2026-08-22T12:53:50.517453Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1255,9 +1482,9 @@
     },
     {
       "ip": "17.145.0.2",
-      "paloSource": "10.50.83.27",
-      "owner": "Apple (AS714)",
-      "suspectedService": "Apple app/content service",
+      "paloSource": null,
+      "owner": "Apple",
+      "suspectedService": "Apple service",
       "verified": false,
       "category": "OWNER_ONLY_UNATTRIBUTED",
       "confidence": "low",
@@ -1276,22 +1503,22 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "Apple ownership and historical app.apple.com attribution are not an official in-scope endpoint proof, and no permitted Apple FQDN currently maps this address"
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
       "ip": "17.248.209.54",
-      "paloSource": "10.50.83.27",
-      "owner": "Apple (AS714)",
-      "suspectedService": "Apple iCloud edge service",
+      "paloSource": null,
+      "owner": "Apple",
+      "suspectedService": "Apple service",
       "verified": false,
-      "category": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
-      "confidence": "medium",
+      "category": "OWNER_ONLY_UNATTRIBUTED",
+      "confidence": "low",
       "covered": false,
       "edl": null,
       "targetEdl": null,
       "source": null,
       "fqdn": null,
-      "officialFqdn": "*.icloud.com",
+      "officialFqdn": null,
       "cname_chain": [],
       "cnameChain": [],
       "first_seen": null,
@@ -1299,9 +1526,9 @@
       "last_seen": null,
       "lastSeen": null,
       "observation_sources": [],
-      "source_documentation": "https://support.apple.com/en-us/101555",
-      "officialSource": "https://support.apple.com/en-us/101555",
-      "reason": "Apple documents the *.icloud.com family, but no in-scope concrete Apple FQDN currently or recently maps this address"
+      "source_documentation": null,
+      "officialSource": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
       "ip": "17.253.37.204",
@@ -1326,6 +1553,10 @@
       ],
       "source_documentation": "https://support.apple.com/en-us/101555",
       "officialSource": "https://support.apple.com/en-us/101555",
+      "allFqdns": [
+        "devimages-cdn.apple.com",
+        "download.developer.apple.com"
+      ],
       "targetEdl": "apple-xcode-developer-ipv4.txt",
       "officialFqdn": "devimages-cdn.apple.com",
       "cnameChain": [
@@ -1351,7 +1582,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "first_seen": "2026-08-22T08:46:37.008576Z",
-      "last_seen": "2026-08-22T12:53:50.517453Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24"
@@ -1368,7 +1599,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "firstSeen": "2026-08-22T08:46:37.008576Z",
-      "lastSeen": "2026-08-22T12:53:50.517453Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1387,7 +1618,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "first_seen": "2026-08-22T09:00:08.705520Z",
-      "last_seen": "2026-08-22T11:31:22.695022Z",
+      "last_seen": "2026-08-22T13:24:45.428787Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24"
@@ -1404,7 +1635,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "firstSeen": "2026-08-22T09:00:08.705520Z",
-      "lastSeen": "2026-08-22T11:31:22.695022Z",
+      "lastSeen": "2026-08-22T13:24:45.428787Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1788,11 +2019,11 @@
     },
     {
       "ip": "95.101.137.28",
-      "paloSource": "10.50.83.27",
-      "owner": "Akamai (AS20940)",
-      "suspectedService": "Unattributed shared CDN traffic",
+      "paloSource": null,
+      "owner": "Akamai",
+      "suspectedService": "Apple Maps / shared CDN",
       "verified": false,
-      "category": "CDN_SHARED_UNATTRIBUTED",
+      "category": "OWNER_ONLY_UNATTRIBUTED",
       "confidence": "low",
       "covered": false,
       "edl": null,
@@ -1809,15 +2040,15 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "Shared Akamai address without a demonstrated official client FQDN; Akamai ownership alone is not authorization"
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
       "ip": "95.101.137.33",
-      "paloSource": "10.50.83.27",
-      "owner": "Akamai (AS20940)",
-      "suspectedService": "Unattributed shared CDN traffic",
+      "paloSource": null,
+      "owner": "Akamai",
+      "suspectedService": "Apple Maps / shared CDN",
       "verified": false,
-      "category": "CDN_SHARED_UNATTRIBUTED",
+      "category": "OWNER_ONLY_UNATTRIBUTED",
       "confidence": "low",
       "covered": false,
       "edl": null,
@@ -1834,7 +2065,7 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "Shared Akamai address without a demonstrated official client FQDN; Akamai ownership alone is not authorization"
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
       "ip": "23.58.84.19",
@@ -1988,11 +2219,11 @@
     },
     {
       "ip": "52.222.169.45",
-      "paloSource": "10.50.83.125",
-      "owner": "AWS CloudFront (AS16509)",
-      "suspectedService": "Unattributed shared CloudFront distribution",
+      "paloSource": null,
+      "owner": null,
+      "suspectedService": null,
       "verified": false,
-      "category": "CDN_SHARED_UNATTRIBUTED",
+      "category": "INTENTIONALLY_UNCOVERED",
       "confidence": "low",
       "covered": false,
       "edl": null,
@@ -2009,15 +2240,15 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "Shared CloudFront address without a demonstrated official client FQDN; unrelated tenants may use the same edge"
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
       "ip": "52.222.169.104",
-      "paloSource": "10.50.83.126",
-      "owner": "AWS CloudFront (AS16509)",
-      "suspectedService": "Unattributed shared CloudFront distribution",
+      "paloSource": null,
+      "owner": null,
+      "suspectedService": null,
       "verified": false,
-      "category": "CDN_SHARED_UNATTRIBUTED",
+      "category": "INTENTIONALLY_UNCOVERED",
       "confidence": "low",
       "covered": false,
       "edl": null,
@@ -2034,7 +2265,7 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "Shared CloudFront address without a demonstrated official client FQDN; the distribution hostname alone does not identify a service"
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     }
   ]
 }
