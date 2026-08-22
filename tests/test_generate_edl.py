@@ -12,7 +12,9 @@ from scripts.generate_edl import (
     GenerationError,
     GITHUB_ACTIONS_FILE,
     GITHUB_ACTIONS_REQUIRED_HOSTS,
+    INTUNE_EVENT_RESIDUAL_IPS,
     INTUNE_EVENT_WILDCARD_TARGETS,
+    INTUNE_WINDOWS_FILE,
     MICROSOFT_DELIVERY_OPTIMIZATION_URL,
     MICROSOFT_EDGE_WINDOWS_FILE,
     RESIDUAL_IPS,
@@ -121,6 +123,56 @@ IP Subnets
             INTUNE_EVENT_WILDCARD_TARGETS["*.events.data.microsoft.com"],
         )
         self.assertIn("us-mobile.events.data.microsoft.com", hosts)
+        self.assertIn("browser.events.data.microsoft.com", hosts)
+        self.assertIn("self.events.data.microsoft.com", hosts)
+        self.assertIn("v20.events.data.microsoft.com", hosts)
+
+    def test_intune_history_seeds_previous_snapshot_and_retains_it_24_hours(
+        self,
+    ) -> None:
+        observed_at = dt.datetime(2026, 8, 22, 12, tzinfo=dt.timezone.utc)
+        hostname = "v20.events.data.microsoft.com"
+        previous_sources = {
+            "generatedAt": "2026-08-22T11:00:00Z",
+            "files": {
+                INTUNE_WINDOWS_FILE: {
+                    "resolvedHostnames": {hostname: ["51.132.193.104"]},
+                    "cnameChains": {
+                        hostname: [
+                            "win-global-asimov-leafs-events-data.trafficmanager.net",
+                            "onedscolprdwus.example.cloudapp.azure.com",
+                        ]
+                    },
+                }
+            },
+        }
+        current_details = build_dns_observation_details(
+            authorized_hostnames={hostname},
+            resolutions={hostname: ["20.184.175.5"]},
+            cname_chains={
+                hostname: [
+                    "win-global-asimov-leafs-events-data.trafficmanager.net"
+                ]
+            },
+            observation_source="system-resolver",
+        )
+
+        networks, resolutions, history, expired = build_dns_history(
+            previous_sources=previous_sources,
+            filename=INTUNE_WINDOWS_FILE,
+            authorized_hostnames={hostname},
+            current_details=current_details,
+            observed_at=observed_at,
+            label="Microsoft Intune events",
+        )
+
+        self.assertIn(ipaddress.IPv4Network("51.132.193.104/32"), networks)
+        self.assertIn("51.132.193.104", resolutions[hostname])
+        self.assertEqual(
+            history[hostname]["51.132.193.104"]["lastSeen"],
+            "2026-08-22T11:00:00Z",
+        )
+        self.assertEqual(expired, [])
 
     def test_windows_update_targets_are_dns_names_not_ip_overrides(self) -> None:
         targets = {
@@ -487,6 +539,10 @@ class ResidualCoverageTests(unittest.TestCase):
         "162.159.194.64",
         "162.159.194.66",
         "172.64.69.66",
+        "51.132.193.104",
+        "4.150.223.98",
+        "4.150.223.112",
+        "20.184.175.2",
     }
 
     def test_tracks_requested_ips_and_emits_provenance_schema(self) -> None:
@@ -537,6 +593,49 @@ class ResidualCoverageTests(unittest.TestCase):
             MICROSOFT_DELIVERY_OPTIMIZATION_URL,
         )
         self.assertFalse(entries["17.248.209.16"]["covered"])
+        self.assertTrue(INTUNE_EVENT_RESIDUAL_IPS.issubset(entries))
+        self.assertFalse(entries["20.184.175.2"]["covered"])
+        self.assertFalse(entries["20.184.175.2"]["verified"])
+        self.assertEqual(entries["20.184.175.2"]["owner"], "Microsoft/Azure")
+
+    def test_intune_telemetry_residual_requires_dns_provenance(self) -> None:
+        observed_at = "2026-08-22T12:00:00Z"
+        hostname = "v20.events.data.microsoft.com"
+        address = "51.132.193.104"
+        document = json.loads(
+            build_residual_coverage(
+                generated_at=observed_at,
+                generated={
+                    INTUNE_WINDOWS_FILE: [
+                        ipaddress.IPv4Network(f"{address}/32")
+                    ]
+                },
+                resolutions_by_file={
+                    INTUNE_WINDOWS_FILE: {hostname: [address]}
+                },
+                cname_chains_by_file={INTUNE_WINDOWS_FILE: {}},
+                dns_history_by_file={
+                    INTUNE_WINDOWS_FILE: {
+                        hostname: {
+                            address: {
+                                "cnameChain": [
+                                    "win-global-asimov-leafs-events-data.trafficmanager.net"
+                                ],
+                                "firstSeen": observed_at,
+                                "lastSeen": observed_at,
+                                "observationSources": ["system-resolver"],
+                            }
+                        }
+                    }
+                },
+            )
+        )
+        entry = next(item for item in document["entries"] if item["ip"] == address)
+
+        self.assertTrue(entry["covered"])
+        self.assertTrue(entry["verified"])
+        self.assertEqual(entry["edl"], INTUNE_WINDOWS_FILE)
+        self.assertEqual(entry["fqdn"], hostname)
 
     def test_github_actions_canary_is_verified_only_with_dns_provenance(self) -> None:
         observed_at = "2026-08-22T12:00:00Z"

@@ -106,9 +106,16 @@ section **Consolidated Endpoint List**. Elle combine :
 
 Le wildcard n'est jamais résolu artificiellement et aucune IP observée n'est
 ajoutée en dur. Le générateur valide sa présence dans la source Microsoft, puis
-résout des cibles concrètes auditées appartenant à ce wildcard (`events`,
-`mobile`, `v10`, `v20` et leurs variantes `au`, `eu`, `uk` et `us`). Les
-résultats sont publiés en `/32` et consignés dans `sources.json`.
+résout huit fois des cibles concrètes auditées appartenant à ce wildcard
+(`events`, `functional`, `self`, `browser`, `mobile`, `v10`, `v10c`, `v20` et
+leurs variantes `au`, `eu`, `uk` et `us`). Les résultats sont publiés en `/32`
+et consignés dans `sources.json`.
+
+Comme ces backends OneDS tournent rapidement, chaque couple FQDN/IP reste actif
+pendant 24 heures après sa dernière observation DNS. Sa chaîne CNAME,
+`firstSeen`, `lastSeen` et ses sources d'observation sont conservées. Une
+adresse Microsoft/Azure observée dans les journaux n'est jamais ajoutée si
+aucune de ces cibles officielles ne la retourne.
 
 Les autres dépendances Windows Update et Delivery Optimization résolues par le
 workflow sont placées dans `microsoft-edge-windows-services-ipv4.txt`. Aucun

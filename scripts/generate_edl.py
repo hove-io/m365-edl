@@ -148,8 +148,12 @@ RESIDUAL_IPS = (
     "52.85.118.108",
     "20.42.65.85",
     "4.150.223.96",
+    "4.150.223.98",
     "4.150.223.104",
+    "4.150.223.112",
     "4.150.223.115",
+    "20.184.175.2",
+    "51.132.193.104",
     "23.103.234.43",
     "17.248.236.28",
     "72.153.5.61",
@@ -201,6 +205,12 @@ RESIDUAL_IPS = (
     "162.159.194.66",
     "172.64.69.66",
 )
+INTUNE_EVENT_RESIDUAL_IPS = {
+    "4.150.223.98",
+    "4.150.223.112",
+    "20.184.175.2",
+    "51.132.193.104",
+}
 
 GITHUB_META_FIELDS = ("web", "api", "git", "pages")
 DROPBOX_PRODUCT_NET_NAMES = {"DROPBOX", "DROPB"}
@@ -392,6 +402,7 @@ INTUNE_EVENT_WILDCARD_TARGETS = {
         "uk-mobile.events.data.microsoft.com",
         "us-mobile.events.data.microsoft.com",
         "au-v20.events.data.microsoft.com",
+        "browser.events.data.microsoft.com",
         "eu-v20.events.data.microsoft.com",
         "uk-v20.events.data.microsoft.com",
         "us-v20.events.data.microsoft.com",
@@ -1999,6 +2010,17 @@ def residual_noncoverage_reason(address: ipaddress.IPv4Address) -> str:
             "Not returned by the targeted official APNs FQDNs; the prohibited "
             "17.0.0.0/8 fallback was not used"
         )
+    if str(address) in INTUNE_EVENT_RESIDUAL_IPS:
+        if address == ipaddress.IPv4Address("20.184.175.2"):
+            return (
+                "Microsoft/Azure ownership observed, but no in-scope official "
+                "Microsoft FQDN currently or recently maps this address to a service"
+            )
+        return (
+            "Probable Microsoft telemetry address not returned during the current "
+            "or rolling 24-hour DNS window by an authorized "
+            "*.events.data.microsoft.com target"
+        )
     if address in {
         ipaddress.IPv4Address("17.248.236.28"),
         ipaddress.IPv4Address("17.145.16.2"),
@@ -2041,6 +2063,26 @@ def residual_classification(
         return {
             "owner": "Microsoft/Azure",
             "suspectedService": "GitHub Actions",
+            "verified": verified,
+        }
+    if str(address) in INTUNE_EVENT_RESIDUAL_IPS:
+        verified = bool(
+            covered
+            and selected_file == INTUNE_WINDOWS_FILE
+            and fqdn
+            and (
+                fqdn == "events.data.microsoft.com"
+                or fqdn.endswith(".events.data.microsoft.com")
+            )
+        )
+        suspected_service = (
+            "Unresolved Microsoft/Azure service"
+            if address == ipaddress.IPv4Address("20.184.175.2")
+            else "Microsoft telemetry / events.data.microsoft.com"
+        )
+        return {
+            "owner": "Microsoft/Azure",
+            "suspectedService": suspected_service,
             "verified": verified,
         }
     if address in ipaddress.IPv4Network("17.0.0.0/8"):
@@ -2184,7 +2226,12 @@ def build_residual_coverage(
             )
             continue
 
-        selected_file = matching_files[0]
+        selected_file = (
+            INTUNE_WINDOWS_FILE
+            if raw_address in INTUNE_EVENT_RESIDUAL_IPS
+            and INTUNE_WINDOWS_FILE in matching_files
+            else matching_files[0]
+        )
         fqdns = sorted(
             set(address_fqdns.get(selected_file, {}).get(raw_address, []))
         )
@@ -2401,8 +2448,9 @@ def build_index(
     <div class="notice">
       <p><strong>Windows Update, Delivery Optimization et Intune :</strong> les
       familles FQDN officielles sont validées dans les sources Microsoft puis des
-      cibles DNS auditées sont résolues à chaque exécution. Seules leurs IPv4 publiques
-      courantes sont ajoutées en <code>/32</code> ; aucune IP observée ni plage Azure
+      cibles DNS auditées sont résolues à chaque exécution. L'EDL Intune conserve
+      pendant 24 heures uniquement les IPv4 publiques réellement observées sous
+      <code>*.events.data.microsoft.com</code>. Aucune IP de logs ni plage Azure
       globale n'est injectée manuellement.</p>
     </div>
     <div class="notice">
@@ -2629,14 +2677,33 @@ def main() -> int:
             label="Microsoft Intune events",
         )
         (
-            intune_event_networks,
-            intune_event_resolutions,
+            _intune_event_current_networks,
+            intune_event_current_resolutions,
             intune_event_cname_chains,
             intune_event_unresolved,
         ) = resolve_service_hostnames(
             intune_event_hosts,
             label="Microsoft Intune events",
             attempts=8,
+        )
+        intune_event_current_details = build_dns_observation_details(
+            authorized_hostnames=set(intune_event_hosts),
+            resolutions=intune_event_current_resolutions,
+            cname_chains=intune_event_cname_chains,
+            observation_source="system-resolver",
+        )
+        (
+            intune_event_networks,
+            intune_event_resolutions,
+            intune_event_dns_history,
+            intune_event_expired_records,
+        ) = build_dns_history(
+            previous_sources=previous_sources,
+            filename=INTUNE_WINDOWS_FILE,
+            authorized_hostnames=set(intune_event_hosts),
+            current_details=intune_event_current_details,
+            observed_at=observed_at,
+            label="Microsoft Intune events",
         )
         intune_windows_networks = sort_networks(
             [*intune_explicit_networks, *intune_event_networks]
@@ -2954,6 +3021,7 @@ def main() -> int:
             MICROSOFT_EDGE_WINDOWS_FILE: microsoft_service_cname_chains,
         }
         dns_history_by_file = {
+            INTUNE_WINDOWS_FILE: intune_event_dns_history,
             APPLE_UPDATES_FILE: apple_updates_dns_history,
             APPLE_CONTENT_FILE: apple_content_dns_history,
             APPLE_DEVICE_FILE: apple_device_dns_history,
@@ -3044,7 +3112,8 @@ def main() -> int:
                 "explicitCidrCount": len(intune_explicit_networks),
                 "method": (
                     "Combine explicit consolidated Intune IP Subnets with IPv4 "
-                    "A records from audited *.events.data.microsoft.com targets"
+                    "A records from audited *.events.data.microsoft.com targets "
+                    "retained for a rolling 24-hour window"
                 ),
                 "scope": (
                     "Intune-managed devices, including consolidated IP subnets "
@@ -3056,8 +3125,17 @@ def main() -> int:
                     for pattern, targets in intune_event_targets.items()
                 },
                 "resolvedHostnames": intune_event_resolutions,
+                "currentResolvedHostnames": intune_event_current_resolutions,
                 "cnameChains": intune_event_cname_chains,
+                "dnsHistory": {
+                    "gracePeriodHours": int(
+                        DNS_HISTORY_GRACE_PERIOD.total_seconds() // 3600
+                    ),
+                    "recordsByHostname": intune_event_dns_history,
+                    "expiredThisRun": intune_event_expired_records,
+                },
                 "unresolvedHostnames": intune_event_unresolved,
+                "dnsAttemptsPerHostname": 8,
                 "manualIpOverrides": False,
                 "globalAzureOrAs8075RangesIncluded": False,
             },
