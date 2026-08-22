@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-08-22T06:18:01.757504Z",
+  "generatedAt": "2026-08-22T06:44:46.661962Z",
   "sources": {
     "microsoft365Endpoints": {
       "publisher": "Microsoft",
       "name": "Microsoft 365 IP Address and URL web service",
       "instance": "Worldwide",
       "url": "https://endpoints.office.com/endpoints/worldwide",
-      "requestUrl": "https://endpoints.office.com/endpoints/worldwide?ClientRequestId=6168943d-ea6e-45dd-ac32-5fc7f30a53fb&Format=JSON",
-      "clientRequestId": "6168943d-ea6e-45dd-ac32-5fc7f30a53fb",
+      "requestUrl": "https://endpoints.office.com/endpoints/worldwide?ClientRequestId=3f3b12f9-9288-49ec-aaf0-ca6954a734b8&Format=JSON",
+      "clientRequestId": "3f3b12f9-9288-49ec-aaf0-ca6954a734b8",
       "responseRecordCount": 63,
       "field": "ips"
     },
@@ -63,7 +63,7 @@
     "dropboxFirewallGuidance": {
       "publisher": "Dropbox",
       "url": "https://help.dropbox.com/installs/configuring-firewall",
-      "sha256": "757e98df0a66722b4c01b5aa6f46b60b2bec585a133784ef5addcf53039b4980",
+      "sha256": "5843280ced0a7f8ffd0f16cc923fc39b4bb6750dfc3ec75c1578b7c2b4d5df81",
       "note": "Dropbox recommends domain allowlisting because third-party infrastructure isn't covered by Dropbox-owned ranges"
     },
     "dropboxArinAllocations": {
@@ -115,7 +115,7 @@
       "method": "Filter the Microsoft 365 ips field by serviceArea"
     },
     "microsoft-defender-ipv4.txt": {
-      "cidrCount": 33,
+      "cidrCount": 36,
       "hostnameCount": 32,
       "method": "Resolve selected official Defender FQDN A records to IPv4 /32",
       "scope": [
@@ -185,54 +185,57 @@
           "20.60.130.228"
         ],
         "crl.microsoft.com": [
-          "23.223.247.198",
-          "23.223.247.221"
+          "23.64.112.143",
+          "23.64.112.180"
         ],
         "ctldl.windowsupdate.com": [
-          "109.61.38.38"
+          "23.47.72.69",
+          "23.47.72.76"
         ],
         "definitionupdates.microsoft.com": [
-          "23.209.57.16"
+          "23.54.41.27"
         ],
         "download.microsoft.com": [
           "204.79.197.219"
         ],
         "download.windowsupdate.com": [
-          "146.75.38.172"
+          "140.248.146.172"
         ],
         "ecs.office.com": [
-          "52.123.128.14",
-          "52.123.129.14"
+          "52.123.250.136",
+          "52.123.250.137",
+          "52.123.250.155",
+          "52.123.250.166"
         ],
         "eu-mobile.events.data.microsoft.com": [
-          "4.207.44.77"
+          "40.79.150.121"
         ],
         "eu-v20.events.data.microsoft.com": [
-          "52.178.17.232"
+          "4.207.44.75"
         ],
         "eu.vortex-win.data.microsoft.com": [
-          "4.207.44.72"
+          "4.207.44.70"
         ],
         "europe.x.cp.wd.microsoft.com": [
-          "20.50.64.15"
+          "20.50.2.45"
         ],
         "events.data.microsoft.com": [
-          "20.184.175.9"
+          "20.42.65.94"
         ],
         "fe3cr.delivery.mp.microsoft.com": [
-          "74.179.77.164"
+          "135.232.92.97"
         ],
         "go.microsoft.com": [
-          "23.48.9.211"
+          "23.14.141.249"
         ],
         "mobile.events.data.microsoft.com": [
-          "52.168.117.170"
+          "20.184.175.13"
         ],
         "settings-win.data.microsoft.com": [
-          "172.215.188.232"
+          "57.155.101.212"
         ],
         "update.microsoft.com": [
-          "128.85.102.70"
+          "132.196.74.18"
         ],
         "usseu1northprod.blob.core.windows.net": [
           "20.209.97.107"
@@ -241,16 +244,16 @@
           "20.209.11.97"
         ],
         "vortex-win.data.microsoft.com": [
-          "4.150.223.96"
+          "20.42.73.30"
         ],
         "wdcp.microsoft.com": [
-          "48.211.71.198"
+          "172.178.160.26"
         ],
         "wdcpalt.microsoft.com": [
           "172.178.160.17"
         ],
         "winatp-gw-neu.microsoft.com": [
-          "74.178.35.144"
+          "72.145.59.251"
         ],
         "winatp-gw-neu3.microsoft.com": [
           "72.145.59.250"
@@ -268,7 +271,7 @@
           "20.60.27.132"
         ],
         "www.microsoft.com": [
-          "23.202.154.36"
+          "23.54.42.39"
         ]
       }
     },
@@ -281,12 +284,85 @@
       ]
     },
     "microsoft-intune-windows-ipv4.txt": {
-      "cidrCount": 85,
-      "method": "Extract and validate explicit IPv4 CIDRs from the consolidated Intune IP Subnets block",
-      "scope": "Intune-managed devices, including the explicitly published Intune and Azure Front Door Microsoft Security subnets"
+      "cidrCount": 100,
+      "explicitCidrCount": 85,
+      "method": "Combine explicit consolidated Intune IP Subnets with IPv4 A records from audited *.events.data.microsoft.com targets",
+      "scope": "Intune-managed devices, including consolidated IP subnets and optional reporting/Endpoint Analytics endpoints",
+      "wildcardPatterns": [
+        "*.events.data.microsoft.com"
+      ],
+      "wildcardResolutionTargets": {
+        "*.events.data.microsoft.com": [
+          "events.data.microsoft.com",
+          "functional.events.data.microsoft.com",
+          "self.events.data.microsoft.com",
+          "v10.events.data.microsoft.com",
+          "v10c.events.data.microsoft.com",
+          "v20.events.data.microsoft.com",
+          "mobile.events.data.microsoft.com",
+          "au-mobile.events.data.microsoft.com",
+          "eu-mobile.events.data.microsoft.com",
+          "uk-mobile.events.data.microsoft.com",
+          "us-mobile.events.data.microsoft.com",
+          "au-v20.events.data.microsoft.com",
+          "eu-v20.events.data.microsoft.com",
+          "uk-v20.events.data.microsoft.com",
+          "us-v20.events.data.microsoft.com"
+        ]
+      },
+      "resolvedHostnames": {
+        "au-mobile.events.data.microsoft.com": [
+          "40.79.167.10"
+        ],
+        "au-v20.events.data.microsoft.com": [
+          "104.46.162.231"
+        ],
+        "eu-mobile.events.data.microsoft.com": [
+          "40.79.150.121"
+        ],
+        "eu-v20.events.data.microsoft.com": [
+          "4.207.44.75"
+        ],
+        "events.data.microsoft.com": [
+          "20.42.65.94"
+        ],
+        "functional.events.data.microsoft.com": [
+          "20.42.65.93"
+        ],
+        "mobile.events.data.microsoft.com": [
+          "20.184.175.13"
+        ],
+        "self.events.data.microsoft.com": [
+          "40.79.150.122"
+        ],
+        "uk-mobile.events.data.microsoft.com": [
+          "51.104.15.253"
+        ],
+        "uk-v20.events.data.microsoft.com": [
+          "51.105.71.136"
+        ],
+        "us-mobile.events.data.microsoft.com": [
+          "20.184.175.0"
+        ],
+        "us-v20.events.data.microsoft.com": [
+          "4.150.223.106"
+        ],
+        "v10.events.data.microsoft.com": [
+          "4.150.223.113"
+        ],
+        "v10c.events.data.microsoft.com": [
+          "20.42.65.90"
+        ],
+        "v20.events.data.microsoft.com": [
+          "52.168.117.170"
+        ]
+      },
+      "unresolvedHostnames": {},
+      "manualIpOverrides": false,
+      "globalAzureOrAs8075RangesIncluded": false
     },
     "apple-updates-ipv4.txt": {
-      "cidrCount": 27,
+      "cidrCount": 26,
       "method": "Resolve official Apple Software updates FQDNs to IPv4 /32",
       "documentedHostnames": [
         "appldnld.apple.com",
@@ -315,79 +391,79 @@
       "wildcardResolutionTargets": {},
       "resolvedHostnames": {
         "appldnld.apple.com": [
-          "17.253.21.134",
-          "17.253.21.141"
+          "17.253.21.132",
+          "17.253.21.148"
         ],
         "configuration.apple.com": [
-          "17.253.21.140",
-          "17.253.21.146"
+          "17.253.21.149",
+          "17.253.21.150"
         ],
         "fcs-keys-pub-prod.cdn-apple.com": [
-          "17.253.21.141",
-          "17.253.21.147"
+          "17.253.21.136",
+          "17.253.21.150"
         ],
         "gdmf-ados.apple.com": [
           "17.33.203.20"
         ],
         "gdmf.apple.com": [
-          "17.23.18.34"
+          "17.137.162.3"
         ],
         "gg.apple.com": [
           "17.171.47.4"
         ],
         "gs.apple.com": [
-          "17.111.103.15"
+          "17.137.162.1"
         ],
         "gsra.apple.com": [
-          "17.111.103.114"
+          "17.171.47.40"
         ],
         "ig.apple.com": [
           "17.171.47.71"
         ],
         "mesu.apple.com": [
-          "17.253.21.133",
-          "17.253.21.144"
+          "17.253.21.136",
+          "17.253.21.149"
         ],
         "oscdn.apple.com": [
-          "23.15.3.157",
-          "23.15.3.222"
+          "23.59.177.74",
+          "184.25.59.70"
         ],
         "osrecovery.apple.com": [
           "17.156.129.133"
         ],
         "skl.apple.com": [
-          "17.171.47.73"
+          "17.171.47.7"
         ],
         "swcdn.apple.com": [
-          "17.253.21.146",
-          "17.253.21.149"
+          "17.253.21.132",
+          "17.253.21.138"
         ],
         "swdist.apple.com": [
-          "17.253.21.135",
-          "17.253.21.137",
-          "17.253.21.143",
-          "17.253.21.148"
+          "17.253.21.132",
+          "17.253.21.133",
+          "17.253.21.144",
+          "17.253.21.146"
         ],
         "swdownload.apple.com": [
           "17.156.129.140"
         ],
         "swscan.apple.com": [
-          "23.222.197.13"
+          "23.14.141.8"
         ],
         "updates-http.cdn-apple.com": [
-          "17.253.21.135",
-          "17.253.21.148"
+          "17.253.21.134",
+          "17.253.21.147"
         ],
         "updates.cdn-apple.com": [
-          "17.253.21.133",
+          "17.253.21.132",
           "17.253.21.145"
         ],
         "wkms-public.apple.com": [
-          "17.32.214.125"
+          "17.157.64.131"
         ],
         "xp.apple.com": [
-          "17.253.21.137",
-          "17.253.21.138"
+          "17.253.21.134",
+          "17.253.21.142"
         ]
       },
       "unresolvedHostnames": {}
@@ -439,36 +515,35 @@
       },
       "resolvedHostnames": {
         "api.apple-cloudkit.com": [
-          "17.248.228.19",
-          "17.248.228.65",
-          "17.248.228.66",
-          "17.248.228.67",
-          "17.248.228.69",
-          "17.248.228.70"
+          "17.248.207.9",
+          "17.248.207.17",
+          "17.248.207.67",
+          "17.248.210.8",
+          "17.248.210.70"
         ],
         "apps.apple.com": [
-          "23.222.196.33"
+          "140.248.147.6"
         ],
         "audiocontentdownload.apple.com": [
-          "17.253.21.131",
-          "17.253.21.137"
+          "17.253.21.137",
+          "17.253.21.139"
         ],
         "devimages-cdn.apple.com": [
-          "17.253.21.133",
-          "17.253.21.135"
+          "17.253.21.144",
+          "17.253.21.145"
         ],
         "download.developer.apple.com": [
-          "17.253.21.133",
-          "17.253.21.143"
+          "17.253.21.135",
+          "17.253.21.145"
         ],
         "gateway.icloud.com": [
-          "17.248.228.12",
-          "17.248.228.66",
-          "17.248.228.68",
-          "17.248.228.70"
+          "17.248.207.9",
+          "17.248.207.17",
+          "17.248.210.8",
+          "17.248.210.64"
         ],
         "itunes.apple.com": [
-          "23.222.196.33"
+          "2.16.232.30"
         ],
         "mzstatic.com": [
           "17.253.142.4"
@@ -479,14 +554,14 @@
           "17.33.202.170"
         ],
         "sylvan.apple.com": [
-          "17.253.21.138",
+          "17.253.21.140",
           "17.253.21.141"
         ],
         "token.safebrowsing.apple": [
-          "17.253.21.134",
-          "17.253.21.135",
-          "17.253.21.144",
-          "17.253.21.146"
+          "17.253.27.134",
+          "17.253.27.136",
+          "17.253.27.143",
+          "17.253.27.150"
         ]
       },
       "unresolvedHostnames": {
@@ -497,7 +572,7 @@
       }
     },
     "apple-device-services-ipv4.txt": {
-      "cidrCount": 25,
+      "cidrCount": 24,
       "method": "Resolve official Apple Device management and audited APNs FQDNs to IPv4 /32",
       "documentedHostnames": [
         "*.appattest.apple.com",
@@ -527,19 +602,19 @@
       },
       "resolvedHostnames": {
         "api.development.push.apple.com": [
-          "17.188.143.34",
-          "17.188.143.66",
-          "17.188.143.98"
+          "17.188.168.135",
+          "17.188.168.147",
+          "17.188.168.149"
         ],
         "api.push.apple.com": [
-          "17.188.169.31",
-          "17.188.169.156",
-          "17.188.169.158",
-          "17.188.169.222",
-          "17.188.169.223",
-          "17.188.169.225",
-          "17.188.170.157",
-          "17.188.172.28"
+          "17.188.143.42",
+          "17.188.143.136",
+          "17.188.143.137",
+          "17.188.178.9",
+          "17.188.178.102",
+          "17.188.179.7",
+          "17.188.179.38",
+          "17.188.179.42"
         ],
         "axm-servicediscovery.apple.com": [
           "17.33.202.237"
@@ -548,10 +623,10 @@
           "17.156.129.65"
         ],
         "deviceservices-external.apple.com": [
-          "17.32.214.189"
+          "17.179.240.222"
         ],
         "gdmf.apple.com": [
-          "17.23.18.34"
+          "17.137.162.3"
         ],
         "identity.apple.com": [
           "17.179.244.134"
@@ -560,18 +635,17 @@
           "17.156.129.66"
         ],
         "mdmenrollment.apple.com": [
-          "17.248.228.12",
-          "17.248.228.19",
-          "17.248.228.27",
-          "17.248.228.70",
-          "17.248.228.71"
+          "17.248.207.9",
+          "17.248.207.17",
+          "17.248.207.25",
+          "17.248.207.68",
+          "17.248.210.8"
         ],
         "setup.icloud.com": [
-          "17.248.228.12",
-          "17.248.228.19",
-          "17.248.228.27",
-          "17.248.228.64",
-          "17.248.228.69"
+          "17.248.207.17",
+          "17.248.207.25",
+          "17.248.210.8",
+          "17.248.210.64"
         ],
         "vpp.itunes.apple.com": [
           "17.157.96.194"
@@ -651,13 +725,13 @@
       ],
       "resolvedHostnames": {
         "downloads.dell.com": [
-          "23.209.58.8"
+          "23.54.42.5"
         ]
       },
       "unresolvedHostnames": {}
     },
     "microsoft-edge-windows-services-ipv4.txt": {
-      "cidrCount": 35,
+      "cidrCount": 52,
       "method": "Resolve selected official Microsoft Edge and Windows FQDNs to IPv4 /32, then remove networks already covered by existing EDLs",
       "edgeHostnames": [
         "clients.config.office.net",
@@ -684,17 +758,22 @@
       ],
       "windowsHostnames": [
         "adl.windows.com",
+        "array504.prod.do.dsp.mp.microsoft.com",
+        "array506.prod.do.dsp.mp.microsoft.com",
         "checkappexec.microsoft.com",
         "ctldl.windowsupdate.com",
         "data-edge.smartscreen.microsoft.com",
         "definitionupdates.microsoft.com",
         "displaycatalog.mp.microsoft.com",
-        "functional.events.data.microsoft.com",
+        "dl.delivery.mp.microsoft.com",
+        "download.windowsupdate.com",
+        "fe3cr.delivery.mp.microsoft.com",
+        "geo.prod.do.dsp.mp.microsoft.com",
+        "geover.prod.do.dsp.mp.microsoft.com",
         "licensing.mp.microsoft.com",
         "manage.devcenter.microsoft.com",
         "nav-edge.smartscreen.microsoft.com",
         "ping-edge.smartscreen.microsoft.com",
-        "self.events.data.microsoft.com",
         "settings-win.data.microsoft.com",
         "settings.data.microsoft.com",
         "share.microsoft.com",
@@ -702,140 +781,212 @@
         "storeedgefd.dsx.mp.microsoft.com",
         "telecommand.telemetry.microsoft.com",
         "tsfe.trafficshaping.dsp.mp.microsoft.com",
-        "v10.events.data.microsoft.com",
+        "update.microsoft.com",
         "www.telecommandsvc.microsoft.com"
       ],
+      "windowsWildcardPatterns": [
+        "*.delivery.mp.microsoft.com",
+        "*.dl.delivery.mp.microsoft.com",
+        "*.prod.do.dsp.mp.microsoft.com",
+        "*.update.microsoft.com",
+        "*.windowsupdate.com"
+      ],
+      "windowsWildcardResolutionTargets": {
+        "*.delivery.mp.microsoft.com": [
+          "fe3cr.delivery.mp.microsoft.com"
+        ],
+        "*.dl.delivery.mp.microsoft.com": [
+          "dl.delivery.mp.microsoft.com"
+        ],
+        "*.prod.do.dsp.mp.microsoft.com": [
+          "array504.prod.do.dsp.mp.microsoft.com",
+          "array506.prod.do.dsp.mp.microsoft.com",
+          "geo.prod.do.dsp.mp.microsoft.com",
+          "geover.prod.do.dsp.mp.microsoft.com"
+        ],
+        "*.update.microsoft.com": [
+          "update.microsoft.com"
+        ],
+        "*.windowsupdate.com": [
+          "ctldl.windowsupdate.com",
+          "download.windowsupdate.com"
+        ]
+      },
       "resolvedHostnames": {
         "adl.windows.com": [
-          "23.223.247.205",
-          "23.223.247.213"
+          "23.200.156.204",
+          "23.200.156.215"
+        ],
+        "array504.prod.do.dsp.mp.microsoft.com": [
+          "72.153.5.61"
+        ],
+        "array506.prod.do.dsp.mp.microsoft.com": [
+          "72.153.5.63"
         ],
         "checkappexec.microsoft.com": [
-          "13.91.222.61"
+          "65.52.241.40"
         ],
         "clients.config.office.net": [
-          "23.103.225.9",
-          "23.103.225.63",
-          "23.103.225.77",
-          "23.103.225.86"
+          "23.103.231.33",
+          "23.103.231.36",
+          "23.103.231.42",
+          "23.103.231.44"
         ],
         "config.edge.skype.com": [
-          "52.123.247.21",
-          "52.123.247.42",
-          "52.123.247.72",
-          "52.123.247.81"
+          "150.171.22.17"
         ],
         "ctldl.windowsupdate.com": [
-          "109.61.38.38"
+          "23.47.72.69",
+          "23.47.72.76"
         ],
         "data-edge.smartscreen.microsoft.com": [
-          "104.40.82.182"
+          "4.153.29.52",
+          "52.159.108.190"
         ],
         "definitionupdates.microsoft.com": [
-          "23.209.57.16"
+          "23.54.41.27"
         ],
         "displaycatalog.mp.microsoft.com": [
-          "150.171.109.66"
+          "150.171.109.178",
+          "150.171.110.210"
+        ],
+        "dl.delivery.mp.microsoft.com": [
+          "23.220.206.23",
+          "23.220.206.25",
+          "23.220.206.33",
+          "23.220.206.67",
+          "23.220.206.70"
+        ],
+        "download.windowsupdate.com": [
+          "140.248.146.172"
         ],
         "edge.microsoft.com": [
           "150.171.27.11",
           "150.171.28.11"
         ],
         "edgepasskeysenclave.microsoft.com": [
-          "150.171.109.118"
+          "150.171.110.211"
         ],
-        "functional.events.data.microsoft.com": [
-          "4.150.223.111"
+        "fe3cr.delivery.mp.microsoft.com": [
+          "135.232.92.97"
+        ],
+        "geo.prod.do.dsp.mp.microsoft.com": [
+          "72.153.5.63"
+        ],
+        "geover.prod.do.dsp.mp.microsoft.com": [
+          "23.14.141.205"
         ],
         "licensing.mp.microsoft.com": [
-          "20.7.252.84"
+          "4.155.94.229"
         ],
         "manage.devcenter.microsoft.com": [
-          "20.22.38.220"
+          "4.255.90.245"
         ],
         "msedge.api.cdp.microsoft.com": [
-          "135.232.92.34"
+          "135.233.95.80"
         ],
         "msedge.b.dl.delivery.mp.microsoft.com": [
-          "109.61.38.38"
+          "23.220.206.20",
+          "23.220.206.46",
+          "23.220.206.73"
         ],
         "msedge.b.tlu.dl.delivery.mp.microsoft.com": [
-          "2.18.67.7",
-          "2.18.67.10"
+          "140.248.146.172"
         ],
         "msedge.f.dl.delivery.mp.microsoft.com": [
-          "2.18.67.207",
-          "23.15.3.140",
-          "146.75.38.172"
+          "23.220.206.20",
+          "23.220.206.46",
+          "23.220.206.73"
         ],
         "msedge.f.tlu.dl.delivery.mp.microsoft.com": [
-          "23.210.73.200",
-          "23.210.92.200"
+          "140.248.146.172"
         ],
         "msedge.sb.dl.delivery.mp.microsoft.com": [
-          "146.75.30.172"
+          "23.220.206.12",
+          "23.220.206.14",
+          "23.220.206.15",
+          "23.220.206.21",
+          "23.220.206.28",
+          "23.220.206.29",
+          "23.220.206.33",
+          "23.220.206.34",
+          "23.220.206.43"
         ],
         "msedge.sb.tlu.dl.delivery.mp.microsoft.com": [
-          "23.210.73.205",
-          "23.210.73.230"
+          "23.220.206.32",
+          "23.220.206.43"
         ],
         "msedge.sf.dl.delivery.mp.microsoft.com": [
-          "146.75.30.172"
+          "140.248.146.172"
         ],
         "msedge.sf.tlu.dl.delivery.mp.microsoft.com": [
-          "23.210.73.205",
-          "23.210.73.230"
+          "23.220.206.32",
+          "23.220.206.43"
         ],
         "msedgeextensions.b.dl.delivery.mp.microsoft.com": [
-          "23.210.73.229",
-          "23.210.92.240"
+          "140.248.146.172"
         ],
         "msedgeextensions.b.tlu.dl.delivery.mp.microsoft.com": [
-          "146.75.38.172"
+          "140.248.146.172"
         ],
         "msedgeextensions.f.dl.delivery.mp.microsoft.com": [
-          "146.75.38.172"
+          "23.220.206.41",
+          "23.220.206.43",
+          "23.220.206.73"
         ],
         "msedgeextensions.f.tlu.dl.delivery.mp.microsoft.com": [
-          "2.18.67.7",
-          "2.18.67.10"
+          "140.248.146.172"
         ],
         "msedgeextensions.sb.dl.delivery.mp.microsoft.com": [
-          "146.75.30.172"
+          "23.220.206.12",
+          "23.220.206.14",
+          "23.220.206.15",
+          "23.220.206.21",
+          "23.220.206.28",
+          "23.220.206.29",
+          "23.220.206.33",
+          "23.220.206.34",
+          "23.220.206.43"
         ],
         "msedgeextensions.sb.tlu.dl.delivery.mp.microsoft.com": [
-          "23.210.73.205",
-          "23.210.73.230"
+          "23.220.206.7",
+          "23.220.206.10",
+          "23.220.206.32",
+          "23.220.206.43",
+          "23.220.206.60"
         ],
         "msedgeextensions.sf.dl.delivery.mp.microsoft.com": [
-          "146.75.30.172"
+          "23.220.206.21",
+          "23.220.206.29",
+          "23.220.206.34",
+          "23.220.206.39",
+          "23.220.206.58",
+          "23.220.206.59",
+          "23.220.206.74"
         ],
         "msedgeextensions.sf.tlu.dl.delivery.mp.microsoft.com": [
-          "146.75.30.172"
+          "140.248.146.172"
         ],
         "nav-edge.smartscreen.microsoft.com": [
-          "52.228.161.161"
+          "4.153.29.52"
         ],
         "ping-edge.smartscreen.microsoft.com": [
-          "40.118.171.167"
-        ],
-        "self.events.data.microsoft.com": [
-          "20.50.80.215"
+          "4.152.133.8"
         ],
         "settings-win.data.microsoft.com": [
-          "172.215.188.232"
+          "57.155.101.212"
         ],
         "settings.data.microsoft.com": [
-          "172.215.188.232"
+          "20.42.179.204"
         ],
         "share.microsoft.com": [
-          "23.4.189.138"
+          "23.65.18.204"
         ],
         "storecatalogrevocation.storequality.microsoft.com": [
-          "150.171.109.66"
+          "150.171.110.211"
         ],
         "storeedgefd.dsx.mp.microsoft.com": [
-          "23.48.10.93"
+          "23.14.142.148"
         ],
         "telecommand.telemetry.microsoft.com": [
           "20.118.138.130"
@@ -843,8 +994,8 @@
         "tsfe.trafficshaping.dsp.mp.microsoft.com": [
           "72.153.5.112"
         ],
-        "v10.events.data.microsoft.com": [
-          "20.184.175.6"
+        "update.microsoft.com": [
+          "132.196.74.18"
         ],
         "www.telecommandsvc.microsoft.com": [
           "20.118.138.130"
@@ -852,35 +1003,29 @@
       },
       "unresolvedHostnames": {},
       "excludedExistingNetworks": {
-        "23.209.57.16/32": [
+        "23.47.72.69/32": [
           "microsoft-defender-ipv4.txt"
         ],
-        "52.123.247.21/32": [
-          "m365-teams-ipv4.txt",
-          "microsoft-teams-media-ipv4.txt"
-        ],
-        "52.123.247.42/32": [
-          "m365-teams-ipv4.txt",
-          "microsoft-teams-media-ipv4.txt"
-        ],
-        "52.123.247.72/32": [
-          "m365-teams-ipv4.txt",
-          "microsoft-teams-media-ipv4.txt"
-        ],
-        "52.123.247.81/32": [
-          "m365-teams-ipv4.txt",
-          "microsoft-teams-media-ipv4.txt"
-        ],
-        "109.61.38.38/32": [
+        "23.47.72.76/32": [
           "microsoft-defender-ipv4.txt"
         ],
-        "146.75.38.172/32": [
+        "23.54.41.27/32": [
           "microsoft-defender-ipv4.txt"
         ],
-        "172.215.188.232/32": [
+        "57.155.101.212/32": [
+          "microsoft-defender-ipv4.txt"
+        ],
+        "132.196.74.18/32": [
+          "microsoft-defender-ipv4.txt"
+        ],
+        "135.232.92.97/32": [
+          "microsoft-defender-ipv4.txt"
+        ],
+        "140.248.146.172/32": [
           "microsoft-defender-ipv4.txt"
         ]
       },
+      "manualIpOverrides": false,
       "globalAzureOrAs8075RangesIncluded": false
     }
   }
