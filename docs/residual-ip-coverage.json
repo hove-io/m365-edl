@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T08:46:37.008576Z",
+  "generatedAt": "2026-08-22T09:00:08.705520Z",
   "policy": "Coverage is reported only from generated EDL content; unmatched IPs are never added to force coverage",
   "entries": [
     {
@@ -85,9 +85,9 @@
       "covered": true,
       "edl": "microsoft-intune-windows-ipv4.txt",
       "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
-      "fqdn": "v10.events.data.microsoft.com",
+      "fqdn": "functional.events.data.microsoft.com",
       "cname_chain": [
-        "win-global-asimov-leafs-events-data.trafficmanager.net",
+        "global.asimov.events.data.trafficmanager.net",
         "onedscolprdcus60.centralus.cloudapp.azure.com"
       ],
       "first_seen": null,
@@ -262,16 +262,18 @@
     },
     {
       "ip": "52.168.117.169",
-      "covered": false,
-      "edl": null,
-      "source": null,
-      "fqdn": null,
-      "cname_chain": [],
+      "covered": true,
+      "edl": "microsoft-intune-windows-ipv4.txt",
+      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
+      "fqdn": "mobile.events.data.microsoft.com",
+      "cname_chain": [
+        "mobile.events.data.trafficmanager.net",
+        "onedscolprdeus10.eastus.cloudapp.azure.com"
+      ],
       "first_seen": null,
       "last_seen": null,
       "observation_sources": [],
-      "source_documentation": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints"
     },
     {
       "ip": "52.168.117.170",
@@ -330,16 +332,20 @@
       "covered": true,
       "edl": "apple-xcode-developer-ipv4.txt",
       "source": "Apple enterprise Xcode download FQDN resolution",
-      "fqdn": "download.developer.apple.com",
+      "fqdn": "devimages-cdn.apple.com",
       "cname_chain": [
-        "dd-cdn-origin-apple-com.v.aaplimg.com"
+        "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
-      "first_seen": "2026-08-22T08:46:37.008576Z",
-      "last_seen": "2026-08-22T08:46:37.008576Z",
+      "first_seen": "2026-08-22T09:00:08.705520Z",
+      "last_seen": "2026-08-22T09:00:08.705520Z",
       "observation_sources": [
-        "google-doh-ecs:82.64.0.0/24"
+        "google-doh-ecs:82.66.0.0/24"
       ],
-      "source_documentation": "https://support.apple.com/en-us/101555"
+      "source_documentation": "https://support.apple.com/en-us/101555",
+      "allFqdns": [
+        "devimages-cdn.apple.com",
+        "download.developer.apple.com"
+      ]
     },
     {
       "ip": "17.188.170.10",
@@ -460,16 +466,19 @@
     },
     {
       "ip": "17.253.37.204",
-      "covered": false,
-      "edl": null,
-      "source": null,
-      "fqdn": null,
-      "cname_chain": [],
-      "first_seen": null,
-      "last_seen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "reason": "Apple address not returned by an in-scope official FQDN"
+      "covered": true,
+      "edl": "apple-xcode-developer-ipv4.txt",
+      "source": "Apple enterprise Xcode download FQDN resolution",
+      "fqdn": "devimages-cdn.apple.com",
+      "cname_chain": [
+        "devimages-cdn-origin-apple-com.v.aaplimg.com"
+      ],
+      "first_seen": "2026-08-22T09:00:08.705520Z",
+      "last_seen": "2026-08-22T09:00:08.705520Z",
+      "observation_sources": [
+        "google-doh-ecs:82.66.0.0/24"
+      ],
+      "source_documentation": "https://support.apple.com/en-us/101555"
     },
     {
       "ip": "17.253.29.135",
@@ -485,23 +494,32 @@
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/24"
       ],
-      "source_documentation": "https://support.apple.com/en-us/101555"
+      "source_documentation": "https://support.apple.com/en-us/101555",
+      "allFqdns": [
+        "devimages-cdn.apple.com",
+        "download.developer.apple.com"
+      ]
     },
     {
       "ip": "17.253.29.147",
       "covered": true,
       "edl": "apple-xcode-developer-ipv4.txt",
       "source": "Apple enterprise Xcode download FQDN resolution",
-      "fqdn": "download.developer.apple.com",
+      "fqdn": "devimages-cdn.apple.com",
       "cname_chain": [
-        "dd-cdn-origin-apple-com.v.aaplimg.com"
+        "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
-      "first_seen": "2026-08-22T08:46:37.008576Z",
-      "last_seen": "2026-08-22T08:46:37.008576Z",
+      "first_seen": "2026-08-22T09:00:08.705520Z",
+      "last_seen": "2026-08-22T09:00:08.705520Z",
       "observation_sources": [
+        "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24"
       ],
-      "source_documentation": "https://support.apple.com/en-us/101555"
+      "source_documentation": "https://support.apple.com/en-us/101555",
+      "allFqdns": [
+        "devimages-cdn.apple.com",
+        "download.developer.apple.com"
+      ]
     },
     {
       "ip": "17.253.29.140",
@@ -521,17 +539,21 @@
       "covered": true,
       "edl": "apple-xcode-developer-ipv4.txt",
       "source": "Apple enterprise Xcode download FQDN resolution",
-      "fqdn": "download.developer.apple.com",
+      "fqdn": "devimages-cdn.apple.com",
       "cname_chain": [
-        "dd-cdn-origin-apple-com.v.aaplimg.com"
+        "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
-      "first_seen": "2026-08-22T08:46:37.008576Z",
-      "last_seen": "2026-08-22T08:46:37.008576Z",
+      "first_seen": "2026-08-22T09:00:08.705520Z",
+      "last_seen": "2026-08-22T09:00:08.705520Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24"
       ],
-      "source_documentation": "https://support.apple.com/en-us/101555"
+      "source_documentation": "https://support.apple.com/en-us/101555",
+      "allFqdns": [
+        "devimages-cdn.apple.com",
+        "download.developer.apple.com"
+      ]
     },
     {
       "ip": "17.253.37.209",
@@ -555,16 +577,20 @@
     },
     {
       "ip": "17.253.37.210",
-      "covered": false,
-      "edl": null,
-      "source": null,
-      "fqdn": null,
-      "cname_chain": [],
-      "first_seen": null,
-      "last_seen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "reason": "Apple address not returned by an in-scope official FQDN"
+      "covered": true,
+      "edl": "apple-xcode-developer-ipv4.txt",
+      "source": "Apple enterprise Xcode download FQDN resolution",
+      "fqdn": "devimages-cdn.apple.com",
+      "cname_chain": [
+        "devimages-cdn-origin-apple-com.v.aaplimg.com"
+      ],
+      "first_seen": "2026-08-22T09:00:08.705520Z",
+      "last_seen": "2026-08-22T09:00:08.705520Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/24",
+        "google-doh-ecs:82.66.0.0/24"
+      ],
+      "source_documentation": "https://support.apple.com/en-us/101555"
     },
     {
       "ip": "17.248.209.46",
@@ -594,21 +620,16 @@
     },
     {
       "ip": "17.111.103.20",
-      "covered": true,
-      "edl": "apple-updates-ipv4.txt",
-      "source": "Apple enterprise Software updates FQDN resolution",
-      "fqdn": "gdmf.apple.com",
-      "cname_chain": [
-        "gdmf.v.aaplimg.com"
-      ],
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
       "first_seen": null,
       "last_seen": null,
       "observation_sources": [],
-      "source_documentation": "https://support.apple.com/en-us/101555",
-      "allEdls": [
-        "apple-updates-ipv4.txt",
-        "apple-device-services-ipv4.txt"
-      ]
+      "source_documentation": null,
+      "reason": "Apple address not returned by an in-scope official FQDN"
     },
     {
       "ip": "95.101.137.16",
