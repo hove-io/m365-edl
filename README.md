@@ -17,6 +17,7 @@ External Dynamic Lists (**IP List**) par un pare-feu Palo Alto Networks.
 | `apple-updates-ipv4.txt` | Mises à jour logicielles Apple | https://hove-io.github.io/m365-edl/apple-updates-ipv4.txt |
 | `apple-appstore-content-ipv4.txt` | Apple App Store et contenu | https://hove-io.github.io/m365-edl/apple-appstore-content-ipv4.txt |
 | `apple-device-services-ipv4.txt` | Apple Device Management et APNs | https://hove-io.github.io/m365-edl/apple-device-services-ipv4.txt |
+| `apple-xcode-developer-ipv4.txt` | Xcode et téléchargements Developer | https://hove-io.github.io/m365-edl/apple-xcode-developer-ipv4.txt |
 | `github-ipv4.txt` | GitHub `web`, `api`, `git` et `pages` | https://hove-io.github.io/m365-edl/github-ipv4.txt |
 | `dropbox-ipv4.txt` | Allocations produit Dropbox | https://hove-io.github.io/m365-edl/dropbox-ipv4.txt |
 | `dell-update-ipv4.txt` | Dell Command Update | https://hove-io.github.io/m365-edl/dell-update-ipv4.txt |
@@ -114,18 +115,27 @@ préfixe Azure générique ni aucune plage AS8075 n'est ajouté.
 
 ### Apple
 
-Les trois listes Apple proviennent de
+Les quatre listes Apple proviennent de
 [Use Apple products on enterprise networks](https://support.apple.com/101555).
 Le générateur isole strictement les tableaux **Software updates**, **Apps and
-additional content** et **Device management**, puis résout leurs enregistrements
-A en `/32`. Les cibles concrètes APNs sont validées contre la documentation
-Apple Developer officielle.
+additional content**, **Device setup** et **Device management**, puis résout
+leurs enregistrements A en `/32`. `apple-device-services-ipv4.txt` regroupe les
+deux sections appareil. Les deux hôtes décrits par Apple pour les composants
+téléchargeables Xcode (`devimages-cdn.apple.com` et
+`download.developer.apple.com`) sont isolés dans
+`apple-xcode-developer-ipv4.txt` et retirés de la liste App Store générique. Les
+cibles concrètes APNs sont validées contre la documentation Apple Developer
+officielle.
 
 Le préfixe global `17.0.0.0/8` n'est jamais utilisé. Lorsqu'un FQDN Apple est
 hébergé par un CDN, seule l'IPv4 obtenue par sa résolution est conservée. Les
 wildcards ne sont pas exhaustivement convertibles : une EDL Domain/URL et une
 exemption d'inspection TLS restent nécessaires pour une couverture Apple
 complète.
+
+Apple indique que l'interception HTTPS peut empêcher ses services de
+fonctionner. Les FQDN Apple autorisés doivent donc être exemptés du déchiffrement
+TLS, en complément des EDL IP dynamiques.
 
 ### GitHub
 
@@ -167,9 +177,12 @@ les familles officielles `*.prod.do.dsp.mp.microsoft.com`,
 `*.dl.delivery.mp.microsoft.com`, `*.delivery.mp.microsoft.com`,
 `*.update.microsoft.com` et `*.windowsupdate.com`, ainsi que
 `tsfe.trafficshaping.dsp.mp.microsoft.com`. Les wildcards sont représentés par
-des cibles concrètes auditées, notamment les services `array`, `geo`, de
-métadonnées et de téléchargement. Les réponses DNS changent avec les backends
-Microsoft et sont donc recalculées à chaque exécution, sans `/32` manuel.
+des cibles concrètes auditées, notamment `array504`, `array508`, `array516`,
+`array808`, des instances `disc` et `kv`, les variantes `geo`/`geover`, ainsi
+que les services de téléchargement. Les familles sont aussi validées contre le
+[workflow Delivery Optimization](https://learn.microsoft.com/windows/deployment/do/delivery-optimization-workflow)
+officiel. Les réponses DNS changent avec les backends Microsoft et sont donc
+recalculées à chaque exécution, sans `/32` manuel.
 
 Les `/32` déjà couverts par une EDL Microsoft existante sont retirés de cette
 nouvelle liste. Aucun range Azure global ni AS8075 n'est utilisé.
@@ -196,8 +209,8 @@ Il applique les contrôles suivants à chaque liste :
 5. refus de tout fichier vide ;
 6. blocage d'une baisse de plus de 50 % du nombre d'entrées ;
 7. jusqu'à huit résolutions DNS par FQDN Microsoft dynamique (trois pour les
-   autres sources), suivi des CNAME par le résolveur et journalisation de chaque
-   mapping FQDN vers IPv4 ;
+   autres sources), avec un court intervalle entre les requêtes, agrégation des
+   A et journalisation de chaque mapping FQDN → chaîne CNAME → IPv4 ;
 8. génération atomique de l'ensemble ;
 9. commit et publication uniquement lorsqu'une EDL a changé.
 
@@ -222,6 +235,8 @@ Le rapport public
 [`residual-ip-coverage.json`](https://hove-io.github.io/m365-edl/residual-ip-coverage.json)
 indique pour chaque IP observée si elle est couverte, par quelle EDL et par
 quelle source/FQDN. Une IP sans preuve officielle reste `covered: false`.
+Chaque entrée expose aussi `cname_chain` et `source_documentation` ; une chaîne
+vide reste explicite lorsque le FQDN répond directement.
 
 ## Exploitation Palo Alto
 
@@ -238,6 +253,7 @@ EDL-MICROSOFT-INTUNE-WINDOWS-IPV4
 EDL-APPLE-UPDATES-IPV4
 EDL-APPLE-APPSTORE-CONTENT-IPV4
 EDL-APPLE-DEVICE-SERVICES-IPV4
+EDL-APPLE-XCODE-DEVELOPER-IPV4
 EDL-GITHUB-IPV4
 EDL-DROPBOX-IPV4
 EDL-DELL-UPDATE-IPV4

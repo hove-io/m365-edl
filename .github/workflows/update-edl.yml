@@ -59,6 +59,7 @@ jobs:
           dell_update_file="${RUNNER_TEMP}/dell-command-update.html"
           microsoft_edge_file="${RUNNER_TEMP}/microsoft-edge.html"
           microsoft_windows_file="${RUNNER_TEMP}/microsoft-windows.html"
+          microsoft_delivery_optimization_file="${RUNNER_TEMP}/microsoft-delivery-optimization.html"
 
           content_type="$(curl \
             --fail \
@@ -141,6 +142,9 @@ jobs:
           download_source \
             'https://learn.microsoft.com/en-us/windows/privacy/manage-windows-11-endpoints' \
             "$microsoft_windows_file"
+          download_source \
+            'https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow' \
+            "$microsoft_delivery_optimization_file"
 
           test -s "$response_file"
           printf 'request_id=%s\n' "$request_id" >> "$GITHUB_OUTPUT"
@@ -158,6 +162,7 @@ jobs:
           printf 'dell_update_file=%s\n' "$dell_update_file" >> "$GITHUB_OUTPUT"
           printf 'microsoft_edge_file=%s\n' "$microsoft_edge_file" >> "$GITHUB_OUTPUT"
           printf 'microsoft_windows_file=%s\n' "$microsoft_windows_file" >> "$GITHUB_OUTPUT"
+          printf 'microsoft_delivery_optimization_file=%s\n' "$microsoft_delivery_optimization_file" >> "$GITHUB_OUTPUT"
 
       - name: Generate and validate EDL files
         run: |
@@ -177,6 +182,7 @@ jobs:
             --dell-update-file "${{ steps.request.outputs.dell_update_file }}" \
             --microsoft-edge-file "${{ steps.request.outputs.microsoft_edge_file }}" \
             --microsoft-windows-file "${{ steps.request.outputs.microsoft_windows_file }}" \
+            --microsoft-delivery-optimization-file "${{ steps.request.outputs.microsoft_delivery_optimization_file }}" \
             --output-dir docs
 
       - name: Detect publication changes
@@ -204,6 +210,7 @@ jobs:
             docs/apple-appstore-content-ipv4.txt \
             docs/apple-device-services-ipv4.txt \
             docs/apple-updates-ipv4.txt \
+            docs/apple-xcode-developer-ipv4.txt \
             docs/dell-update-ipv4.txt \
             docs/dropbox-ipv4.txt \
             docs/github-ipv4.txt \

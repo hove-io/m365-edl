@@ -14,6 +14,7 @@ import re
 import socket
 import sys
 import tempfile
+import time
 import uuid
 from html.parser import HTMLParser
 from pathlib import Path
@@ -72,6 +73,10 @@ MICROSOFT_WINDOWS_URL = (
     "https://learn.microsoft.com/en-us/windows/privacy/"
     "manage-windows-11-endpoints"
 )
+MICROSOFT_DELIVERY_OPTIMIZATION_URL = (
+    "https://learn.microsoft.com/en-us/windows/deployment/do/"
+    "delivery-optimization-workflow"
+)
 
 MAX_SOURCE_BYTES = 10 * 1024 * 1024
 M365_SERVICE_FILES = {
@@ -86,6 +91,7 @@ INTUNE_WINDOWS_FILE = "microsoft-intune-windows-ipv4.txt"
 APPLE_UPDATES_FILE = "apple-updates-ipv4.txt"
 APPLE_CONTENT_FILE = "apple-appstore-content-ipv4.txt"
 APPLE_DEVICE_FILE = "apple-device-services-ipv4.txt"
+APPLE_XCODE_FILE = "apple-xcode-developer-ipv4.txt"
 GITHUB_FILE = "github-ipv4.txt"
 DROPBOX_FILE = "dropbox-ipv4.txt"
 DELL_UPDATE_FILE = "dell-update-ipv4.txt"
@@ -103,6 +109,7 @@ PUBLICATIONS = (
     ("Apple Software Updates", APPLE_UPDATES_FILE),
     ("Apple App Store / Content", APPLE_CONTENT_FILE),
     ("Apple Device Services / APNs", APPLE_DEVICE_FILE),
+    ("Apple Xcode / Developer downloads", APPLE_XCODE_FILE),
     ("GitHub web/API/git/Pages", GITHUB_FILE),
     ("Dropbox product networks", DROPBOX_FILE),
     ("Dell Command Update", DELL_UPDATE_FILE),
@@ -113,6 +120,7 @@ NEW_SERVICE_FILES = (
     APPLE_UPDATES_FILE,
     APPLE_CONTENT_FILE,
     APPLE_DEVICE_FILE,
+    APPLE_XCODE_FILE,
     GITHUB_FILE,
     DROPBOX_FILE,
     DELL_UPDATE_FILE,
@@ -132,7 +140,9 @@ RESIDUAL_IPS = (
     "17.248.236.28",
     "72.153.5.61",
     "72.153.5.129",
+    "72.153.5.137",
     "72.153.5.140",
+    "72.154.7.101",
     "95.101.137.11",
     "95.101.137.12",
     "95.101.137.14",
@@ -152,6 +162,15 @@ RESIDUAL_IPS = (
     "172.66.0.227",
     "140.82.121.5",
     "150.171.28.11",
+    "17.248.209.16",
+    "17.253.37.204",
+    "95.101.137.16",
+    "95.101.137.21",
+    "95.101.137.23",
+    "95.101.137.24",
+    "23.58.84.19",
+    "151.101.1.64",
+    "151.101.129.64",
 )
 
 GITHUB_META_FIELDS = ("web", "api", "git", "pages")
@@ -161,19 +180,55 @@ APPLE_SECTION_REQUIREMENTS = {
     "software": {
         "appldnld.apple.com",
         "configuration.apple.com",
+        "fcs-keys-pub-prod.cdn-apple.com",
+        "gdmf-ados.apple.com",
         "gdmf.apple.com",
         "gg.apple.com",
         "gs.apple.com",
+        "gsra.apple.com",
         "ig.apple.com",
         "mesu.apple.com",
+        "oscdn.apple.com",
+        "osrecovery.apple.com",
+        "skl.apple.com",
+        "swcdn.apple.com",
+        "swdist.apple.com",
+        "swdownload.apple.com",
+        "swscan.apple.com",
+        "updates-http.cdn-apple.com",
+        "updates.cdn-apple.com",
+        "wkms-public.apple.com",
+        "xp.apple.com",
     },
     "appscontent": {
+        "*.appattest.apple.com",
+        "*.apps-marketplace.apple.com",
         "*.itunes.apple.com",
         "*.apps.apple.com",
         "*.mzstatic.com",
         "itunes.apple.com",
         "ppq.apple.com",
         "api.apple-cloudkit.com",
+        "audiocontentdownload.apple.com",
+        "devimages-cdn.apple.com",
+        "download.developer.apple.com",
+        "gateway.icloud.com",
+        "playground-assets-cdn.apple.com",
+        "playground-cdn.apple.com",
+        "sylvan.apple.com",
+        "token.safebrowsing.apple",
+    },
+    "devicesetup": {
+        "albert.apple.com",
+        "captive.apple.com",
+        "gs.apple.com",
+        "humb.apple.com",
+        "static.ips.apple.com",
+        "sq-device.apple.com",
+        "tbsc.apple.com",
+        "time-ios.apple.com",
+        "time.apple.com",
+        "time-macos.apple.com",
     },
     "devicemanagement": {
         "*.push.apple.com",
@@ -183,7 +238,16 @@ APPLE_SECTION_REQUIREMENTS = {
         "identity.apple.com",
         "iprofiles.apple.com",
         "mdmenrollment.apple.com",
+        "setup.icloud.com",
+        "vpp.itunes.apple.com",
+        "*.appattest.apple.com",
+        "axm-servicediscovery.apple.com",
     },
+}
+
+APPLE_XCODE_HOSTS = {
+    "devimages-cdn.apple.com",
+    "download.developer.apple.com",
 }
 
 APPLE_APP_WILDCARD_TARGETS = {
@@ -250,8 +314,19 @@ WINDOWS_UPDATE_WILDCARD_TARGETS = {
     "*.prod.do.dsp.mp.microsoft.com": (
         "array504.prod.do.dsp.mp.microsoft.com",
         "array506.prod.do.dsp.mp.microsoft.com",
+        "array508.prod.do.dsp.mp.microsoft.com",
+        "array516.prod.do.dsp.mp.microsoft.com",
+        "array808.prod.do.dsp.mp.microsoft.com",
+        "disc501.prod.do.dsp.mp.microsoft.com",
+        "disc601.prod.do.dsp.mp.microsoft.com",
+        "disc801.prod.do.dsp.mp.microsoft.com",
+        "geo-prod.do.dsp.mp.microsoft.com",
         "geo.prod.do.dsp.mp.microsoft.com",
+        "geover-prod.do.dsp.mp.microsoft.com",
         "geover.prod.do.dsp.mp.microsoft.com",
+        "kv501.prod.do.dsp.mp.microsoft.com",
+        "kv601.prod.do.dsp.mp.microsoft.com",
+        "kv801.prod.do.dsp.mp.microsoft.com",
     ),
     "*.dl.delivery.mp.microsoft.com": ("dl.delivery.mp.microsoft.com",),
     "*.delivery.mp.microsoft.com": ("fe3cr.delivery.mp.microsoft.com",),
@@ -260,6 +335,18 @@ WINDOWS_UPDATE_WILDCARD_TARGETS = {
         "ctldl.windowsupdate.com",
         "download.windowsupdate.com",
     ),
+}
+
+DELIVERY_OPTIMIZATION_REQUIRED_PATTERNS = {
+    "geover-prod.do.dsp.mp.microsoft.com",
+    "geo-prod.do.dsp.mp.microsoft.com",
+    "geo.prod.do.dsp.mp.microsoft.com",
+    "geover.prod.do.dsp.mp.microsoft.com",
+    "kv*.prod.do.dsp.mp.microsoft.com",
+    "disc*.prod.do.dsp.mp.microsoft.com",
+    "array*.prod.do.dsp.mp.microsoft.com",
+    "dl.delivery.mp.microsoft.com",
+    "*.windowsupdate.com",
 }
 
 INTUNE_EVENT_WILDCARD_TARGETS = {
@@ -458,6 +545,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dell-update-file", type=Path, required=True)
     parser.add_argument("--microsoft-edge-file", type=Path, required=True)
     parser.add_argument("--microsoft-windows-file", type=Path, required=True)
+    parser.add_argument(
+        "--microsoft-delivery-optimization-file", type=Path, required=True
+    )
     return parser.parse_args()
 
 
@@ -998,15 +1088,23 @@ def expand_documented_hostnames(
 
 
 def resolve_service_hostnames(
-    hostnames: list[str], *, label: str, attempts: int = 3
+    hostnames: list[str],
+    *,
+    label: str,
+    attempts: int = 3,
+    retry_delay_seconds: float = 0.1,
 ) -> tuple[
-    list[ipaddress.IPv4Network], dict[str, list[str]], dict[str, str]
+    list[ipaddress.IPv4Network],
+    dict[str, list[str]],
+    dict[str, list[str]],
+    dict[str, str],
 ]:
     if not hostnames:
         raise GenerationError(f"No {label} hostnames selected")
     socket.setdefaulttimeout(20)
     networks: set[ipaddress.IPv4Network] = set()
     resolutions: dict[str, list[str]] = {}
+    cname_chains: dict[str, list[str]] = {}
     unresolved: dict[str, str] = {}
     no_name_errors = {socket.EAI_NONAME}
     if hasattr(socket, "EAI_NODATA"):
@@ -1014,23 +1112,29 @@ def resolve_service_hostnames(
 
     for hostname in hostnames:
         addresses: set[str] = set()
+        cname_chain: list[str] = []
         transient_error: socket.gaierror | None = None
         no_record = False
-        for _ in range(attempts):
+        for attempt in range(attempts):
             try:
-                answers = socket.getaddrinfo(
-                    hostname,
-                    443,
-                    family=socket.AF_INET,
-                    type=socket.SOCK_STREAM,
-                )
+                canonical_name, aliases, answers = socket.gethostbyname_ex(hostname)
             except socket.gaierror as error:
                 if error.errno in no_name_errors:
                     no_record = True
                     break
                 transient_error = error
-                continue
-            addresses.update(answer[4][0] for answer in answers)
+            else:
+                addresses.update(answers)
+                for cname in (*aliases, canonical_name):
+                    normalized = cname.strip().lower().rstrip(".")
+                    if (
+                        normalized
+                        and normalized != hostname
+                        and normalized not in cname_chain
+                    ):
+                        cname_chain.append(normalized)
+            if attempt + 1 < attempts:
+                time.sleep(retry_delay_seconds)
 
         if not addresses:
             if no_record:
@@ -1045,6 +1149,7 @@ def resolve_service_hostnames(
 
         sorted_addresses = sorted(addresses, key=ipaddress.IPv4Address)
         resolutions[hostname] = sorted_addresses
+        cname_chains[hostname] = cname_chain
         for address in sorted_addresses:
             network = ipaddress.IPv4Network(f"{address}/32", strict=True)
             networks.add(
@@ -1062,7 +1167,7 @@ def resolve_service_hostnames(
             f"{label} DNS: {len(unresolved)} documented hostnames currently "
             "have no A record"
         )
-    return sort_networks(networks), resolutions, unresolved
+    return sort_networks(networks), resolutions, cname_chains, unresolved
 
 
 def extract_github_networks(
@@ -1280,10 +1385,25 @@ def document_date(markdown: str) -> str | None:
 
 def residual_noncoverage_reason(address: ipaddress.IPv4Address) -> str:
     shared_cdn = {
-        *(ipaddress.IPv4Address(value) for value in RESIDUAL_IPS[:4]),
-        *(ipaddress.IPv4Address(value) for value in RESIDUAL_IPS[12:15]),
-        ipaddress.IPv4Address("23.200.213.147"),
-        ipaddress.IPv4Address("172.66.0.227"),
+        ipaddress.IPv4Address(value)
+        for value in {
+            "52.85.118.32",
+            "52.85.118.49",
+            "52.85.118.61",
+            "52.85.118.108",
+            "95.101.137.11",
+            "95.101.137.12",
+            "95.101.137.14",
+            "95.101.137.16",
+            "95.101.137.21",
+            "95.101.137.23",
+            "95.101.137.24",
+            "23.200.213.147",
+            "23.58.84.19",
+            "151.101.1.64",
+            "151.101.129.64",
+            "172.66.0.227",
+        }
     }
     if address in shared_cdn:
         return (
@@ -1303,7 +1423,9 @@ def residual_noncoverage_reason(address: ipaddress.IPv4Address) -> str:
         )
     if address in {
         ipaddress.IPv4Address("17.248.236.28"),
+        ipaddress.IPv4Address("17.248.209.16"),
         ipaddress.IPv4Address("17.253.29.146"),
+        ipaddress.IPv4Address("17.253.37.204"),
     }:
         return "Apple address not returned by an in-scope official FQDN"
     return (
@@ -1317,6 +1439,7 @@ def build_residual_coverage(
     generated_at: str,
     generated: dict[str, list[ipaddress.IPv4Network]],
     resolutions_by_file: dict[str, dict[str, list[str]]],
+    cname_chains_by_file: dict[str, dict[str, list[str]]],
 ) -> str:
     source_by_file = {
         "m365-common-ipv4.txt": "Microsoft 365 endpoint web service: Common",
@@ -1331,12 +1454,31 @@ def build_residual_coverage(
         APPLE_UPDATES_FILE: "Apple enterprise Software updates FQDN resolution",
         APPLE_CONTENT_FILE: "Apple enterprise Apps and additional content FQDN resolution",
         APPLE_DEVICE_FILE: "Apple enterprise Device management/APNs FQDN resolution",
+        APPLE_XCODE_FILE: "Apple enterprise Xcode download FQDN resolution",
         GITHUB_FILE: "GitHub Meta API fields web, api, git, and pages",
         DROPBOX_FILE: "Dropbox-linked ARIN product allocations",
         DELL_UPDATE_FILE: "Dell Command Update official FQDN resolution",
         MICROSOFT_EDGE_WINDOWS_FILE: (
-            "Official Microsoft Edge and Windows endpoint FQDN resolution"
+            "Official Microsoft Edge, Windows, and Delivery Optimization "
+            "endpoint FQDN resolution"
         ),
+    }
+    documentation_by_file = {
+        "m365-common-ipv4.txt": M365_API_URL,
+        "m365-exchange-ipv4.txt": M365_API_URL,
+        "m365-sharepoint-ipv4.txt": M365_API_URL,
+        "m365-teams-ipv4.txt": M365_API_URL,
+        DEFENDER_FILE: DEFENDER_STANDARD_LEARN_URL,
+        TEAMS_MEDIA_FILE: TEAMS_DIRECT_ROUTING_URL,
+        INTUNE_WINDOWS_FILE: INTUNE_ENDPOINTS_LEARN_URL,
+        APPLE_UPDATES_FILE: APPLE_ENTERPRISE_URL,
+        APPLE_CONTENT_FILE: APPLE_ENTERPRISE_URL,
+        APPLE_DEVICE_FILE: APPLE_ENTERPRISE_URL,
+        APPLE_XCODE_FILE: APPLE_ENTERPRISE_URL,
+        DELL_UPDATE_FILE: DELL_UPDATE_DOCUMENTATION_URL,
+        MICROSOFT_EDGE_WINDOWS_FILE: MICROSOFT_WINDOWS_URL,
+        GITHUB_FILE: GITHUB_META_DOCS_URL,
+        DROPBOX_FILE: DROPBOX_FIREWALL_URL,
     }
     preferred_order = (*NEW_SERVICE_FILES, *(name for _, name in PUBLICATIONS))
     ordered_files = list(dict.fromkeys(preferred_order))
@@ -1365,6 +1507,8 @@ def build_residual_coverage(
                     "edl": None,
                     "source": None,
                     "fqdn": None,
+                    "cname_chain": [],
+                    "source_documentation": None,
                     "reason": residual_noncoverage_reason(address),
                 }
             )
@@ -1374,12 +1518,21 @@ def build_residual_coverage(
         fqdns = sorted(
             set(address_fqdns.get(selected_file, {}).get(raw_address, []))
         )
+        source_documentation = documentation_by_file.get(selected_file)
+        if fqdns and fqdns[0].endswith(".prod.do.dsp.mp.microsoft.com"):
+            source_documentation = MICROSOFT_DELIVERY_OPTIMIZATION_URL
         entry: dict[str, Any] = {
             "ip": raw_address,
             "covered": True,
             "edl": selected_file,
             "source": source_by_file[selected_file],
             "fqdn": fqdns[0] if fqdns else None,
+            "cname_chain": (
+                cname_chains_by_file.get(selected_file, {}).get(fqdns[0], [])
+                if fqdns
+                else []
+            ),
+            "source_documentation": source_documentation,
         }
         if len(matching_files) > 1:
             entry["allEdls"] = matching_files
@@ -1553,6 +1706,13 @@ def build_index(
       courantes sont ajoutées en <code>/32</code> ; aucune IP observée ni plage Azure
       globale n'est injectée manuellement.</p>
     </div>
+    <div class="notice">
+      <p><strong>Apple :</strong> les listes utilisent uniquement les A publics
+      courants des FQDN présents dans la source Apple. Les services Device setup
+      et Device management sont regroupés, tandis que les téléchargements Xcode
+      sont isolés. Aucun <code>17.0.0.0/8</code> ni range CDN global n'est ajouté.
+      Apple recommande d'exempter ces FQDN de l'inspection HTTPS.</p>
+    </div>
     <table>
       <thead><tr><th>Périmètre</th><th>Fichier</th><th>CIDR</th></tr></thead>
       <tbody>{''.join(rows)}</tbody>
@@ -1584,6 +1744,7 @@ def publish(
     additional_sources: dict[str, dict[str, Any]],
     additional_files: dict[str, dict[str, Any]],
     resolutions_by_file: dict[str, dict[str, list[str]]],
+    cname_chains_by_file: dict[str, dict[str, list[str]]],
 ) -> bool:
     check_drop_guard(output_dir, generated)
     rendered = {filename: render_edl(items) for filename, items in generated.items()}
@@ -1632,6 +1793,7 @@ def publish(
         generated_at=generated_at,
         generated=generated,
         resolutions_by_file=resolutions_by_file,
+        cname_chains_by_file=cname_chains_by_file,
     )
     index = build_index(generated_at, generated)
 
@@ -1715,6 +1877,10 @@ def main() -> int:
             args.microsoft_windows_file,
             label="Microsoft Windows endpoints source",
         )
+        microsoft_delivery_optimization = load_text_source(
+            args.microsoft_delivery_optimization_file,
+            label="Microsoft Delivery Optimization workflow source",
+        )
 
         generated = extract_m365_networks(payload)
         defender_hostnames, defender_wildcards, wildcard_targets = (
@@ -1748,6 +1914,7 @@ def main() -> int:
         (
             intune_event_networks,
             intune_event_resolutions,
+            intune_event_cname_chains,
             intune_event_unresolved,
         ) = resolve_service_hostnames(
             intune_event_hosts,
@@ -1778,6 +1945,7 @@ def main() -> int:
         (
             apple_updates_networks,
             apple_updates_resolutions,
+            apple_updates_cname_chains,
             apple_updates_unresolved,
         ) = resolve_service_hostnames(
             apple_updates_hosts, label="Apple Software updates"
@@ -1785,6 +1953,15 @@ def main() -> int:
 
         apple_content_documented = extract_apple_section_hostnames(
             apple_enterprise, section_id="appscontent"
+        )
+        if not APPLE_XCODE_HOSTS.issubset(apple_content_documented):
+            raise GenerationError(
+                "Apple Apps and additional content no longer documents all "
+                "required Xcode download hosts"
+            )
+        apple_xcode_documented = sorted(APPLE_XCODE_HOSTS)
+        apple_content_documented = sorted(
+            set(apple_content_documented) - APPLE_XCODE_HOSTS
         )
         apple_content_hosts, apple_content_wildcards, apple_content_targets = (
             expand_documented_hostnames(
@@ -1796,13 +1973,37 @@ def main() -> int:
         (
             apple_content_networks,
             apple_content_resolutions,
+            apple_content_cname_chains,
             apple_content_unresolved,
         ) = resolve_service_hostnames(
             apple_content_hosts, label="Apple Apps and content"
         )
 
-        apple_device_documented = extract_apple_section_hostnames(
+        apple_xcode_hosts, apple_xcode_wildcards, apple_xcode_targets = (
+            expand_documented_hostnames(
+                apple_xcode_documented,
+                wildcard_targets={},
+                label="Apple Xcode developer downloads",
+            )
+        )
+        (
+            apple_xcode_networks,
+            apple_xcode_resolutions,
+            apple_xcode_cname_chains,
+            apple_xcode_unresolved,
+        ) = resolve_service_hostnames(
+            apple_xcode_hosts, label="Apple Xcode developer downloads"
+        )
+
+        apple_device_setup_documented = extract_apple_section_hostnames(
+            apple_enterprise, section_id="devicesetup"
+        )
+        apple_device_management_documented = extract_apple_section_hostnames(
             apple_enterprise, section_id="devicemanagement"
+        )
+        apple_device_documented = sorted(
+            set(apple_device_setup_documented)
+            | set(apple_device_management_documented)
         )
         validate_documented_hostnames(
             apple_apns,
@@ -1819,6 +2020,7 @@ def main() -> int:
         (
             apple_device_networks,
             apple_device_resolutions,
+            apple_device_cname_chains,
             apple_device_unresolved,
         ) = resolve_service_hostnames(
             apple_device_hosts, label="Apple Device management/APNs"
@@ -1835,9 +2037,12 @@ def main() -> int:
         )
 
         dell_hosts = validate_dell_catalog_source(dell_update)
-        dell_networks, dell_resolutions, dell_unresolved = resolve_service_hostnames(
-            dell_hosts, label="Dell Command Update"
-        )
+        (
+            dell_networks,
+            dell_resolutions,
+            dell_cname_chains,
+            dell_unresolved,
+        ) = resolve_service_hostnames(dell_hosts, label="Dell Command Update")
 
         edge_hosts = validate_documented_hostnames(
             microsoft_edge,
@@ -1848,6 +2053,11 @@ def main() -> int:
             microsoft_windows,
             MICROSOFT_WINDOWS_HOSTS | set(WINDOWS_UPDATE_WILDCARD_TARGETS),
             label="Microsoft Windows endpoints",
+        )
+        validate_documented_hostnames(
+            microsoft_delivery_optimization,
+            DELIVERY_OPTIMIZATION_REQUIRED_PATTERNS,
+            label="Delivery Optimization workflow",
         )
         windows_hosts, windows_wildcards, windows_targets = (
             expand_documented_hostnames(
@@ -1860,6 +2070,7 @@ def main() -> int:
         (
             microsoft_service_networks,
             microsoft_service_resolutions,
+            microsoft_service_cname_chains,
             microsoft_service_unresolved,
         ) = resolve_service_hostnames(
             microsoft_service_hosts,
@@ -1877,6 +2088,7 @@ def main() -> int:
         generated[APPLE_UPDATES_FILE] = apple_updates_networks
         generated[APPLE_CONTENT_FILE] = apple_content_networks
         generated[APPLE_DEVICE_FILE] = apple_device_networks
+        generated[APPLE_XCODE_FILE] = apple_xcode_networks
         generated[GITHUB_FILE] = github_networks
         generated[DROPBOX_FILE] = dropbox_networks
         generated[DELL_UPDATE_FILE] = dell_networks
@@ -1888,8 +2100,18 @@ def main() -> int:
             APPLE_UPDATES_FILE: apple_updates_resolutions,
             APPLE_CONTENT_FILE: apple_content_resolutions,
             APPLE_DEVICE_FILE: apple_device_resolutions,
+            APPLE_XCODE_FILE: apple_xcode_resolutions,
             DELL_UPDATE_FILE: dell_resolutions,
             MICROSOFT_EDGE_WINDOWS_FILE: microsoft_service_resolutions,
+        }
+        cname_chains_by_file = {
+            INTUNE_WINDOWS_FILE: intune_event_cname_chains,
+            APPLE_UPDATES_FILE: apple_updates_cname_chains,
+            APPLE_CONTENT_FILE: apple_content_cname_chains,
+            APPLE_DEVICE_FILE: apple_device_cname_chains,
+            APPLE_XCODE_FILE: apple_xcode_cname_chains,
+            DELL_UPDATE_FILE: dell_cname_chains,
+            MICROSOFT_EDGE_WINDOWS_FILE: microsoft_service_cname_chains,
         }
 
         additional_sources: dict[str, dict[str, Any]] = {
@@ -1900,6 +2122,7 @@ def main() -> int:
                 "sections": [
                     "Software updates",
                     "Apps and additional content",
+                    "Device setup",
                     "Device management",
                 ],
             },
@@ -1949,6 +2172,14 @@ def main() -> int:
                 "url": MICROSOFT_WINDOWS_URL,
                 "sha256": source_hash(microsoft_windows),
             },
+            "microsoftDeliveryOptimizationWorkflow": {
+                "publisher": "Microsoft",
+                "url": MICROSOFT_DELIVERY_OPTIMIZATION_URL,
+                "sha256": source_hash(microsoft_delivery_optimization),
+                "validatedPatterns": sorted(
+                    DELIVERY_OPTIMIZATION_REQUIRED_PATTERNS
+                ),
+            },
         }
         additional_files: dict[str, dict[str, Any]] = {
             INTUNE_WINDOWS_FILE: {
@@ -1968,6 +2199,7 @@ def main() -> int:
                     for pattern, targets in intune_event_targets.items()
                 },
                 "resolvedHostnames": intune_event_resolutions,
+                "cnameChains": intune_event_cname_chains,
                 "unresolvedHostnames": intune_event_unresolved,
                 "manualIpOverrides": False,
                 "globalAzureOrAs8075RangesIncluded": False,
@@ -1979,6 +2211,7 @@ def main() -> int:
                 "wildcardPatterns": apple_updates_wildcards,
                 "wildcardResolutionTargets": apple_updates_targets,
                 "resolvedHostnames": apple_updates_resolutions,
+                "cnameChains": apple_updates_cname_chains,
                 "unresolvedHostnames": apple_updates_unresolved,
             },
             APPLE_CONTENT_FILE: {
@@ -1988,29 +2221,50 @@ def main() -> int:
                     "to IPv4 /32"
                 ),
                 "documentedHostnames": apple_content_documented,
+                "excludedXcodeHostnames": apple_xcode_documented,
                 "wildcardPatterns": apple_content_wildcards,
                 "wildcardResolutionTargets": {
                     pattern: list(targets)
                     for pattern, targets in apple_content_targets.items()
                 },
                 "resolvedHostnames": apple_content_resolutions,
+                "cnameChains": apple_content_cname_chains,
                 "unresolvedHostnames": apple_content_unresolved,
             },
             APPLE_DEVICE_FILE: {
                 "cidrCount": len(apple_device_networks),
                 "method": (
-                    "Resolve official Apple Device management and audited APNs "
-                    "FQDNs to IPv4 /32"
+                    "Resolve official Apple Device setup, Device management, "
+                    "and audited APNs FQDNs to IPv4 /32"
                 ),
                 "documentedHostnames": apple_device_documented,
+                "documentedSections": {
+                    "Device setup": apple_device_setup_documented,
+                    "Device management": apple_device_management_documented,
+                },
                 "wildcardPatterns": apple_device_wildcards,
                 "wildcardResolutionTargets": {
                     pattern: list(targets)
                     for pattern, targets in apple_device_targets.items()
                 },
                 "resolvedHostnames": apple_device_resolutions,
+                "cnameChains": apple_device_cname_chains,
                 "unresolvedHostnames": apple_device_unresolved,
                 "forbiddenFallback": "17.0.0.0/8",
+            },
+            APPLE_XCODE_FILE: {
+                "cidrCount": len(apple_xcode_networks),
+                "method": (
+                    "Resolve only the Xcode downloadable-component FQDNs from "
+                    "Apple's official Apps and additional content table to IPv4 /32"
+                ),
+                "documentedHostnames": apple_xcode_documented,
+                "wildcardPatterns": apple_xcode_wildcards,
+                "wildcardResolutionTargets": apple_xcode_targets,
+                "resolvedHostnames": apple_xcode_resolutions,
+                "cnameChains": apple_xcode_cname_chains,
+                "unresolvedHostnames": apple_xcode_unresolved,
+                "forbiddenFallback": "17.0.0.0/8 or global CDN ranges",
             },
             GITHUB_FILE: {
                 "cidrCount": len(github_networks),
@@ -2046,6 +2300,7 @@ def main() -> int:
                 "method": "Resolve the official Dell Command Update FQDN to IPv4 /32",
                 "documentedHostnames": dell_hosts,
                 "resolvedHostnames": dell_resolutions,
+                "cnameChains": dell_cname_chains,
                 "unresolvedHostnames": dell_unresolved,
             },
             MICROSOFT_EDGE_WINDOWS_FILE: {
@@ -2062,6 +2317,7 @@ def main() -> int:
                     for pattern, targets in windows_targets.items()
                 },
                 "resolvedHostnames": microsoft_service_resolutions,
+                "cnameChains": microsoft_service_cname_chains,
                 "unresolvedHostnames": microsoft_service_unresolved,
                 "excludedExistingNetworks": microsoft_existing_exclusions,
                 "manualIpOverrides": False,
@@ -2086,6 +2342,7 @@ def main() -> int:
             additional_sources=additional_sources,
             additional_files=additional_files,
             resolutions_by_file=resolutions_by_file,
+            cname_chains_by_file=cname_chains_by_file,
         )
     except GenerationError as error:
         print(f"ERROR: {error}", file=sys.stderr)
