@@ -20,6 +20,8 @@ from scripts.generate_edl import (
     INTUNE_WINDOWS_FILE,
     M365_COMMON_WILDCARD_TARGETS,
     M365_SERVICE_FILES,
+    MICROSOFT_DOH_ECS_SUBNETS,
+    MICROSOFT_DOH_RESOLVER,
     MICROSOFT_DELIVERY_OPTIMIZATION_URL,
     MICROSOFT_EDGE_WINDOWS_FILE,
     RESIDUAL_IPS,
@@ -28,11 +30,13 @@ from scripts.generate_edl import (
     XCODE_DOH_ECS_SUBNETS,
     XCODE_DOH_RESOLVER,
     build_residual_coverage,
+    combine_dns_observation_details,
     build_dns_history,
     build_dns_observation_details,
     build_xcode_dns_history,
     expand_documented_hostnames,
     extract_apple_section_hostnames,
+    extract_doh_observations,
     extract_xcode_doh_observations,
     extract_intune_consolidated_hostnames,
     extract_intune_windows_networks,
@@ -309,6 +313,91 @@ class DnsProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(unresolved, {})
         sleep.assert_called_once()
+
+
+class MicrosoftControlledDnsTests(unittest.TestCase):
+    HOSTNAME = "settings.data.microsoft.com"
+
+    @classmethod
+    def observation_source(cls) -> str:
+        lines = []
+        for attempt in (1, 2):
+            for subnet in MICROSOFT_DOH_ECS_SUBNETS:
+                address = (
+                    "48.209.138.189"
+                    if subnet == MICROSOFT_DOH_ECS_SUBNETS[0]
+                    else "48.209.138.168"
+                )
+                lines.append(
+                    json.dumps(
+                        {
+                            "fqdn": cls.HOSTNAME,
+                            "ecsSubnet": subnet,
+                            "resolver": MICROSOFT_DOH_RESOLVER,
+                            "attempt": attempt,
+                            "response": {
+                                "Status": 0,
+                                "edns_client_subnet": subnet,
+                                "Question": [{"name": cls.HOSTNAME, "type": 1}],
+                                "Answer": [
+                                    {
+                                        "name": cls.HOSTNAME,
+                                        "type": 5,
+                                        "data": "atm-settingsfe-prod-geo2.trafficmanager.net.",
+                                    },
+                                    {
+                                        "name": "atm-settingsfe-prod-geo2.trafficmanager.net.",
+                                        "type": 5,
+                                        "data": "settings-prod-neu.northeurope.cloudapp.azure.com.",
+                                    },
+                                    {
+                                        "name": "settings-prod-neu.northeurope.cloudapp.azure.com.",
+                                        "type": 1,
+                                        "data": address,
+                                    },
+                                ],
+                            },
+                        }
+                    )
+                )
+        return "\n".join(lines) + "\n"
+
+    def test_aggregates_controlled_views_and_merges_system_provenance(self) -> None:
+        resolutions, doh_details, counts = extract_doh_observations(
+            self.observation_source(),
+            authorized_hostnames={self.HOSTNAME},
+            ecs_subnets=MICROSOFT_DOH_ECS_SUBNETS,
+            resolver_url=MICROSOFT_DOH_RESOLVER,
+            required_attempts=2,
+            label="Microsoft",
+        )
+        system_details = build_dns_observation_details(
+            authorized_hostnames={self.HOSTNAME},
+            resolutions={self.HOSTNAME: ["48.209.133.15"]},
+            cname_chains={self.HOSTNAME: []},
+            observation_source="system-resolver",
+        )
+        merged_resolutions, merged_details = combine_dns_observation_details(
+            authorized_hostnames={self.HOSTNAME},
+            observation_sets=[system_details, doh_details],
+        )
+
+        self.assertEqual(
+            resolutions[self.HOSTNAME],
+            ["48.209.138.168", "48.209.138.189"],
+        )
+        self.assertEqual(set(counts.values()), {2})
+        self.assertEqual(
+            merged_resolutions[self.HOSTNAME],
+            ["48.209.133.15", "48.209.138.168", "48.209.138.189"],
+        )
+        self.assertEqual(
+            merged_details[self.HOSTNAME]["48.209.138.189"]["cnameChain"],
+            [
+                "atm-settingsfe-prod-geo2.trafficmanager.net",
+                "settings-prod-neu.northeurope.cloudapp.azure.com",
+            ],
+        )
 
 
 class GitHubActionsTests(unittest.TestCase):
@@ -614,6 +703,11 @@ class ResidualCoverageTests(unittest.TestCase):
         "52.85.118.108",
         "52.222.169.45",
         "52.222.169.104",
+        "20.42.65.88",
+        "48.209.138.189",
+        "48.209.138.168",
+        "51.116.246.106",
+        "20.184.175.21",
     }
 
     def test_tracks_requested_ips_and_emits_provenance_schema(self) -> None:
@@ -685,10 +779,25 @@ class ResidualCoverageTests(unittest.TestCase):
             set(document["currentInternetOnlyAudit"]["ips"]),
             set(CURRENT_INTERNET_ONLY_AUDIT),
         )
-        self.assertEqual(document["currentInternetOnlyAudit"]["ipCount"], 15)
+        self.assertEqual(
+            set(CURRENT_INTERNET_ONLY_AUDIT),
+            {
+                "20.42.65.88",
+                "20.105.245.153",
+                "48.209.138.189",
+                "48.209.138.168",
+                "51.116.246.106",
+                "150.171.22.17",
+                "20.184.175.21",
+            },
+        )
+        self.assertEqual(
+            document["currentInternetOnlyAudit"]["ipCount"],
+            len(CURRENT_INTERNET_ONLY_AUDIT),
+        )
         self.assertEqual(
             sum(document["currentInternetOnlyAudit"]["categoryCounts"].values()),
-            15,
+            len(CURRENT_INTERNET_ONLY_AUDIT),
         )
         self.assertTrue(
             set(document["currentInternetOnlyAudit"]["categoryCounts"])

@@ -116,7 +116,9 @@ ajoutée en dur. Le générateur valide sa présence dans la source Microsoft, p
 résout huit fois des cibles concrètes auditées appartenant à ce wildcard
 (`events`, `functional`, `self`, `browser`, `mobile`, `v10`, `v10c`, `v20`,
 `watson` et `umwatsonc`, ainsi que leurs variantes `au`, `eu`, `uk` et `us`).
-Les résultats sont publiés en `/32` et consignés dans `sources.json`.
+Les cibles prioritaires sont également observées huit fois depuis chacune de
+deux vues DNS françaises contrôlées par Google DNS over HTTPS avec EDNS Client
+Subnet. Les résultats sont publiés en `/32` et consignés dans `sources.json`.
 
 Les cibles `watson.events.data.microsoft.com` et
 `umwatsonc.events.data.microsoft.com` sont en plus validées à chaque run contre
@@ -230,6 +232,14 @@ que les services de téléchargement. Les familles sont aussi validées contre l
 officiel. Les réponses DNS changent avec les backends Microsoft et sont donc
 recalculées à chaque exécution, sans `/32` manuel.
 
+Les FQDN officiels `settings.data.microsoft.com`,
+`settings-win.data.microsoft.com` et `config.edge.skype.com` sont en plus
+observés huit fois depuis chacune des deux vues DNS françaises contrôlées. Les
+couples FQDN/IP, leur chaîne CNAME et leurs sources d'observation sont conservés
+24 heures. Cette fenêtre couvre les rotations géographiques sans ajouter
+`edge.skype.com`, un wildcard `*.pipe.aria.microsoft.com` non concrétisé, ni un
+préfixe Microsoft global.
+
 Les `/32` déjà couverts par une EDL Microsoft existante sont retirés de cette
 nouvelle liste. Aucun range Azure global ni AS8075 n'est utilisé.
 
@@ -289,8 +299,8 @@ Chaque entrée expose aussi `paloSource`, `officialSource`, `category`,
 explicite lorsque le FQDN répond directement. Les alias explicites
 `officialFqdn`, `cnameChain`, `firstSeen`, `lastSeen` et `targetEdl` facilitent
 également l'audit automatique des canaris sans supprimer le schéma historique.
-Le bloc `currentInternetOnlyAudit` recense les 15 destinations de la passe
-courante et les classe exactement dans `COVERED_OFFICIAL`,
+Le bloc `currentInternetOnlyAudit` recense les destinations de la passe
+post-refresh courante et les classe exactement dans `COVERED_OFFICIAL`,
 `OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED`, `CDN_SHARED_UNATTRIBUTED`,
 `OWNER_ONLY_UNATTRIBUTED` ou `INTENTIONALLY_UNCOVERED`.
 Pour les quatre EDL Apple et l'EDL GitHub Actions, `first_seen`, `last_seen` et

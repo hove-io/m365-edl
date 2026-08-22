@@ -134,7 +134,7 @@ COVERAGE_CATEGORIES = {
 # context only. They never add an address to an EDL. Coverage still requires an
 # address to be present in an official CIDR or in the current/24-hour DNS
 # history of an authorized FQDN.
-CURRENT_INTERNET_ONLY_AUDIT: dict[str, dict[str, str | None]] = {
+PREVIOUS_INTERNET_ONLY_AUDIT: dict[str, dict[str, str | None]] = {
     "4.150.223.107": {
         "paloSource": "10.50.82.50",
         "owner": "Microsoft/Azure (AS8075)",
@@ -338,6 +338,91 @@ CURRENT_INTERNET_ONLY_AUDIT: dict[str, dict[str, str | None]] = {
     },
 }
 
+CURRENT_INTERNET_ONLY_AUDIT: dict[str, dict[str, str | None]] = {
+    "20.42.65.88": {
+        "paloSource": "10.50.84.24",
+        "owner": "Microsoft/Azure (AS8075)",
+        "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
+        "officialSource": INTUNE_ENDPOINTS_LEARN_URL,
+        "officialFqdn": "*.events.data.microsoft.com",
+        "uncoveredCategory": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+        "confidence": "high",
+        "reason": (
+            "The official events.data.microsoft.com family has returned this "
+            "address historically, but it was not observed in the current or "
+            "rolling 24-hour authorized DNS window"
+        ),
+    },
+    "20.105.245.153": PREVIOUS_INTERNET_ONLY_AUDIT["20.105.245.153"],
+    "48.209.138.189": {
+        "paloSource": "10.50.84.24",
+        "owner": "Microsoft/Azure (AS8075)",
+        "suspectedService": "Windows dynamic settings service",
+        "officialSource": MICROSOFT_WINDOWS_URL,
+        "officialFqdn": "settings.data.microsoft.com",
+        "uncoveredCategory": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+        "confidence": "high",
+        "reason": (
+            "The official Windows settings FQDNs are authorized, but neither "
+            "returned this address in the current or rolling 24-hour DNS window"
+        ),
+    },
+    "48.209.138.168": {
+        "paloSource": "10.50.83.87",
+        "owner": "Microsoft/Azure (AS8075)",
+        "suspectedService": "Windows dynamic settings service",
+        "officialSource": MICROSOFT_WINDOWS_URL,
+        "officialFqdn": "settings.data.microsoft.com",
+        "uncoveredCategory": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+        "confidence": "high",
+        "reason": (
+            "The official Windows settings FQDNs are authorized, but neither "
+            "returned this address in the current or rolling 24-hour DNS window"
+        ),
+    },
+    "51.116.246.106": {
+        "paloSource": "10.50.83.22",
+        "owner": "Microsoft/Azure (AS8075)",
+        "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
+        "officialSource": INTUNE_ENDPOINTS_LEARN_URL,
+        "officialFqdn": "*.events.data.microsoft.com",
+        "uncoveredCategory": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+        "confidence": "high",
+        "reason": (
+            "The official events.data.microsoft.com family has returned this "
+            "address historically, but it was not observed in the current or "
+            "rolling 24-hour authorized DNS window"
+        ),
+    },
+    "150.171.22.17": {
+        "paloSource": "10.50.84.3",
+        "owner": "Microsoft/Azure (AS8075)",
+        "suspectedService": "Microsoft Edge configuration service",
+        "officialSource": MICROSOFT_EDGE_URL,
+        "officialFqdn": "config.edge.skype.com",
+        "uncoveredCategory": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+        "confidence": "high",
+        "reason": (
+            "config.edge.skype.com is officially documented, but it did not "
+            "return this address in the current or rolling 24-hour DNS window"
+        ),
+    },
+    "20.184.175.21": {
+        "paloSource": "10.50.82.50",
+        "owner": "Microsoft/Azure (AS8075)",
+        "suspectedService": "Unresolved Microsoft/Azure service",
+        "officialSource": None,
+        "officialFqdn": None,
+        "uncoveredCategory": "OWNER_ONLY_UNATTRIBUTED",
+        "confidence": "low",
+        "reason": (
+            "Microsoft ownership is the only reliable attribution; no official "
+            "Intune, Defender, Edge, Windows Update, or Delivery Optimization "
+            "FQDN currently maps this address"
+        ),
+    },
+}
+
 PUBLICATIONS = (
     ("Microsoft 365 Common", "m365-common-ipv4.txt"),
     ("Microsoft 365 Exchange", "m365-exchange-ipv4.txt"),
@@ -375,6 +460,7 @@ RESIDUAL_IPS = (
     "52.85.118.61",
     "52.85.118.108",
     "20.42.65.85",
+    "20.42.65.88",
     "20.42.72.131",
     "4.150.223.96",
     "4.150.223.98",
@@ -384,7 +470,9 @@ RESIDUAL_IPS = (
     "4.150.223.115",
     "20.184.175.2",
     "20.184.175.3",
+    "20.184.175.21",
     "51.132.193.104",
+    "51.116.246.106",
     "150.171.22.17",
     "104.208.16.94",
     "23.103.234.43",
@@ -399,6 +487,7 @@ RESIDUAL_IPS = (
     "95.101.137.14",
     "20.85.108.33",
     "48.209.138.189",
+    "48.209.138.168",
     "52.168.117.169",
     "52.168.117.170",
     "23.200.213.147",
@@ -451,6 +540,8 @@ INTUNE_EVENT_RESIDUAL_IPS = {
     "20.184.175.3",
     "20.184.175.2",
     "20.42.72.131",
+    "20.42.65.88",
+    "51.116.246.106",
     "51.132.193.104",
     "104.208.16.94",
 }
@@ -658,6 +749,26 @@ INTUNE_EVENT_EXACT_SOURCE_REQUIREMENTS = {
     CONFIGMGR_INTERNET_ENDPOINTS_URL: {"umwatsonc.events.data.microsoft.com"},
 }
 
+MICROSOFT_DOH_RESOLVER = XCODE_DOH_RESOLVER
+MICROSOFT_DOH_ECS_SUBNETS = XCODE_DOH_ECS_SUBNETS
+MICROSOFT_DOH_ATTEMPTS = 8
+MICROSOFT_INTUNE_DOH_HOSTS = {
+    "events.data.microsoft.com",
+    "self.events.data.microsoft.com",
+    "v10.events.data.microsoft.com",
+    "v20.events.data.microsoft.com",
+    "mobile.events.data.microsoft.com",
+    "browser.events.data.microsoft.com",
+    "eu-mobile.events.data.microsoft.com",
+    "eu-v20.events.data.microsoft.com",
+}
+MICROSOFT_EDGE_DOH_HOSTS = {
+    "config.edge.skype.com",
+    "settings.data.microsoft.com",
+    "settings-win.data.microsoft.com",
+}
+MICROSOFT_DOH_HOSTS = MICROSOFT_INTUNE_DOH_HOSTS | MICROSOFT_EDGE_DOH_HOSTS
+
 EXPECTED_TEAMS_MEDIA_NETWORKS = {
     ipaddress.IPv4Network("52.112.0.0/14"),
     ipaddress.IPv4Network("52.120.0.0/14"),
@@ -830,6 +941,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--apple-apns-file", type=Path, required=True)
     parser.add_argument(
         "--apple-xcode-dns-observations-file", type=Path, required=True
+    )
+    parser.add_argument(
+        "--microsoft-dns-observations-file", type=Path, required=True
     )
     parser.add_argument("--github-meta-file", type=Path, required=True)
     parser.add_argument("--dropbox-firewall-file", type=Path, required=True)
@@ -1520,19 +1634,25 @@ def format_utc_timestamp(value: dt.datetime) -> str:
     return value.astimezone(dt.timezone.utc).isoformat().replace("+00:00", "Z")
 
 
-def extract_xcode_doh_observations(
+def extract_doh_observations(
     source: str,
+    *,
+    authorized_hostnames: set[str],
+    ecs_subnets: tuple[str, ...],
+    resolver_url: str,
+    required_attempts: int,
+    label: str,
 ) -> tuple[
     dict[str, list[str]],
     dict[str, dict[str, dict[str, Any]]],
     dict[str, int],
 ]:
-    """Validate controlled DNS-over-HTTPS observations for official Xcode FQDNs."""
+    """Validate controlled DNS-over-HTTPS observations for official FQDNs."""
     addresses_by_hostname: dict[str, set[str]] = {
-        hostname: set() for hostname in APPLE_XCODE_HOSTS
+        hostname: set() for hostname in authorized_hostnames
     }
     details: dict[str, dict[str, dict[str, Any]]] = {
-        hostname: {} for hostname in APPLE_XCODE_HOSTS
+        hostname: {} for hostname in authorized_hostnames
     }
     attempts: dict[tuple[str, str], set[int]] = {}
 
@@ -1543,36 +1663,36 @@ def extract_xcode_doh_observations(
             observation = json.loads(line)
         except json.JSONDecodeError as error:
             raise GenerationError(
-                f"Invalid Xcode DNS observation JSON at line {line_number}: {error}"
+                f"Invalid {label} DNS observation JSON at line {line_number}: {error}"
             ) from error
         if not isinstance(observation, dict):
             raise GenerationError(
-                f"Xcode DNS observation line {line_number} must be an object"
+                f"{label} DNS observation line {line_number} must be an object"
             )
         hostname = observation.get("fqdn")
         ecs_subnet = observation.get("ecsSubnet")
         resolver = observation.get("resolver")
         attempt = observation.get("attempt")
         response = observation.get("response")
-        if hostname not in APPLE_XCODE_HOSTS:
+        if hostname not in authorized_hostnames:
             raise GenerationError(
-                f"Unauthorized Xcode DNS observation hostname: {hostname!r}"
+                f"Unauthorized {label} DNS observation hostname: {hostname!r}"
             )
-        if ecs_subnet not in XCODE_DOH_ECS_SUBNETS:
+        if ecs_subnet not in ecs_subnets:
             raise GenerationError(
-                f"Unauthorized Xcode DNS ECS subnet: {ecs_subnet!r}"
+                f"Unauthorized {label} DNS ECS subnet: {ecs_subnet!r}"
             )
-        if resolver != XCODE_DOH_RESOLVER:
+        if resolver != resolver_url:
             raise GenerationError(
-                f"Unexpected Xcode DNS resolver: {resolver!r}"
+                f"Unexpected {label} DNS resolver: {resolver!r}"
             )
-        if not isinstance(attempt, int) or not 1 <= attempt <= XCODE_DNS_ATTEMPTS:
+        if not isinstance(attempt, int) or not 1 <= attempt <= required_attempts:
             raise GenerationError(
-                f"Invalid Xcode DNS attempt at line {line_number}: {attempt!r}"
+                f"Invalid {label} DNS attempt at line {line_number}: {attempt!r}"
             )
         if not isinstance(response, dict) or response.get("Status") != 0:
             raise GenerationError(
-                f"Xcode DNS resolver returned an error at line {line_number}"
+                f"{label} DNS resolver returned an error at line {line_number}"
             )
         response_ecs_subnet = response.get("edns_client_subnet")
         try:
@@ -1580,11 +1700,11 @@ def extract_xcode_doh_observations(
             returned_ecs = ipaddress.IPv4Network(response_ecs_subnet)
         except (ipaddress.AddressValueError, ipaddress.NetmaskValueError) as error:
             raise GenerationError(
-                f"Invalid Xcode DNS ECS response at line {line_number}"
+                f"Invalid {label} DNS ECS response at line {line_number}"
             ) from error
         if not returned_ecs.subnet_of(requested_ecs):
             raise GenerationError(
-                f"Xcode DNS ECS response escaped the requested subnet at line {line_number}"
+                f"{label} DNS ECS response escaped the requested subnet at line {line_number}"
             )
         questions = response.get("Question")
         if (
@@ -1596,12 +1716,12 @@ def extract_xcode_doh_observations(
             or questions[0]["name"].strip().lower().rstrip(".") != hostname
         ):
             raise GenerationError(
-                f"Xcode DNS response question mismatch at line {line_number}"
+                f"{label} DNS response question mismatch at line {line_number}"
             )
         answers = response.get("Answer")
         if not isinstance(answers, list):
             raise GenerationError(
-                f"Xcode DNS response has no Answer list at line {line_number}"
+                f"{label} DNS response has no Answer list at line {line_number}"
             )
 
         cname_targets: dict[str, str] = {}
@@ -1609,7 +1729,7 @@ def extract_xcode_doh_observations(
         for answer in answers:
             if not isinstance(answer, dict):
                 raise GenerationError(
-                    f"Invalid Xcode DNS answer at line {line_number}"
+                    f"Invalid {label} DNS answer at line {line_number}"
                 )
             record_type = answer.get("type")
             data = answer.get("data")
@@ -1620,30 +1740,30 @@ def extract_xcode_doh_observations(
             normalized_owner = owner.strip().lower().rstrip(".")
             if not HOSTNAME_PATTERN.fullmatch(normalized_owner):
                 raise GenerationError(
-                    f"Invalid Xcode DNS answer owner at line {line_number}: {owner!r}"
+                    f"Invalid {label} DNS answer owner at line {line_number}: {owner!r}"
                 )
             if record_type == 5:
                 if not HOSTNAME_PATTERN.fullmatch(normalized):
                     raise GenerationError(
-                        f"Invalid Xcode DNS CNAME at line {line_number}: {data!r}"
+                        f"Invalid {label} DNS CNAME at line {line_number}: {data!r}"
                     )
                 previous_target = cname_targets.setdefault(
                     normalized_owner, normalized
                 )
                 if previous_target != normalized:
                     raise GenerationError(
-                        f"Conflicting Xcode DNS CNAMEs at line {line_number}"
+                        f"Conflicting {label} DNS CNAMEs at line {line_number}"
                     )
             elif record_type == 1:
                 try:
                     address = ipaddress.IPv4Address(normalized)
                 except ipaddress.AddressValueError as error:
                     raise GenerationError(
-                        f"Invalid Xcode DNS A record at line {line_number}: {data!r}"
+                        f"Invalid {label} DNS A record at line {line_number}: {data!r}"
                     ) from error
                 validate_ipv4_network(
                     ipaddress.IPv4Network(f"{address}/32"),
-                    context=f"Xcode DNS-over-HTTPS {hostname}",
+                    context=f"{label} DNS-over-HTTPS {hostname}",
                 )
                 addresses_by_owner.setdefault(normalized_owner, []).append(
                     str(address)
@@ -1656,14 +1776,14 @@ def extract_xcode_doh_observations(
             terminal_name = cname_targets[terminal_name]
             if terminal_name in visited:
                 raise GenerationError(
-                    f"Xcode DNS CNAME loop at line {line_number}"
+                    f"{label} DNS CNAME loop at line {line_number}"
                 )
             visited.add(terminal_name)
             cname_chain.append(terminal_name)
         addresses = addresses_by_owner.get(terminal_name, [])
         if not addresses:
             raise GenerationError(
-                "Xcode DNS response returned no public A record at the end of "
+                f"{label} DNS response returned no public A record at the end of "
                 f"its CNAME chain at line {line_number}"
             )
 
@@ -1682,24 +1802,24 @@ def extract_xcode_doh_observations(
 
     required_pairs = {
         (hostname, subnet)
-        for hostname in APPLE_XCODE_HOSTS
-        for subnet in XCODE_DOH_ECS_SUBNETS
+        for hostname in authorized_hostnames
+        for subnet in ecs_subnets
     }
     missing = required_pairs - set(attempts)
     if missing:
         raise GenerationError(
-            "Missing Xcode DNS observation series for: "
+            f"Missing {label} DNS observation series for: "
             + ", ".join(f"{hostname}@{subnet}" for hostname, subnet in sorted(missing))
         )
     incomplete = {
         pair: len(observed) for pair, observed in attempts.items()
-        if len(observed) != XCODE_DNS_ATTEMPTS
+        if len(observed) != required_attempts
     }
     if incomplete:
         raise GenerationError(
-            "Incomplete Xcode DNS observation series: "
+            f"Incomplete {label} DNS observation series: "
             + ", ".join(
-                f"{hostname}@{subnet}={count}/{XCODE_DNS_ATTEMPTS}"
+                f"{hostname}@{subnet}={count}/{required_attempts}"
                 for (hostname, subnet), count in sorted(incomplete.items())
             )
         )
@@ -1713,6 +1833,23 @@ def extract_xcode_doh_observations(
         for (hostname, subnet), values in sorted(attempts.items())
     }
     return resolutions, details, counts
+
+
+def extract_xcode_doh_observations(
+    source: str,
+) -> tuple[
+    dict[str, list[str]],
+    dict[str, dict[str, dict[str, Any]]],
+    dict[str, int],
+]:
+    return extract_doh_observations(
+        source,
+        authorized_hostnames=APPLE_XCODE_HOSTS,
+        ecs_subnets=XCODE_DOH_ECS_SUBNETS,
+        resolver_url=XCODE_DOH_RESOLVER,
+        required_attempts=XCODE_DNS_ATTEMPTS,
+        label="Xcode",
+    )
 
 
 def combine_xcode_observations(
@@ -1757,6 +1894,43 @@ def combine_xcode_observations(
         for hostname, addresses in sorted(combined.items())
     }
     return resolutions, details
+
+
+def combine_dns_observation_details(
+    *,
+    authorized_hostnames: set[str],
+    observation_sets: list[dict[str, dict[str, dict[str, Any]]]],
+) -> tuple[dict[str, list[str]], dict[str, dict[str, dict[str, Any]]]]:
+    """Merge current system/DoH observations without losing provenance."""
+    combined: dict[str, dict[str, dict[str, Any]]] = {
+        hostname: {} for hostname in authorized_hostnames
+    }
+    for observations in observation_sets:
+        unexpected = set(observations) - authorized_hostnames
+        if unexpected:
+            raise GenerationError(
+                "DNS observation set contains unauthorized hostnames: "
+                + ", ".join(sorted(unexpected))
+            )
+        for hostname, records in observations.items():
+            for address, incoming in records.items():
+                record = combined[hostname].setdefault(
+                    address,
+                    {"cnameChain": [], "observationSources": []},
+                )
+                incoming_chain = incoming.get("cnameChain", [])
+                incoming_sources = incoming.get("observationSources", [])
+                if len(incoming_chain) > len(record["cnameChain"]):
+                    record["cnameChain"] = list(incoming_chain)
+                record["observationSources"] = sorted(
+                    set(record["observationSources"]) | set(incoming_sources)
+                )
+    resolutions = {
+        hostname: sorted(records, key=ipaddress.IPv4Address)
+        for hostname, records in sorted(combined.items())
+        if records
+    }
+    return resolutions, combined
 
 
 def build_dns_observation_details(
@@ -2577,6 +2751,8 @@ def build_residual_coverage(
         source_documentation = documentation_by_file.get(selected_file)
         if fqdns and fqdns[0].endswith(".prod.do.dsp.mp.microsoft.com"):
             source_documentation = MICROSOFT_DELIVERY_OPTIMIZATION_URL
+        elif fqdns and fqdns[0] == "config.edge.skype.com":
+            source_documentation = MICROSOFT_EDGE_URL
         elif fqdns and fqdns[0] == "watson.events.data.microsoft.com":
             source_documentation = WINDOWS_DIAGNOSTIC_ENDPOINTS_URL
         elif fqdns and fqdns[0] == "umwatsonc.events.data.microsoft.com":
@@ -2843,8 +3019,10 @@ def build_index(
       cibles DNS auditées sont résolues à chaque exécution. L'EDL Intune conserve
       pendant 24 heures uniquement les IPv4 publiques réellement observées sous
       <code>*.events.data.microsoft.com</code>, y compris les diagnostics Windows
-      et Configuration Manager explicitement documentés. Aucune IP de logs ni
-      plage Azure globale n'est injectée manuellement.</p>
+      et Configuration Manager explicitement documentés. Les cibles dynamiques
+      prioritaires Intune, Windows Settings et Edge sont aussi observées depuis
+      deux vues DNS françaises contrôlées, avec chaîne CNAME et grâce de 24 heures.
+      Aucune IP de logs ni plage Azure globale n'est injectée manuellement.</p>
     </div>
     <div class="notice">
       <p><strong>Apple :</strong> les listes utilisent uniquement les A publics
@@ -3004,6 +3182,10 @@ def main() -> int:
             args.apple_xcode_dns_observations_file,
             label="Apple Xcode DNS-over-HTTPS observations",
         )
+        microsoft_dns_observations = load_text_source(
+            args.microsoft_dns_observations_file,
+            label="Microsoft DNS-over-HTTPS observations",
+        )
         github_meta = load_json_source(
             args.github_meta_file,
             label="GitHub Meta API response",
@@ -3047,6 +3229,18 @@ def main() -> int:
             else None
         )
         observed_at = dt.datetime.now(dt.timezone.utc)
+        (
+            microsoft_doh_resolutions,
+            microsoft_doh_details,
+            microsoft_doh_attempt_counts,
+        ) = extract_doh_observations(
+            microsoft_dns_observations,
+            authorized_hostnames=MICROSOFT_DOH_HOSTS,
+            ecs_subnets=MICROSOFT_DOH_ECS_SUBNETS,
+            resolver_url=MICROSOFT_DOH_RESOLVER,
+            required_attempts=MICROSOFT_DOH_ATTEMPTS,
+            label="Microsoft",
+        )
 
         generated = extract_m365_networks(payload)
         m365_common_file = M365_SERVICE_FILES["Common"]
@@ -3154,6 +3348,25 @@ def main() -> int:
             resolutions=intune_event_current_resolutions,
             cname_chains=intune_event_cname_chains,
             observation_source="system-resolver",
+        )
+        missing_intune_doh_hosts = MICROSOFT_INTUNE_DOH_HOSTS - set(
+            intune_event_hosts
+        )
+        if missing_intune_doh_hosts:
+            raise GenerationError(
+                "Controlled Microsoft Intune DNS hosts are not authorized by "
+                "the official source: " + ", ".join(sorted(missing_intune_doh_hosts))
+            )
+        intune_doh_details = {
+            hostname: microsoft_doh_details[hostname]
+            for hostname in MICROSOFT_INTUNE_DOH_HOSTS
+        }
+        (
+            intune_event_current_resolutions,
+            intune_event_current_details,
+        ) = combine_dns_observation_details(
+            authorized_hostnames=set(intune_event_hosts),
+            observation_sets=[intune_event_current_details, intune_doh_details],
         )
         (
             intune_event_networks,
@@ -3435,14 +3648,56 @@ def main() -> int:
         )
         microsoft_service_hosts = sorted(set(edge_hosts) | set(windows_hosts))
         (
-            microsoft_service_networks,
-            microsoft_service_resolutions,
+            _microsoft_service_current_networks,
+            microsoft_service_current_resolutions,
             microsoft_service_cname_chains,
             microsoft_service_unresolved,
         ) = resolve_service_hostnames(
             microsoft_service_hosts,
             label="Microsoft Edge/Windows services",
             attempts=8,
+        )
+        microsoft_service_current_details = build_dns_observation_details(
+            authorized_hostnames=set(microsoft_service_hosts),
+            resolutions=microsoft_service_current_resolutions,
+            cname_chains=microsoft_service_cname_chains,
+            observation_source="system-resolver",
+        )
+        missing_edge_doh_hosts = MICROSOFT_EDGE_DOH_HOSTS - set(
+            microsoft_service_hosts
+        )
+        if missing_edge_doh_hosts:
+            raise GenerationError(
+                "Controlled Microsoft Edge/Windows DNS hosts are not authorized "
+                "by the official sources: "
+                + ", ".join(sorted(missing_edge_doh_hosts))
+            )
+        edge_doh_details = {
+            hostname: microsoft_doh_details[hostname]
+            for hostname in MICROSOFT_EDGE_DOH_HOSTS
+        }
+        (
+            microsoft_service_current_resolutions,
+            microsoft_service_current_details,
+        ) = combine_dns_observation_details(
+            authorized_hostnames=set(microsoft_service_hosts),
+            observation_sets=[
+                microsoft_service_current_details,
+                edge_doh_details,
+            ],
+        )
+        (
+            microsoft_service_networks,
+            microsoft_service_resolutions,
+            microsoft_service_dns_history,
+            microsoft_service_expired_records,
+        ) = build_dns_history(
+            previous_sources=previous_sources,
+            filename=MICROSOFT_EDGE_WINDOWS_FILE,
+            authorized_hostnames=set(microsoft_service_hosts),
+            current_details=microsoft_service_current_details,
+            observed_at=observed_at,
+            label="Microsoft Edge/Windows services",
         )
         (
             microsoft_service_networks,
@@ -3493,6 +3748,7 @@ def main() -> int:
             APPLE_DEVICE_FILE: apple_device_dns_history,
             APPLE_XCODE_FILE: apple_xcode_dns_history,
             GITHUB_ACTIONS_FILE: github_actions_dns_history,
+            MICROSOFT_EDGE_WINDOWS_FILE: microsoft_service_dns_history,
         }
 
         additional_sources: dict[str, dict[str, Any]] = {
@@ -3521,6 +3777,19 @@ def main() -> int:
                 "purpose": (
                     "Collect multiple current public A records for the two "
                     "official Apple Xcode FQDNs from controlled France DNS views"
+                ),
+            },
+            "microsoftControlledDnsObservations": {
+                "resolver": MICROSOFT_DOH_RESOLVER,
+                "ecsSubnets": list(MICROSOFT_DOH_ECS_SUBNETS),
+                "attemptsPerHostnameAndSubnet": MICROSOFT_DOH_ATTEMPTS,
+                "hostnames": sorted(MICROSOFT_DOH_HOSTS),
+                "resolvedHostnames": microsoft_doh_resolutions,
+                "sha256": source_hash(microsoft_dns_observations),
+                "purpose": (
+                    "Collect current public A records and complete CNAME chains "
+                    "for selected official Microsoft dynamic FQDNs from "
+                    "controlled France DNS views"
                 ),
             },
             "githubMeta": {
@@ -3651,6 +3920,12 @@ def main() -> int:
                 },
                 "unresolvedHostnames": intune_event_unresolved,
                 "dnsAttemptsPerHostname": 8,
+                "controlledDohHostnames": sorted(MICROSOFT_INTUNE_DOH_HOSTS),
+                "dnsObservationAttempts": {
+                    key: count
+                    for key, count in microsoft_doh_attempt_counts.items()
+                    if key.split("@", 1)[0] in MICROSOFT_INTUNE_DOH_HOSTS
+                },
                 "manualIpOverrides": False,
                 "globalAzureOrAs8075RangesIncluded": False,
             },
@@ -3825,7 +4100,8 @@ def main() -> int:
                 "cidrCount": len(microsoft_service_networks),
                 "method": (
                     "Resolve selected official Microsoft Edge and Windows FQDNs "
-                    "to IPv4 /32, then remove networks already covered by existing EDLs"
+                    "to IPv4 /32, retain DNS-proven records for 24 hours, then "
+                    "remove networks already covered by existing EDLs"
                 ),
                 "edgeHostnames": edge_hosts,
                 "windowsHostnames": windows_hosts,
@@ -3835,7 +4111,21 @@ def main() -> int:
                     for pattern, targets in windows_targets.items()
                 },
                 "resolvedHostnames": microsoft_service_resolutions,
+                "currentResolvedHostnames": microsoft_service_current_resolutions,
                 "cnameChains": microsoft_service_cname_chains,
+                "dnsHistory": {
+                    "gracePeriodHours": int(
+                        DNS_HISTORY_GRACE_PERIOD.total_seconds() // 3600
+                    ),
+                    "recordsByHostname": microsoft_service_dns_history,
+                    "expiredThisRun": microsoft_service_expired_records,
+                },
+                "controlledDohHostnames": sorted(MICROSOFT_EDGE_DOH_HOSTS),
+                "dnsObservationAttempts": {
+                    key: count
+                    for key, count in microsoft_doh_attempt_counts.items()
+                    if key.split("@", 1)[0] in MICROSOFT_EDGE_DOH_HOSTS
+                },
                 "unresolvedHostnames": microsoft_service_unresolved,
                 "excludedExistingNetworks": microsoft_existing_exclusions,
                 "manualIpOverrides": False,
