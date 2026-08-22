@@ -1,32 +1,173 @@
 {
-  "generatedAt": "2026-08-22T15:42:24.576685Z",
+  "generatedAt": "2026-08-22T16:23:03.020175Z",
   "policy": "Coverage is reported only from generated EDL content; unmatched IPs are never added to force coverage",
   "currentInternetOnlyAudit": {
-    "ipCount": 7,
+    "ipCount": 6,
     "ips": [
-      "20.42.65.88",
-      "20.184.175.21",
-      "51.116.246.106",
-      "150.171.22.17",
-      "48.209.138.189",
-      "48.209.138.168",
-      "20.105.245.153"
+      "2.16.193.188",
+      "34.244.58.147",
+      "40.79.150.123",
+      "72.153.5.132",
+      "72.154.7.97",
+      "172.66.0.227"
     ],
     "categoryCounts": {
-      "CDN_SHARED_UNATTRIBUTED": 0,
-      "COVERED_OFFICIAL": 6,
+      "CDN_SHARED_UNATTRIBUTED": 2,
+      "COVERED_OFFICIAL": 3,
       "INTENTIONALLY_UNCOVERED": 0,
-      "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED": 0,
-      "OWNER_ONLY_UNATTRIBUTED": 1
+      "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED": 1,
+      "OWNER_ONLY_UNATTRIBUTED": 0
     }
   },
   "entries": [
     {
+      "ip": "2.16.193.188",
+      "sourcePalo": "10.50.82.50",
+      "paloSource": "10.50.82.50",
+      "owner": "Akamai (AS20940)",
+      "suspectedService": "Unattributed shared Akamai delivery edge",
+      "verified": false,
+      "category": "CDN_SHARED_UNATTRIBUTED",
+      "confidence": "low",
+      "covered": false,
+      "edl": null,
+      "targetEdl": null,
+      "source": null,
+      "fqdn": null,
+      "officialFqdn": null,
+      "cname_chain": [],
+      "cnameChain": [],
+      "first_seen": null,
+      "firstSeen": null,
+      "last_seen": null,
+      "lastSeen": null,
+      "observation_sources": [],
+      "source_documentation": null,
+      "officialSource": null,
+      "reason": "No authorized Microsoft service FQDN returned this shared Akamai address; Akamai ownership is not service authorization"
+    },
+    {
+      "ip": "34.244.58.147",
+      "sourcePalo": "10.50.83.23",
+      "paloSource": "10.50.83.23",
+      "owner": "AWS hosting / Canonical Ubuntu service",
+      "suspectedService": "Ubuntu Pro APT News / MOTD",
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "ubuntu-motd-ipv4.txt",
+      "source": "Canonical Ubuntu Pro APT News FQDN resolution",
+      "fqdn": "motd.ubuntu.com",
+      "cname_chain": [],
+      "first_seen": "2026-08-22T16:23:03.020175Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/0",
+        "google-doh-ecs:82.66.0.0/0",
+        "system-resolver"
+      ],
+      "source_documentation": "https://github.com/canonical/ubuntu-pro-client/blob/main/uaclient/defaults.py",
+      "officialSource": "https://github.com/canonical/ubuntu-pro-client/blob/main/uaclient/defaults.py",
+      "targetEdl": "ubuntu-motd-ipv4.txt",
+      "officialFqdn": "motd.ubuntu.com",
+      "cnameChain": [],
+      "firstSeen": "2026-08-22T16:23:03.020175Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
+      "reason": "Covered by a DNS-observed official FQDN"
+    },
+    {
+      "ip": "40.79.150.123",
+      "sourcePalo": "10.50.84.3",
+      "paloSource": "10.50.84.3",
+      "owner": "Microsoft/Azure (AS8075)",
+      "suspectedService": "Probable Microsoft OneDS telemetry backend",
+      "verified": false,
+      "category": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+      "confidence": "medium",
+      "covered": false,
+      "edl": null,
+      "targetEdl": null,
+      "source": null,
+      "fqdn": null,
+      "officialFqdn": "*.events.data.microsoft.com",
+      "cname_chain": [],
+      "cnameChain": [],
+      "first_seen": null,
+      "firstSeen": null,
+      "last_seen": null,
+      "lastSeen": null,
+      "observation_sources": [],
+      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "reason": "The France Central OneDS backend name is only an attribution clue; no authorized *.events.data.microsoft.com target returned this address in the current or rolling 24-hour DNS window"
+    },
+    {
+      "ip": "72.153.5.132",
+      "sourcePalo": "10.50.84.24",
+      "paloSource": "10.50.84.24",
+      "owner": "Microsoft (AS8075)",
+      "suspectedService": "Windows Delivery Optimization Array service",
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "microsoft-edge-windows-services-ipv4.txt",
+      "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
+      "fqdn": "array511.prod.do.dsp.mp.microsoft.com",
+      "cname_chain": [],
+      "first_seen": "2026-08-22T16:23:03.020175Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/0",
+        "google-doh-ecs:82.66.0.0/0",
+        "system-resolver"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow",
+      "officialSource": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow",
+      "targetEdl": "microsoft-edge-windows-services-ipv4.txt",
+      "officialFqdn": "array511.prod.do.dsp.mp.microsoft.com",
+      "cnameChain": [],
+      "firstSeen": "2026-08-22T16:23:03.020175Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
+      "reason": "Covered by a DNS-observed official FQDN"
+    },
+    {
+      "ip": "72.154.7.97",
+      "sourcePalo": "10.50.82.50",
+      "paloSource": "10.50.82.50",
+      "owner": "Microsoft (AS8075)",
+      "suspectedService": "Windows Delivery Optimization Array service",
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "microsoft-edge-windows-services-ipv4.txt",
+      "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
+      "fqdn": "array804.prod.do.dsp.mp.microsoft.com",
+      "cname_chain": [],
+      "first_seen": "2026-08-22T16:23:03.020175Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/0",
+        "google-doh-ecs:82.66.0.0/0",
+        "system-resolver"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow",
+      "officialSource": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow",
+      "targetEdl": "microsoft-edge-windows-services-ipv4.txt",
+      "officialFqdn": "array804.prod.do.dsp.mp.microsoft.com",
+      "cnameChain": [],
+      "firstSeen": "2026-08-22T16:23:03.020175Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
+      "reason": "Covered by a DNS-observed official FQDN"
+    },
+    {
       "ip": "52.85.118.32",
       "sourcePalo": null,
       "paloSource": null,
-      "owner": null,
-      "suspectedService": null,
+      "owner": "AWS CloudFront (AS16509)",
+      "suspectedService": "Unattributed shared CloudFront distribution",
       "verified": false,
       "category": "CDN_SHARED_UNATTRIBUTED",
       "confidence": "low",
@@ -45,14 +186,14 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+      "reason": "No authorized official service FQDN currently maps this CloudFront address"
     },
     {
       "ip": "52.85.118.49",
-      "sourcePalo": null,
-      "paloSource": null,
-      "owner": null,
-      "suspectedService": null,
+      "sourcePalo": "10.50.83.126",
+      "paloSource": "10.50.83.126",
+      "owner": "AWS CloudFront (AS16509)",
+      "suspectedService": "Unattributed shared CloudFront distribution",
       "verified": false,
       "category": "CDN_SHARED_UNATTRIBUTED",
       "confidence": "low",
@@ -71,14 +212,14 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+      "reason": "Shared CloudFront address without a demonstrated official client FQDN; CloudFront ownership alone is not authorization"
     },
     {
       "ip": "52.85.118.61",
       "sourcePalo": null,
       "paloSource": null,
-      "owner": null,
-      "suspectedService": null,
+      "owner": "AWS CloudFront (AS16509)",
+      "suspectedService": "Unattributed shared CloudFront distribution",
       "verified": false,
       "category": "CDN_SHARED_UNATTRIBUTED",
       "confidence": "low",
@@ -97,14 +238,14 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+      "reason": "No authorized official service FQDN currently maps this CloudFront address"
     },
     {
       "ip": "52.85.118.108",
-      "sourcePalo": null,
-      "paloSource": null,
-      "owner": null,
-      "suspectedService": null,
+      "sourcePalo": "10.50.83.125",
+      "paloSource": "10.50.83.125",
+      "owner": "AWS CloudFront (AS16509)",
+      "suspectedService": "Possible AWS CodeBuild console on shared CloudFront",
       "verified": false,
       "category": "CDN_SHARED_UNATTRIBUTED",
       "confidence": "low",
@@ -123,7 +264,7 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+      "reason": "Historical CodeBuild names on a shared CloudFront address do not identify this TLS flow or authorize the whole distribution"
     },
     {
       "ip": "20.42.65.85",
@@ -227,10 +368,6 @@
       ],
       "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
       "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
-      "allEdls": [
-        "microsoft-defender-ipv4.txt",
-        "microsoft-intune-windows-ipv4.txt"
-      ],
       "allFqdns": [
         "events.data.microsoft.com",
         "functional.events.data.microsoft.com",
@@ -373,9 +510,9 @@
     },
     {
       "ip": "4.150.223.107",
-      "sourcePalo": null,
-      "paloSource": null,
-      "owner": "Microsoft/Azure",
+      "sourcePalo": "10.50.82.50",
+      "paloSource": "10.50.82.50",
+      "owner": "Microsoft/Azure (AS8075)",
       "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
       "verified": true,
       "category": "COVERED_OFFICIAL",
@@ -439,7 +576,10 @@
       "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
       "allFqdns": [
         "browser.events.data.microsoft.com",
-        "mobile.events.data.microsoft.com"
+        "events.data.microsoft.com",
+        "functional.events.data.microsoft.com",
+        "mobile.events.data.microsoft.com",
+        "v10c.events.data.microsoft.com"
       ],
       "targetEdl": "microsoft-intune-windows-ipv4.txt",
       "officialFqdn": "browser.events.data.microsoft.com",
@@ -479,6 +619,7 @@
       "allFqdns": [
         "events.data.microsoft.com",
         "mobile.events.data.microsoft.com",
+        "us-mobile.events.data.microsoft.com",
         "v10.events.data.microsoft.com",
         "v20.events.data.microsoft.com"
       ],
@@ -529,9 +670,9 @@
     },
     {
       "ip": "20.184.175.3",
-      "sourcePalo": null,
-      "paloSource": null,
-      "owner": "Microsoft/Azure",
+      "sourcePalo": "10.50.84.3",
+      "paloSource": "10.50.84.3",
+      "owner": "Microsoft/Azure (AS8075)",
       "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
       "verified": true,
       "category": "COVERED_OFFICIAL",
@@ -597,7 +738,8 @@
       "allFqdns": [
         "browser.events.data.microsoft.com",
         "functional.events.data.microsoft.com",
-        "self.events.data.microsoft.com"
+        "self.events.data.microsoft.com",
+        "us-mobile.events.data.microsoft.com"
       ],
       "targetEdl": "microsoft-intune-windows-ipv4.txt",
       "officialFqdn": "browser.events.data.microsoft.com",
@@ -635,8 +777,10 @@
       "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
       "allFqdns": [
         "browser.events.data.microsoft.com",
+        "functional.events.data.microsoft.com",
         "self.events.data.microsoft.com",
-        "uk-mobile.events.data.microsoft.com"
+        "uk-mobile.events.data.microsoft.com",
+        "uk-v20.events.data.microsoft.com"
       ],
       "targetEdl": "microsoft-intune-windows-ipv4.txt",
       "officialFqdn": "browser.events.data.microsoft.com",
@@ -676,8 +820,10 @@
         "browser.events.data.microsoft.com",
         "eu-mobile.events.data.microsoft.com",
         "events.data.microsoft.com",
+        "functional.events.data.microsoft.com",
         "mobile.events.data.microsoft.com",
         "v10.events.data.microsoft.com",
+        "v10c.events.data.microsoft.com",
         "v20.events.data.microsoft.com"
       ],
       "targetEdl": "microsoft-intune-windows-ipv4.txt",
@@ -710,7 +856,7 @@
         "ln-0007.ln-msedge.net"
       ],
       "first_seen": "2026-08-22T13:24:45.428787Z",
-      "last_seen": "2026-08-22T15:42:24.576685Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/0",
         "google-doh-ecs:82.66.0.0/0"
@@ -726,14 +872,14 @@
         "ln-0007.ln-msedge.net"
       ],
       "firstSeen": "2026-08-22T13:24:45.428787Z",
-      "lastSeen": "2026-08-22T15:42:24.576685Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
       "ip": "104.208.16.94",
-      "sourcePalo": null,
-      "paloSource": null,
-      "owner": "Microsoft/Azure",
+      "sourcePalo": "10.50.83.87",
+      "paloSource": "10.50.83.87",
+      "owner": "Microsoft/Azure (AS8075)",
       "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
       "verified": true,
       "category": "COVERED_OFFICIAL",
@@ -747,7 +893,7 @@
         "onedscolprdcus66.centralus.cloudapp.azure.com"
       ],
       "first_seen": "2026-08-22T13:46:25.409436Z",
-      "last_seen": "2026-08-22T13:46:25.409436Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
       "observation_sources": [
         "google-doh-ecs:82.66.0.0/0"
       ],
@@ -760,7 +906,7 @@
         "onedscolprdcus66.centralus.cloudapp.azure.com"
       ],
       "firstSeen": "2026-08-22T13:46:25.409436Z",
-      "lastSeen": "2026-08-22T13:46:25.409436Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -830,7 +976,7 @@
       "fqdn": "array504.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
       "first_seen": "2026-08-22T12:53:50.517453Z",
-      "last_seen": "2026-08-22T15:42:24.576685Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
       "observation_sources": [
         "previous-published-dns-snapshot",
         "system-resolver"
@@ -841,7 +987,7 @@
       "officialFqdn": "array504.prod.do.dsp.mp.microsoft.com",
       "cnameChain": [],
       "firstSeen": "2026-08-22T12:53:50.517453Z",
-      "lastSeen": "2026-08-22T15:42:24.576685Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -859,7 +1005,7 @@
       "fqdn": "array508.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
       "first_seen": "2026-08-22T12:53:50.517453Z",
-      "last_seen": "2026-08-22T15:42:24.576685Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
       "observation_sources": [
         "previous-published-dns-snapshot",
         "system-resolver"
@@ -870,7 +1016,7 @@
       "officialFqdn": "array508.prod.do.dsp.mp.microsoft.com",
       "cnameChain": [],
       "firstSeen": "2026-08-22T12:53:50.517453Z",
-      "lastSeen": "2026-08-22T15:42:24.576685Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -888,7 +1034,7 @@
       "fqdn": "array516.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
       "first_seen": "2026-08-22T12:53:50.517453Z",
-      "last_seen": "2026-08-22T15:42:24.576685Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
       "observation_sources": [
         "previous-published-dns-snapshot",
         "system-resolver"
@@ -899,7 +1045,7 @@
       "officialFqdn": "array516.prod.do.dsp.mp.microsoft.com",
       "cnameChain": [],
       "firstSeen": "2026-08-22T12:53:50.517453Z",
-      "lastSeen": "2026-08-22T15:42:24.576685Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -943,7 +1089,7 @@
       "fqdn": "array808.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
       "first_seen": "2026-08-22T12:53:50.517453Z",
-      "last_seen": "2026-08-22T15:42:24.576685Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
       "observation_sources": [
         "previous-published-dns-snapshot",
         "system-resolver"
@@ -954,7 +1100,7 @@
       "officialFqdn": "array808.prod.do.dsp.mp.microsoft.com",
       "cnameChain": [],
       "firstSeen": "2026-08-22T12:53:50.517453Z",
-      "lastSeen": "2026-08-22T15:42:24.576685Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1052,7 +1198,7 @@
         "tokenghubeus21.actions.githubusercontent.com"
       ],
       "first_seen": "2026-08-22T09:29:05.060917Z",
-      "last_seen": "2026-08-22T15:42:24.576685Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
       "observation_sources": [
         "system-resolver"
       ],
@@ -1064,7 +1210,7 @@
         "tokenghubeus21.actions.githubusercontent.com"
       ],
       "firstSeen": "2026-08-22T09:29:05.060917Z",
-      "lastSeen": "2026-08-22T15:42:24.576685Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1085,7 +1231,7 @@
         "settings-prod-neu-2-tagged.northeurope.cloudapp.azure.com"
       ],
       "first_seen": "2026-08-22T13:24:45.428787Z",
-      "last_seen": "2026-08-22T14:43:28.017996Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/14",
         "google-doh-ecs:82.66.0.0/14"
@@ -1103,7 +1249,7 @@
         "settings-prod-neu-2-tagged.northeurope.cloudapp.azure.com"
       ],
       "firstSeen": "2026-08-22T13:24:45.428787Z",
-      "lastSeen": "2026-08-22T14:43:28.017996Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1124,7 +1270,7 @@
         "settings-prod-neu-3-tagged.northeurope.cloudapp.azure.com"
       ],
       "first_seen": "2026-08-22T13:24:45.428787Z",
-      "last_seen": "2026-08-22T15:42:24.576685Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/14",
         "google-doh-ecs:82.66.0.0/14"
@@ -1142,7 +1288,7 @@
         "settings-prod-neu-3-tagged.northeurope.cloudapp.azure.com"
       ],
       "firstSeen": "2026-08-22T13:24:45.428787Z",
-      "lastSeen": "2026-08-22T15:42:24.576685Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1205,6 +1351,7 @@
       "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
       "allFqdns": [
         "mobile.events.data.microsoft.com",
+        "v10.events.data.microsoft.com",
         "v20.events.data.microsoft.com"
       ],
       "targetEdl": "microsoft-intune-windows-ipv4.txt",
@@ -1219,13 +1366,13 @@
     },
     {
       "ip": "23.200.213.147",
-      "sourcePalo": null,
-      "paloSource": null,
-      "owner": null,
-      "suspectedService": null,
+      "sourcePalo": "10.50.84.3",
+      "paloSource": "10.50.84.3",
+      "owner": "Akamai (AS16625)",
+      "suspectedService": "Microsoft developer website on shared Akamai",
       "verified": false,
       "category": "CDN_SHARED_UNATTRIBUTED",
-      "confidence": "low",
+      "confidence": "medium",
       "covered": false,
       "edl": null,
       "targetEdl": null,
@@ -1241,7 +1388,7 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+      "reason": "Shared Akamai address with historical Microsoft developer names, but no authorized official service FQDN currently maps it"
     },
     {
       "ip": "20.85.130.105",
@@ -1260,7 +1407,7 @@
         "glb-c0e95bd587389a.github.com"
       ],
       "first_seen": "2026-08-22T09:29:05.060917Z",
-      "last_seen": "2026-08-22T15:42:24.576685Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
       "observation_sources": [
         "system-resolver"
       ],
@@ -1278,7 +1425,7 @@
         "glb-c0e95bd587389a.github.com"
       ],
       "firstSeen": "2026-08-22T09:29:05.060917Z",
-      "lastSeen": "2026-08-22T15:42:24.576685Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1337,7 +1484,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "first_seen": "2026-08-22T09:00:08.705520Z",
-      "last_seen": "2026-08-22T15:42:24.576685Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24"
@@ -1354,7 +1501,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "firstSeen": "2026-08-22T09:00:08.705520Z",
-      "lastSeen": "2026-08-22T15:42:24.576685Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1385,10 +1532,10 @@
     },
     {
       "ip": "13.107.6.156",
-      "sourcePalo": null,
-      "paloSource": null,
-      "owner": null,
-      "suspectedService": null,
+      "sourcePalo": "10.50.84.3",
+      "paloSource": "10.50.84.3",
+      "owner": "Microsoft/Azure (AS8075)",
+      "suspectedService": "Microsoft 365 Office web front door",
       "verified": true,
       "category": "COVERED_OFFICIAL",
       "confidence": "high",
@@ -1402,7 +1549,7 @@
         "b-0004.b-msedge.net"
       ],
       "first_seen": "2026-08-22T12:30:28.378421Z",
-      "last_seen": "2026-08-22T15:42:24.576685Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
       "observation_sources": [
         "system-resolver"
       ],
@@ -1416,7 +1563,7 @@
         "b-0004.b-msedge.net"
       ],
       "firstSeen": "2026-08-22T12:30:28.378421Z",
-      "lastSeen": "2026-08-22T15:42:24.576685Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1499,19 +1646,19 @@
     },
     {
       "ip": "172.66.0.227",
-      "sourcePalo": null,
-      "paloSource": null,
-      "owner": "Cloudflare",
-      "suspectedService": "Shared CDN service",
+      "sourcePalo": "10.50.83.87",
+      "paloSource": "10.50.83.87",
+      "owner": "Cloudflare (AS13335)",
+      "suspectedService": "Possible Apple Private Cloud Compute or shared CDN",
       "verified": false,
       "category": "CDN_SHARED_UNATTRIBUTED",
-      "confidence": "low",
+      "confidence": "medium",
       "covered": false,
       "edl": null,
       "targetEdl": null,
       "source": null,
       "fqdn": null,
-      "officialFqdn": null,
+      "officialFqdn": "apple-relay.cloudflare.com / cp4.cloudflare.com / apple-relay.fastly-edge.com",
       "cname_chain": [],
       "cnameChain": [],
       "first_seen": null,
@@ -1519,9 +1666,9 @@
       "last_seen": null,
       "lastSeen": null,
       "observation_sources": [],
-      "source_documentation": null,
-      "officialSource": null,
-      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+      "source_documentation": "https://support.apple.com/en-us/101555",
+      "officialSource": "https://support.apple.com/en-us/101555",
+      "reason": "Apple documents three Private Cloud Compute relay FQDNs, but none returned this shared Cloudflare address in the current or rolling 24-hour authorized DNS window"
     },
     {
       "ip": "140.82.121.5",
@@ -1567,7 +1714,7 @@
         "ax-0002.ax-msedge.net"
       ],
       "first_seen": "2026-08-22T12:53:50.517453Z",
-      "last_seen": "2026-08-22T15:42:24.576685Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
       "observation_sources": [
         "previous-published-dns-snapshot",
         "system-resolver"
@@ -1581,7 +1728,7 @@
         "ax-0002.ax-msedge.net"
       ],
       "firstSeen": "2026-08-22T12:53:50.517453Z",
-      "lastSeen": "2026-08-22T15:42:24.576685Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1638,10 +1785,10 @@
     },
     {
       "ip": "17.145.0.2",
-      "sourcePalo": null,
-      "paloSource": null,
-      "owner": "Apple",
-      "suspectedService": "Apple service",
+      "sourcePalo": "10.50.83.27",
+      "paloSource": "10.50.83.27",
+      "owner": "Apple (AS714)",
+      "suspectedService": "Apple app/content service",
       "verified": false,
       "category": "OWNER_ONLY_UNATTRIBUTED",
       "confidence": "low",
@@ -1660,23 +1807,23 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "reason": "Apple ownership and historical app.apple.com attribution are not an official in-scope endpoint proof, and no permitted Apple FQDN currently maps this address"
     },
     {
       "ip": "17.248.209.54",
-      "sourcePalo": null,
-      "paloSource": null,
-      "owner": "Apple",
-      "suspectedService": "Apple service",
+      "sourcePalo": "10.50.83.27",
+      "paloSource": "10.50.83.27",
+      "owner": "Apple (AS714)",
+      "suspectedService": "Apple iCloud edge service",
       "verified": false,
-      "category": "OWNER_ONLY_UNATTRIBUTED",
-      "confidence": "low",
+      "category": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+      "confidence": "medium",
       "covered": false,
       "edl": null,
       "targetEdl": null,
       "source": null,
       "fqdn": null,
-      "officialFqdn": null,
+      "officialFqdn": "*.icloud.com",
       "cname_chain": [],
       "cnameChain": [],
       "first_seen": null,
@@ -1684,9 +1831,9 @@
       "last_seen": null,
       "lastSeen": null,
       "observation_sources": [],
-      "source_documentation": null,
-      "officialSource": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "source_documentation": "https://support.apple.com/en-us/101555",
+      "officialSource": "https://support.apple.com/en-us/101555",
+      "reason": "Apple documents the *.icloud.com family, but no in-scope concrete Apple FQDN currently or recently maps this address"
     },
     {
       "ip": "17.253.37.204",
@@ -1779,7 +1926,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "first_seen": "2026-08-22T09:00:08.705520Z",
-      "last_seen": "2026-08-22T13:46:25.409436Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24"
@@ -1796,7 +1943,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "firstSeen": "2026-08-22T09:00:08.705520Z",
-      "lastSeen": "2026-08-22T13:46:25.409436Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1927,7 +2074,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "first_seen": "2026-08-22T09:00:08.705520Z",
-      "last_seen": "2026-08-22T10:04:04.927252Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24"
@@ -1944,7 +2091,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "firstSeen": "2026-08-22T09:00:08.705520Z",
-      "lastSeen": "2026-08-22T10:04:04.927252Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -2193,12 +2340,12 @@
     },
     {
       "ip": "95.101.137.28",
-      "sourcePalo": null,
-      "paloSource": null,
-      "owner": "Akamai",
-      "suspectedService": "Apple Maps / shared CDN",
+      "sourcePalo": "10.50.83.27",
+      "paloSource": "10.50.83.27",
+      "owner": "Akamai (AS20940)",
+      "suspectedService": "Unattributed shared CDN traffic",
       "verified": false,
-      "category": "OWNER_ONLY_UNATTRIBUTED",
+      "category": "CDN_SHARED_UNATTRIBUTED",
       "confidence": "low",
       "covered": false,
       "edl": null,
@@ -2215,16 +2362,16 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "reason": "Shared Akamai address without a demonstrated official client FQDN; Akamai ownership alone is not authorization"
     },
     {
       "ip": "95.101.137.33",
-      "sourcePalo": null,
-      "paloSource": null,
-      "owner": "Akamai",
-      "suspectedService": "Apple Maps / shared CDN",
+      "sourcePalo": "10.50.83.27",
+      "paloSource": "10.50.83.27",
+      "owner": "Akamai (AS20940)",
+      "suspectedService": "Unattributed shared CDN traffic",
       "verified": false,
-      "category": "OWNER_ONLY_UNATTRIBUTED",
+      "category": "CDN_SHARED_UNATTRIBUTED",
       "confidence": "low",
       "covered": false,
       "edl": null,
@@ -2241,7 +2388,59 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "reason": "Shared Akamai address without a demonstrated official client FQDN; Akamai ownership alone is not authorization"
+    },
+    {
+      "ip": "95.101.137.34",
+      "sourcePalo": null,
+      "paloSource": null,
+      "owner": "Akamai (AS20940)",
+      "suspectedService": "Unattributed shared Akamai edge",
+      "verified": false,
+      "category": "CDN_SHARED_UNATTRIBUTED",
+      "confidence": "low",
+      "covered": false,
+      "edl": null,
+      "targetEdl": null,
+      "source": null,
+      "fqdn": null,
+      "officialFqdn": null,
+      "cname_chain": [],
+      "cnameChain": [],
+      "first_seen": null,
+      "firstSeen": null,
+      "last_seen": null,
+      "lastSeen": null,
+      "observation_sources": [],
+      "source_documentation": null,
+      "officialSource": null,
+      "reason": "No authorized official service FQDN currently maps this Akamai address"
+    },
+    {
+      "ip": "95.101.137.35",
+      "sourcePalo": null,
+      "paloSource": null,
+      "owner": "Akamai (AS20940)",
+      "suspectedService": "Unattributed shared Akamai edge",
+      "verified": false,
+      "category": "CDN_SHARED_UNATTRIBUTED",
+      "confidence": "low",
+      "covered": false,
+      "edl": null,
+      "targetEdl": null,
+      "source": null,
+      "fqdn": null,
+      "officialFqdn": null,
+      "cname_chain": [],
+      "cnameChain": [],
+      "first_seen": null,
+      "firstSeen": null,
+      "last_seen": null,
+      "lastSeen": null,
+      "observation_sources": [],
+      "source_documentation": null,
+      "officialSource": null,
+      "reason": "No authorized official service FQDN currently maps this Akamai address"
     },
     {
       "ip": "23.58.84.19",
@@ -2275,25 +2474,28 @@
       "paloSource": null,
       "owner": "Fastly",
       "suspectedService": "Shared CDN service",
-      "verified": false,
-      "category": "CDN_SHARED_UNATTRIBUTED",
-      "confidence": "low",
-      "covered": false,
-      "edl": null,
-      "targetEdl": null,
-      "source": null,
-      "fqdn": null,
-      "officialFqdn": null,
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "apple-device-services-ipv4.txt",
+      "source": "Apple enterprise Device management/APNs/Private Cloud Compute FQDN resolution",
+      "fqdn": "apple-relay.fastly-edge.com",
       "cname_chain": [],
+      "first_seen": "2026-08-22T16:23:03.020175Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/0",
+        "google-doh-ecs:82.66.0.0/0"
+      ],
+      "source_documentation": "https://support.apple.com/en-us/101555",
+      "officialSource": "https://support.apple.com/en-us/101555",
+      "targetEdl": "apple-device-services-ipv4.txt",
+      "officialFqdn": "apple-relay.fastly-edge.com",
       "cnameChain": [],
-      "first_seen": null,
-      "firstSeen": null,
-      "last_seen": null,
-      "lastSeen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "officialSource": null,
-      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+      "firstSeen": "2026-08-22T16:23:03.020175Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
+      "reason": "Covered by a DNS-observed official FQDN"
     },
     {
       "ip": "151.101.129.64",
@@ -2301,25 +2503,28 @@
       "paloSource": null,
       "owner": "Fastly",
       "suspectedService": "Shared CDN service",
-      "verified": false,
-      "category": "CDN_SHARED_UNATTRIBUTED",
-      "confidence": "low",
-      "covered": false,
-      "edl": null,
-      "targetEdl": null,
-      "source": null,
-      "fqdn": null,
-      "officialFqdn": null,
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "apple-device-services-ipv4.txt",
+      "source": "Apple enterprise Device management/APNs/Private Cloud Compute FQDN resolution",
+      "fqdn": "apple-relay.fastly-edge.com",
       "cname_chain": [],
+      "first_seen": "2026-08-22T16:23:03.020175Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/0",
+        "google-doh-ecs:82.66.0.0/0"
+      ],
+      "source_documentation": "https://support.apple.com/en-us/101555",
+      "officialSource": "https://support.apple.com/en-us/101555",
+      "targetEdl": "apple-device-services-ipv4.txt",
+      "officialFqdn": "apple-relay.fastly-edge.com",
       "cnameChain": [],
-      "first_seen": null,
-      "firstSeen": null,
-      "last_seen": null,
-      "lastSeen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "officialSource": null,
-      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+      "firstSeen": "2026-08-22T16:23:03.020175Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
+      "reason": "Covered by a DNS-observed official FQDN"
     },
     {
       "ip": "162.159.194.64",
@@ -2353,25 +2558,29 @@
       "paloSource": null,
       "owner": "Cloudflare",
       "suspectedService": "Shared CDN service",
-      "verified": false,
-      "category": "CDN_SHARED_UNATTRIBUTED",
-      "confidence": "low",
-      "covered": false,
-      "edl": null,
-      "targetEdl": null,
-      "source": null,
-      "fqdn": null,
-      "officialFqdn": null,
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "apple-device-services-ipv4.txt",
+      "source": "Apple enterprise Device management/APNs/Private Cloud Compute FQDN resolution",
+      "fqdn": "apple-relay.cloudflare.com",
       "cname_chain": [],
+      "first_seen": "2026-08-22T16:23:03.020175Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/24",
+        "google-doh-ecs:82.66.0.0/24",
+        "system-resolver"
+      ],
+      "source_documentation": "https://support.apple.com/en-us/101555",
+      "officialSource": "https://support.apple.com/en-us/101555",
+      "targetEdl": "apple-device-services-ipv4.txt",
+      "officialFqdn": "apple-relay.cloudflare.com",
       "cnameChain": [],
-      "first_seen": null,
-      "firstSeen": null,
-      "last_seen": null,
-      "lastSeen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "officialSource": null,
-      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+      "firstSeen": "2026-08-22T16:23:03.020175Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
+      "reason": "Covered by a DNS-observed official FQDN"
     },
     {
       "ip": "172.64.69.66",
@@ -2379,6 +2588,36 @@
       "paloSource": null,
       "owner": "Cloudflare",
       "suspectedService": "Shared CDN service",
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "apple-device-services-ipv4.txt",
+      "source": "Apple enterprise Device management/APNs/Private Cloud Compute FQDN resolution",
+      "fqdn": "apple-relay.cloudflare.com",
+      "cname_chain": [],
+      "first_seen": "2026-08-22T16:23:03.020175Z",
+      "last_seen": "2026-08-22T16:23:03.020175Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/24",
+        "google-doh-ecs:82.66.0.0/24",
+        "system-resolver"
+      ],
+      "source_documentation": "https://support.apple.com/en-us/101555",
+      "officialSource": "https://support.apple.com/en-us/101555",
+      "targetEdl": "apple-device-services-ipv4.txt",
+      "officialFqdn": "apple-relay.cloudflare.com",
+      "cnameChain": [],
+      "firstSeen": "2026-08-22T16:23:03.020175Z",
+      "lastSeen": "2026-08-22T16:23:03.020175Z",
+      "reason": "Covered by a DNS-observed official FQDN"
+    },
+    {
+      "ip": "52.222.169.45",
+      "sourcePalo": "10.50.83.125",
+      "paloSource": "10.50.83.125",
+      "owner": "AWS CloudFront (AS16509)",
+      "suspectedService": "Unattributed shared CloudFront distribution",
       "verified": false,
       "category": "CDN_SHARED_UNATTRIBUTED",
       "confidence": "low",
@@ -2397,42 +2636,16 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
-    },
-    {
-      "ip": "52.222.169.45",
-      "sourcePalo": null,
-      "paloSource": null,
-      "owner": null,
-      "suspectedService": null,
-      "verified": false,
-      "category": "INTENTIONALLY_UNCOVERED",
-      "confidence": "low",
-      "covered": false,
-      "edl": null,
-      "targetEdl": null,
-      "source": null,
-      "fqdn": null,
-      "officialFqdn": null,
-      "cname_chain": [],
-      "cnameChain": [],
-      "first_seen": null,
-      "firstSeen": null,
-      "last_seen": null,
-      "lastSeen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "officialSource": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "reason": "Shared CloudFront address without a demonstrated official client FQDN; unrelated tenants may use the same edge"
     },
     {
       "ip": "52.222.169.104",
-      "sourcePalo": null,
-      "paloSource": null,
-      "owner": null,
-      "suspectedService": null,
+      "sourcePalo": "10.50.83.126",
+      "paloSource": "10.50.83.126",
+      "owner": "AWS CloudFront (AS16509)",
+      "suspectedService": "Unattributed shared CloudFront distribution",
       "verified": false,
-      "category": "INTENTIONALLY_UNCOVERED",
+      "category": "CDN_SHARED_UNATTRIBUTED",
       "confidence": "low",
       "covered": false,
       "edl": null,
@@ -2449,7 +2662,7 @@
       "observation_sources": [],
       "source_documentation": null,
       "officialSource": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "reason": "Shared CloudFront address without a demonstrated official client FQDN; the distribution hostname alone does not identify a service"
     }
   ]
 }
