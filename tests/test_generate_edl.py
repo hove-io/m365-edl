@@ -8,7 +8,10 @@ from scripts.generate_edl import (
     APPLE_SECTION_REQUIREMENTS,
     APPLE_XCODE_HOSTS,
     APPLE_XCODE_FILE,
+    DNS_HISTORY_GRACE_PERIOD,
     GenerationError,
+    GITHUB_ACTIONS_FILE,
+    GITHUB_ACTIONS_REQUIRED_HOSTS,
     INTUNE_EVENT_WILDCARD_TARGETS,
     MICROSOFT_DELIVERY_OPTIMIZATION_URL,
     MICROSOFT_EDGE_WINDOWS_FILE,
@@ -18,12 +21,15 @@ from scripts.generate_edl import (
     XCODE_DOH_ECS_SUBNETS,
     XCODE_DOH_RESOLVER,
     build_residual_coverage,
+    build_dns_history,
+    build_dns_observation_details,
     build_xcode_dns_history,
     expand_documented_hostnames,
     extract_apple_section_hostnames,
     extract_xcode_doh_observations,
     extract_intune_consolidated_hostnames,
     extract_intune_windows_networks,
+    extract_github_actions_hostnames,
     extract_teams_media_networks,
     resolve_service_hostnames,
 )
@@ -198,6 +204,95 @@ class DnsProvenanceTests(unittest.TestCase):
         sleep.assert_called_once()
 
 
+class GitHubActionsTests(unittest.TestCase):
+    META = {
+        "domains": {
+            "actions": [
+                "github.com",
+                "*.actions.githubusercontent.com",
+                "runnerghubeus21.actions.githubusercontent.com",
+                "tokenghub.actions.githubusercontent.com",
+            ],
+            "actions_inbound": {
+                "full_domains": [
+                    "results-receiver.actions.githubusercontent.com",
+                    "tokenghub.actions.githubusercontent.com",
+                    "productionresultssa0.blob.core.windows.net",
+                ]
+            },
+        }
+    }
+
+    def test_selects_only_concrete_official_actions_hostnames(self) -> None:
+        hostnames = extract_github_actions_hostnames(self.META)
+
+        self.assertEqual(
+            hostnames,
+            [
+                "results-receiver.actions.githubusercontent.com",
+                "runnerghubeus21.actions.githubusercontent.com",
+                "tokenghub.actions.githubusercontent.com",
+            ],
+        )
+        self.assertTrue(GITHUB_ACTIONS_REQUIRED_HOSTS.issubset(hostnames))
+
+    def test_rejects_meta_payload_without_required_token_endpoint(self) -> None:
+        payload = json.loads(json.dumps(self.META))
+        payload["domains"]["actions"].remove(
+            "tokenghub.actions.githubusercontent.com"
+        )
+        payload["domains"]["actions_inbound"]["full_domains"].remove(
+            "tokenghub.actions.githubusercontent.com"
+        )
+
+        with self.assertRaisesRegex(GenerationError, "required Actions endpoints"):
+            extract_github_actions_hostnames(payload)
+
+    def test_rejects_non_string_actions_domain(self) -> None:
+        payload = json.loads(json.dumps(self.META))
+        payload["domains"]["actions"].append({"unexpected": "value"})
+
+        with self.assertRaisesRegex(GenerationError, "must be strings"):
+            extract_github_actions_hostnames(payload)
+
+    def test_actions_history_retains_only_dns_observations_for_24_hours(self) -> None:
+        observed_at = dt.datetime(2026, 8, 22, 12, tzinfo=dt.timezone.utc)
+        hostnames = set(GITHUB_ACTIONS_REQUIRED_HOSTS)
+        details = build_dns_observation_details(
+            authorized_hostnames=hostnames,
+            resolutions={"tokenghub.actions.githubusercontent.com": ["20.85.108.33"]},
+            cname_chains={
+                "tokenghub.actions.githubusercontent.com": [
+                    "tokenghubeus21.actions.githubusercontent.com"
+                ]
+            },
+            observation_source="system-resolver",
+        )
+
+        networks, resolutions, history, expired = build_dns_history(
+            previous_sources=None,
+            filename=GITHUB_ACTIONS_FILE,
+            authorized_hostnames=hostnames,
+            current_details=details,
+            observed_at=observed_at,
+            label="GitHub Actions hosted runners",
+            grace_period=DNS_HISTORY_GRACE_PERIOD,
+        )
+
+        self.assertEqual(networks, [ipaddress.IPv4Network("20.85.108.33/32")])
+        self.assertEqual(
+            resolutions["tokenghub.actions.githubusercontent.com"],
+            ["20.85.108.33"],
+        )
+        self.assertEqual(
+            history["tokenghub.actions.githubusercontent.com"]["20.85.108.33"][
+                "cnameChain"
+            ],
+            ["tokenghubeus21.actions.githubusercontent.com"],
+        )
+        self.assertEqual(expired, [])
+
+
 class XcodeDnsHistoryTests(unittest.TestCase):
     @staticmethod
     def observation_source() -> str:
@@ -366,6 +461,9 @@ class ResidualCoverageTests(unittest.TestCase):
         "72.153.5.137",
         "72.154.7.101",
         "17.248.209.16",
+        "17.145.16.2",
+        "17.248.209.62",
+        "17.248.209.73",
         "17.248.236.28",
         "17.253.29.146",
         "17.253.37.204",
@@ -386,6 +484,9 @@ class ResidualCoverageTests(unittest.TestCase):
         "17.248.209.46",
         "17.188.171.202",
         "17.111.103.20",
+        "162.159.194.64",
+        "162.159.194.66",
+        "172.64.69.66",
     }
 
     def test_tracks_requested_ips_and_emits_provenance_schema(self) -> None:
@@ -425,6 +526,9 @@ class ResidualCoverageTests(unittest.TestCase):
                     "first_seen",
                     "last_seen",
                     "source_documentation",
+                    "owner",
+                    "suspectedService",
+                    "verified",
                 }.issubset(entries[address])
             )
         self.assertTrue(entries["72.153.5.61"]["covered"])
@@ -433,6 +537,52 @@ class ResidualCoverageTests(unittest.TestCase):
             MICROSOFT_DELIVERY_OPTIMIZATION_URL,
         )
         self.assertFalse(entries["17.248.209.16"]["covered"])
+
+    def test_github_actions_canary_is_verified_only_with_dns_provenance(self) -> None:
+        observed_at = "2026-08-22T12:00:00Z"
+        document = json.loads(
+            build_residual_coverage(
+                generated_at=observed_at,
+                generated={
+                    GITHUB_ACTIONS_FILE: [
+                        ipaddress.IPv4Network("20.85.108.33/32")
+                    ]
+                },
+                resolutions_by_file={
+                    GITHUB_ACTIONS_FILE: {
+                        "tokenghub.actions.githubusercontent.com": ["20.85.108.33"]
+                    }
+                },
+                cname_chains_by_file={GITHUB_ACTIONS_FILE: {}},
+                dns_history_by_file={
+                    GITHUB_ACTIONS_FILE: {
+                        "tokenghub.actions.githubusercontent.com": {
+                            "20.85.108.33": {
+                                "cnameChain": [
+                                    "tokenghubeus21.actions.githubusercontent.com"
+                                ],
+                                "firstSeen": observed_at,
+                                "lastSeen": observed_at,
+                                "observationSources": ["system-resolver"],
+                            }
+                        }
+                    }
+                },
+            )
+        )
+        entry = next(
+            item for item in document["entries"] if item["ip"] == "20.85.108.33"
+        )
+
+        self.assertTrue(entry["covered"])
+        self.assertTrue(entry["verified"])
+        self.assertEqual(entry["owner"], "Microsoft/Azure")
+        self.assertEqual(entry["suspectedService"], "GitHub Actions")
+        self.assertEqual(entry["edl"], GITHUB_ACTIONS_FILE)
+        self.assertEqual(
+            entry["cname_chain"],
+            ["tokenghubeus21.actions.githubusercontent.com"],
+        )
 
 
 if __name__ == "__main__":

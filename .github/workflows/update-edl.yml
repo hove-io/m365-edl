@@ -275,6 +275,7 @@ jobs:
             docs/apple-xcode-developer-ipv4.txt \
             docs/dell-update-ipv4.txt \
             docs/dropbox-ipv4.txt \
+            docs/github-actions-ipv4.txt \
             docs/github-ipv4.txt \
             docs/index.html \
             docs/sources.json \

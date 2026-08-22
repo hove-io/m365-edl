@@ -19,6 +19,7 @@ External Dynamic Lists (**IP List**) par un pare-feu Palo Alto Networks.
 | `apple-device-services-ipv4.txt` | Apple Device Management et APNs | https://hove-io.github.io/m365-edl/apple-device-services-ipv4.txt |
 | `apple-xcode-developer-ipv4.txt` | Xcode et téléchargements Developer | https://hove-io.github.io/m365-edl/apple-xcode-developer-ipv4.txt |
 | `github-ipv4.txt` | GitHub `web`, `api`, `git` et `pages` | https://hove-io.github.io/m365-edl/github-ipv4.txt |
+| `github-actions-ipv4.txt` | GitHub Actions et runners hébergés | https://hove-io.github.io/m365-edl/github-actions-ipv4.txt |
 | `dropbox-ipv4.txt` | Allocations produit Dropbox | https://hove-io.github.io/m365-edl/dropbox-ipv4.txt |
 | `dell-update-ipv4.txt` | Dell Command Update | https://hove-io.github.io/m365-edl/dell-update-ipv4.txt |
 | `microsoft-edge-windows-services-ipv4.txt` | Microsoft Edge et services Windows complémentaires | https://hove-io.github.io/m365-edl/microsoft-edge-windows-services-ipv4.txt |
@@ -127,13 +128,14 @@ téléchargeables Xcode (`devimages-cdn.apple.com` et
 cibles concrètes APNs sont validées contre la documentation Apple Developer
 officielle.
 
-L'EDL Xcode n'est pas un snapshot DNS unique. À chaque exécution, le workflow
+Les quatre EDL Apple conservent pendant 24 heures les couples FQDN/IP
+officiellement dérivés qu'elles ont réellement observés. Pour Xcode, le workflow
 effectue huit résolutions par FQDN avec le résolveur système et huit observations
 par FQDN depuis chacune de deux vues DNS françaises contrôlées via Google DNS
 over HTTPS (`82.64.0.0/11` et `82.66.0.0/16` en EDNS Client Subnet). Il agrège
 uniquement les A publics retournés pour les deux FQDN Apple autorisés. Chaque
-couple FQDN/IP est conservé pendant 24 heures depuis sa dernière observation,
-puis supprimé automatiquement s'il n'est plus vu. Cette fenêtre absorbe les
+couple FQDN/IP est supprimé automatiquement 24 heures après sa dernière
+observation. Cette fenêtre absorbe les
 rotations DNS rapides sans autoriser un préfixe Apple ou CDN.
 
 Le préfixe global `17.0.0.0/8` n'est jamais utilisé. Lorsqu'un FQDN Apple est
@@ -153,6 +155,22 @@ uniquement les champs `web`, `api`, `git` et `pages`. Les champs `actions`,
 `actions_macos`, `hooks`, `dependabot`, `packages` et `importer` sont exclus.
 GitHub précise que cette API n'est pas exhaustive pour certains services,
 notamment LFS et Packages ; une politique FQDN reste préférable pour ces usages.
+
+`github-actions-ipv4.txt` reste volontairement séparée. Le générateur lit les
+domaines Actions publiés par la même API Meta dans `domains.actions` et
+`domains.actions_inbound`, exige la présence du wildcard officiel
+`*.actions.githubusercontent.com`, puis ne résout que les FQDN concrets sous ce
+suffixe. Cela inclut notamment `tokenghub.actions.githubusercontent.com` et
+`results-receiver.actions.githubusercontent.com`, tous deux exigés comme
+canaris documentaires.
+
+Chaque FQDN Actions est résolu huit fois. Seuls ses A records IPv4 publics sont
+conservés pendant 24 heures avec chaîne CNAME, `firstSeen` et `lastSeen`.
+L'adresse `20.85.108.33` n'est donc couverte que si elle est réellement obtenue
+depuis un FQDN officiel — actuellement via
+`tokenghub.actions.githubusercontent.com` — et n'est jamais ajoutée comme `/32`
+manuel. Le champ CIDR `actions` de l'API Meta, les plages Azure globales et les
+adresses déduites de l'ASN sont explicitement exclus de cette EDL.
 
 ### Dropbox
 
@@ -198,7 +216,8 @@ nouvelle liste. Aucun range Azure global ni AS8075 n'est utilisé.
 
 ### CDN mutualisés
 
-Aucune EDL globale Akamai, CloudFront, Cloudflare ou Fastly n'est créée. Une IP
+Aucune EDL globale Akamai, CloudFront, Cloudflare ou Fastly n'est créée. Les
+préfixes CDN partagés ne sont jamais autorisés globalement. Une IP
 de CDN n'est publiée que lorsqu'elle résulte au moment de la génération d'un
 FQDN officiel appartenant à Apple, Dell, Microsoft ou un autre service ciblé.
 
@@ -217,9 +236,9 @@ Il applique les contrôles suivants à chaque liste :
    réservés, non spécifiés ou non globaux ;
 5. refus de tout fichier vide ;
 6. blocage d'une baisse de plus de 50 % du nombre d'entrées ;
-7. jusqu'à huit résolutions DNS par FQDN Microsoft dynamique (trois pour les
-   autres sources ; huit résolutions système et huit observations par vue DNS
-   contrôlée pour Xcode), avec un court intervalle entre les requêtes, agrégation des A et
+7. jusqu'à huit résolutions DNS par FQDN Microsoft dynamique et GitHub Actions
+   (trois pour les autres sources ; huit résolutions système et huit observations
+   par vue DNS contrôlée pour Xcode), avec un court intervalle entre les requêtes, agrégation des A et
    journalisation de chaque mapping FQDN → chaîne CNAME → IPv4 ;
 8. génération atomique de l'ensemble ;
 9. commit et publication uniquement lorsqu'une EDL ou une observation DNS
@@ -248,9 +267,12 @@ indique pour chaque IP observée si elle est couverte, par quelle EDL et par
 quelle source/FQDN. Une IP sans preuve officielle reste `covered: false`.
 Chaque entrée expose aussi `cname_chain` et `source_documentation` ; une chaîne
 vide reste explicite lorsque le FQDN répond directement.
-Pour Xcode, `first_seen`, `last_seen` et `observation_sources` documentent en
-plus la fenêtre glissante. Le détail persistant se trouve dans
-`files.apple-xcode-developer-ipv4.txt.dnsHistory` de `sources.json`.
+Pour les quatre EDL Apple et l'EDL GitHub Actions, `first_seen`, `last_seen` et
+`observation_sources` documentent en plus la fenêtre glissante. Le détail
+persistant se trouve dans le bloc `dnsHistory` du fichier concerné dans
+`sources.json`. Le rapport distingue également `owner`, `suspectedService` et
+`verified` : la propriété d'une IP Apple, Azure, Akamai ou Cloudflare ne vaut
+jamais autorisation de service.
 
 ## Exploitation Palo Alto
 
@@ -269,6 +291,7 @@ EDL-APPLE-APPSTORE-CONTENT-IPV4
 EDL-APPLE-DEVICE-SERVICES-IPV4
 EDL-APPLE-XCODE-DEVELOPER-IPV4
 EDL-GITHUB-IPV4
+EDL-GITHUB-ACTIONS-IPV4
 EDL-DROPBOX-IPV4
 EDL-DELL-UPDATE-IPV4
 EDL-MICROSOFT-EDGE-WINDOWS-SERVICES-IPV4
