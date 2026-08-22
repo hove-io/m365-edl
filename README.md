@@ -16,8 +16,9 @@ External Dynamic Lists (**IP List**) par un pare-feu Palo Alto Networks.
 | `microsoft-intune-windows-ipv4.txt` | Intune / gestion des appareils Windows | https://hove-io.github.io/m365-edl/microsoft-intune-windows-ipv4.txt |
 | `apple-updates-ipv4.txt` | Mises à jour logicielles Apple | https://hove-io.github.io/m365-edl/apple-updates-ipv4.txt |
 | `apple-appstore-content-ipv4.txt` | Apple App Store et contenu | https://hove-io.github.io/m365-edl/apple-appstore-content-ipv4.txt |
-| `apple-device-services-ipv4.txt` | Apple Device Management et APNs | https://hove-io.github.io/m365-edl/apple-device-services-ipv4.txt |
+| `apple-device-services-ipv4.txt` | Apple Device Management, APNs et Private Cloud Compute | https://hove-io.github.io/m365-edl/apple-device-services-ipv4.txt |
 | `apple-xcode-developer-ipv4.txt` | Xcode et téléchargements Developer | https://hove-io.github.io/m365-edl/apple-xcode-developer-ipv4.txt |
+| `ubuntu-motd-ipv4.txt` | Ubuntu Pro APT News / MOTD | https://hove-io.github.io/m365-edl/ubuntu-motd-ipv4.txt |
 | `github-ipv4.txt` | GitHub `web`, `api`, `git` et `pages` | https://hove-io.github.io/m365-edl/github-ipv4.txt |
 | `github-actions-ipv4.txt` | GitHub Actions et runners hébergés | https://hove-io.github.io/m365-edl/github-actions-ipv4.txt |
 | `dropbox-ipv4.txt` | Allocations produit Dropbox | https://hove-io.github.io/m365-edl/dropbox-ipv4.txt |
@@ -142,7 +143,10 @@ Les quatre listes Apple proviennent de
 Le générateur isole strictement les tableaux **Software updates**, **Apps and
 additional content**, **Device setup** et **Device management**, puis résout
 leurs enregistrements A en `/32`. `apple-device-services-ipv4.txt` regroupe les
-deux sections appareil. Les deux hôtes décrits par Apple pour les composants
+deux sections appareil et les trois relais Private Cloud Compute exacts
+`apple-relay.cloudflare.com`, `apple-relay.fastly-edge.com` et
+`cp4.cloudflare.com`, validés dans le tableau **Apple Intelligence, Siri, and
+Search**. Les deux hôtes décrits par Apple pour les composants
 téléchargeables Xcode (`devimages-cdn.apple.com` et
 `download.developer.apple.com`) sont isolés dans
 `apple-xcode-developer-ipv4.txt` et retirés de la liste App Store générique. Les
@@ -159,6 +163,11 @@ couple FQDN/IP est supprimé automatiquement 24 heures après sa dernière
 observation. Cette fenêtre absorbe les
 rotations DNS rapides sans autoriser un préfixe Apple ou CDN.
 
+Les trois relais Private Cloud Compute sont eux aussi observés huit fois depuis
+chacune des deux vues DNS françaises. Une adresse Cloudflare ou Fastly n'entre
+donc dans l'EDL Apple que si elle est réellement renvoyée par l'un de ces trois
+FQDN officiels ; aucune plage CDN globale n'est importée.
+
 Le préfixe global `17.0.0.0/8` n'est jamais utilisé. Lorsqu'un FQDN Apple est
 hébergé par un CDN, seule l'IPv4 obtenue par sa résolution est conservée. Les
 wildcards ne sont pas exhaustivement convertibles : une EDL Domain/URL et une
@@ -168,6 +177,15 @@ complète.
 Apple indique que l'interception HTTPS peut empêcher ses services de
 fonctionner. Les FQDN Apple autorisés doivent donc être exemptés du déchiffrement
 TLS, en complément des EDL IP dynamiques.
+
+### Ubuntu Pro APT News / MOTD
+
+`ubuntu-motd-ipv4.txt` valide le FQDN `motd.ubuntu.com` contre le fichier
+[`uaclient/defaults.py`](https://github.com/canonical/ubuntu-pro-client/blob/main/uaclient/defaults.py)
+du client Ubuntu Pro officiel, où l'URL APT News est définie. Le workflow
+effectue huit résolutions système et huit observations depuis chacune des deux
+vues DNS françaises, puis conserve uniquement les IPv4 publiques réellement
+observées pendant 24 heures. Aucune plage AWS, EC2 ou CloudFront n'est ajoutée.
 
 ### GitHub
 
@@ -294,7 +312,8 @@ Le rapport public
 [`residual-ip-coverage.json`](https://hove-io.github.io/m365-edl/residual-ip-coverage.json)
 indique pour chaque IP observée si elle est couverte, par quelle EDL et par
 quelle source/FQDN. Une IP sans preuve officielle reste `covered: false`.
-Chaque entrée expose aussi `paloSource`, `officialSource`, `category`,
+Chaque entrée expose aussi `sourcePalo` (`paloSource` reste un alias
+rétrocompatible), `officialSource`, `category`,
 `confidence`, `cname_chain` et `source_documentation` ; une chaîne vide reste
 explicite lorsque le FQDN répond directement. Les alias explicites
 `officialFqdn`, `cnameChain`, `firstSeen`, `lastSeen` et `targetEdl` facilitent
@@ -303,8 +322,9 @@ Le bloc `currentInternetOnlyAudit` recense les destinations de la passe
 post-refresh courante et les classe exactement dans `COVERED_OFFICIAL`,
 `OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED`, `CDN_SHARED_UNATTRIBUTED`,
 `OWNER_ONLY_UNATTRIBUTED` ou `INTENTIONALLY_UNCOVERED`.
-Pour les quatre EDL Apple et l'EDL GitHub Actions, `first_seen`, `last_seen` et
-`observation_sources` documentent en plus la fenêtre glissante. Le détail
+Pour les quatre EDL Apple, l'EDL Ubuntu MOTD et l'EDL GitHub Actions,
+`first_seen`, `last_seen` et `observation_sources` documentent en plus la
+fenêtre glissante. Le détail
 persistant se trouve dans le bloc `dnsHistory` du fichier concerné dans
 `sources.json`. Le rapport distingue également `owner`, `suspectedService` et
 `verified` : la propriété d'une IP Apple, Azure, Akamai ou Cloudflare ne vaut
@@ -326,6 +346,7 @@ EDL-APPLE-UPDATES-IPV4
 EDL-APPLE-APPSTORE-CONTENT-IPV4
 EDL-APPLE-DEVICE-SERVICES-IPV4
 EDL-APPLE-XCODE-DEVELOPER-IPV4
+EDL-UBUNTU-MOTD-IPV4
 EDL-GITHUB-IPV4
 EDL-GITHUB-ACTIONS-IPV4
 EDL-DROPBOX-IPV4

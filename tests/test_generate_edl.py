@@ -2,10 +2,12 @@ import datetime as dt
 import ipaddress
 import json
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 from scripts.generate_edl import (
     APPLE_SECTION_REQUIREMENTS,
+    APPLE_PRIVATE_CLOUD_COMPUTE_HOSTS,
     APPLE_XCODE_HOSTS,
     APPLE_XCODE_FILE,
     COVERAGE_CATEGORIES,
@@ -21,11 +23,13 @@ from scripts.generate_edl import (
     M365_COMMON_WILDCARD_TARGETS,
     M365_SERVICE_FILES,
     MICROSOFT_DOH_ECS_SUBNETS,
+    MICROSOFT_DOH_HOSTS,
     MICROSOFT_DOH_RESOLVER,
     MICROSOFT_DELIVERY_OPTIMIZATION_URL,
     MICROSOFT_EDGE_WINDOWS_FILE,
     RESIDUAL_IPS,
     WINDOWS_UPDATE_WILDCARD_TARGETS,
+    UBUNTU_MOTD_HOSTS,
     XCODE_DNS_ATTEMPTS,
     XCODE_DOH_ECS_SUBNETS,
     XCODE_DOH_RESOLVER,
@@ -44,6 +48,7 @@ from scripts.generate_edl import (
     extract_teams_media_networks,
     resolve_service_hostnames,
     validate_m365_documented_urls,
+    validate_ubuntu_motd_source,
 )
 
 
@@ -242,7 +247,9 @@ IP Subnets
 
         self.assertIn("array504.prod.do.dsp.mp.microsoft.com", targets)
         self.assertIn("array508.prod.do.dsp.mp.microsoft.com", targets)
+        self.assertIn("array511.prod.do.dsp.mp.microsoft.com", targets)
         self.assertIn("array516.prod.do.dsp.mp.microsoft.com", targets)
+        self.assertIn("array804.prod.do.dsp.mp.microsoft.com", targets)
         self.assertIn("array808.prod.do.dsp.mp.microsoft.com", targets)
         self.assertIn("disc601.prod.do.dsp.mp.microsoft.com", targets)
         self.assertIn("kv601.prod.do.dsp.mp.microsoft.com", targets)
@@ -278,6 +285,27 @@ class AppleEndpointTests(unittest.TestCase):
         self.assertTrue(
             APPLE_XCODE_HOSTS.issubset(APPLE_SECTION_REQUIREMENTS["appscontent"])
         )
+
+    def test_private_cloud_compute_hosts_are_exact_and_guarded(self) -> None:
+        self.assertEqual(
+            APPLE_PRIVATE_CLOUD_COMPUTE_HOSTS,
+            {
+                "apple-relay.cloudflare.com",
+                "apple-relay.fastly-edge.com",
+                "cp4.cloudflare.com",
+            },
+        )
+        self.assertEqual(
+            APPLE_PRIVATE_CLOUD_COMPUTE_HOSTS,
+            APPLE_SECTION_REQUIREMENTS["aisirisearch"],
+        )
+
+    def test_ubuntu_motd_requires_canonical_exact_endpoint(self) -> None:
+        source = 'APT_NEWS_URL = "https://motd.ubuntu.com/aptnews.json"\n'
+        self.assertEqual(validate_ubuntu_motd_source(source), ["motd.ubuntu.com"])
+        self.assertEqual(UBUNTU_MOTD_HOSTS, {"motd.ubuntu.com"})
+        with self.assertRaisesRegex(GenerationError, "no longer document"):
+            validate_ubuntu_motd_source('APT_NEWS_URL = "https://example.com"')
 
 
 class DnsProvenanceTests(unittest.TestCase):
@@ -402,6 +430,21 @@ class MicrosoftControlledDnsTests(unittest.TestCase):
                 "settings-prod-neu.northeurope.cloudapp.azure.com",
             ],
         )
+
+
+class WorkflowDnsCoverageTests(unittest.TestCase):
+    def test_workflow_collects_every_controlled_dns_hostname(self) -> None:
+        workflow = Path(".github/workflows/update-edl.yml").read_text(
+            encoding="utf-8"
+        )
+        for hostname in sorted(
+            MICROSOFT_DOH_HOSTS
+            | APPLE_PRIVATE_CLOUD_COMPUTE_HOSTS
+            | UBUNTU_MOTD_HOSTS
+        ):
+            self.assertIn(f"'{hostname}'", workflow)
+        self.assertIn("--apple-pcc-dns-observations-file", workflow)
+        self.assertIn("--ubuntu-dns-observations-file", workflow)
 
 
 class GitHubActionsTests(unittest.TestCase):
@@ -656,6 +699,12 @@ class XcodeDnsHistoryTests(unittest.TestCase):
 
 class ResidualCoverageTests(unittest.TestCase):
     REQUIRED_IPS = {
+        "2.16.193.188",
+        "34.244.58.147",
+        "40.79.150.123",
+        "72.153.5.132",
+        "72.154.7.97",
+        "172.66.0.227",
         "72.153.5.61",
         "72.153.5.129",
         "72.153.5.137",
@@ -703,7 +752,11 @@ class ResidualCoverageTests(unittest.TestCase):
         "23.200.213.147",
         "95.101.137.28",
         "95.101.137.33",
+        "95.101.137.34",
+        "95.101.137.35",
+        "52.85.118.32",
         "52.85.118.49",
+        "52.85.118.61",
         "52.85.118.108",
         "52.222.169.45",
         "52.222.169.104",
@@ -787,13 +840,12 @@ class ResidualCoverageTests(unittest.TestCase):
         self.assertEqual(
             set(CURRENT_INTERNET_ONLY_AUDIT),
             {
-                "20.42.65.88",
-                "20.105.245.153",
-                "48.209.138.189",
-                "48.209.138.168",
-                "51.116.246.106",
-                "150.171.22.17",
-                "20.184.175.21",
+                "72.154.7.97",
+                "72.153.5.132",
+                "40.79.150.123",
+                "2.16.193.188",
+                "172.66.0.227",
+                "34.244.58.147",
             },
         )
         self.assertEqual(

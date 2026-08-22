@@ -55,6 +55,13 @@ APPLE_APNS_URL = (
     "https://developer.apple.com/library/archive/documentation/NetworkingInternet/"
     "Conceptual/RemoteNotificationsPG/CommunicatingwithAPNs.html"
 )
+UBUNTU_PRO_DEFAULTS_URL = (
+    "https://raw.githubusercontent.com/canonical/ubuntu-pro-client/main/"
+    "uaclient/defaults.py"
+)
+UBUNTU_PRO_DEFAULTS_DOCUMENTATION_URL = (
+    "https://github.com/canonical/ubuntu-pro-client/blob/main/uaclient/defaults.py"
+)
 GITHUB_META_URL = "https://api.github.com/meta"
 GITHUB_META_DOCS_URL = "https://docs.github.com/en/rest/meta/meta"
 DROPBOX_FIREWALL_URL = "https://help.dropbox.com/installs/configuring-firewall"
@@ -100,6 +107,7 @@ APPLE_UPDATES_FILE = "apple-updates-ipv4.txt"
 APPLE_CONTENT_FILE = "apple-appstore-content-ipv4.txt"
 APPLE_DEVICE_FILE = "apple-device-services-ipv4.txt"
 APPLE_XCODE_FILE = "apple-xcode-developer-ipv4.txt"
+UBUNTU_MOTD_FILE = "ubuntu-motd-ipv4.txt"
 GITHUB_FILE = "github-ipv4.txt"
 GITHUB_ACTIONS_FILE = "github-actions-ipv4.txt"
 DROPBOX_FILE = "dropbox-ipv4.txt"
@@ -338,7 +346,7 @@ PREVIOUS_INTERNET_ONLY_AUDIT: dict[str, dict[str, str | None]] = {
     },
 }
 
-CURRENT_INTERNET_ONLY_AUDIT: dict[str, dict[str, str | None]] = {
+LAST_INTERNET_ONLY_AUDIT: dict[str, dict[str, str | None]] = {
     "20.42.65.88": {
         "paloSource": "10.50.84.24",
         "owner": "Microsoft/Azure (AS8075)",
@@ -423,6 +431,149 @@ CURRENT_INTERNET_ONLY_AUDIT: dict[str, dict[str, str | None]] = {
     },
 }
 
+PREVIOUS_INTERNET_ONLY_AUDIT.update(LAST_INTERNET_ONLY_AUDIT)
+
+CURRENT_INTERNET_ONLY_AUDIT: dict[str, dict[str, str | None]] = {
+    "72.154.7.97": {
+        "paloSource": "10.50.82.50",
+        "owner": "Microsoft (AS8075)",
+        "suspectedService": "Windows Delivery Optimization Array service",
+        "officialSource": MICROSOFT_DELIVERY_OPTIMIZATION_URL,
+        "officialFqdn": "array804.prod.do.dsp.mp.microsoft.com",
+        "uncoveredCategory": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+        "confidence": "high",
+        "reason": (
+            "The concrete array804 target belongs to Microsoft's documented "
+            "array*.prod.do.dsp.mp.microsoft.com family, but coverage still "
+            "requires a current or rolling 24-hour DNS observation"
+        ),
+    },
+    "72.153.5.132": {
+        "paloSource": "10.50.84.24",
+        "owner": "Microsoft (AS8075)",
+        "suspectedService": "Windows Delivery Optimization Array service",
+        "officialSource": MICROSOFT_DELIVERY_OPTIMIZATION_URL,
+        "officialFqdn": "array511.prod.do.dsp.mp.microsoft.com",
+        "uncoveredCategory": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+        "confidence": "high",
+        "reason": (
+            "The concrete array511 target belongs to Microsoft's documented "
+            "array*.prod.do.dsp.mp.microsoft.com family, but coverage still "
+            "requires a current or rolling 24-hour DNS observation"
+        ),
+    },
+    "40.79.150.123": {
+        "paloSource": "10.50.84.3",
+        "owner": "Microsoft/Azure (AS8075)",
+        "suspectedService": "Probable Microsoft OneDS telemetry backend",
+        "officialSource": INTUNE_ENDPOINTS_LEARN_URL,
+        "officialFqdn": "*.events.data.microsoft.com",
+        "uncoveredCategory": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+        "confidence": "medium",
+        "reason": (
+            "The France Central OneDS backend name is only an attribution clue; "
+            "no authorized *.events.data.microsoft.com target returned this "
+            "address in the current or rolling 24-hour DNS window"
+        ),
+    },
+    "2.16.193.188": {
+        "paloSource": "10.50.82.50",
+        "owner": "Akamai (AS20940)",
+        "suspectedService": "Unattributed shared Akamai delivery edge",
+        "officialSource": None,
+        "officialFqdn": None,
+        "uncoveredCategory": "CDN_SHARED_UNATTRIBUTED",
+        "confidence": "low",
+        "reason": (
+            "No authorized Microsoft service FQDN returned this shared Akamai "
+            "address; Akamai ownership is not service authorization"
+        ),
+    },
+    "172.66.0.227": {
+        "paloSource": "10.50.83.87",
+        "owner": "Cloudflare (AS13335)",
+        "suspectedService": "Possible Apple Private Cloud Compute or shared CDN",
+        "officialSource": APPLE_ENTERPRISE_URL,
+        "officialFqdn": (
+            "apple-relay.cloudflare.com / cp4.cloudflare.com / "
+            "apple-relay.fastly-edge.com"
+        ),
+        "uncoveredCategory": "CDN_SHARED_UNATTRIBUTED",
+        "confidence": "medium",
+        "reason": (
+            "Apple documents three Private Cloud Compute relay FQDNs, but none "
+            "returned this shared Cloudflare address in the current or rolling "
+            "24-hour authorized DNS window"
+        ),
+    },
+    "34.244.58.147": {
+        "paloSource": "10.50.83.23",
+        "owner": "AWS hosting / Canonical Ubuntu service",
+        "suspectedService": "Ubuntu Pro APT News / MOTD",
+        "officialSource": UBUNTU_PRO_DEFAULTS_DOCUMENTATION_URL,
+        "officialFqdn": "motd.ubuntu.com",
+        "uncoveredCategory": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
+        "confidence": "high",
+        "reason": (
+            "Canonical's official Ubuntu Pro client config documents "
+            "motd.ubuntu.com; coverage still requires a current or rolling "
+            "24-hour DNS observation"
+        ),
+    },
+}
+
+CURRENT_CDN_WITNESS_AUDIT: dict[str, dict[str, str | None]] = {
+    "23.200.213.147": PREVIOUS_INTERNET_ONLY_AUDIT["23.200.213.147"],
+    "95.101.137.28": PREVIOUS_INTERNET_ONLY_AUDIT["95.101.137.28"],
+    "95.101.137.34": {
+        "paloSource": None,
+        "owner": "Akamai (AS20940)",
+        "suspectedService": "Unattributed shared Akamai edge",
+        "officialSource": None,
+        "officialFqdn": None,
+        "uncoveredCategory": "CDN_SHARED_UNATTRIBUTED",
+        "confidence": "low",
+        "reason": "No authorized official service FQDN currently maps this Akamai address",
+    },
+    "95.101.137.35": {
+        "paloSource": None,
+        "owner": "Akamai (AS20940)",
+        "suspectedService": "Unattributed shared Akamai edge",
+        "officialSource": None,
+        "officialFqdn": None,
+        "uncoveredCategory": "CDN_SHARED_UNATTRIBUTED",
+        "confidence": "low",
+        "reason": "No authorized official service FQDN currently maps this Akamai address",
+    },
+    "52.85.118.32": {
+        "paloSource": None,
+        "owner": "AWS CloudFront (AS16509)",
+        "suspectedService": "Unattributed shared CloudFront distribution",
+        "officialSource": None,
+        "officialFqdn": None,
+        "uncoveredCategory": "CDN_SHARED_UNATTRIBUTED",
+        "confidence": "low",
+        "reason": "No authorized official service FQDN currently maps this CloudFront address",
+    },
+    "52.85.118.49": PREVIOUS_INTERNET_ONLY_AUDIT["52.85.118.49"],
+    "52.85.118.61": {
+        "paloSource": None,
+        "owner": "AWS CloudFront (AS16509)",
+        "suspectedService": "Unattributed shared CloudFront distribution",
+        "officialSource": None,
+        "officialFqdn": None,
+        "uncoveredCategory": "CDN_SHARED_UNATTRIBUTED",
+        "confidence": "low",
+        "reason": "No authorized official service FQDN currently maps this CloudFront address",
+    },
+}
+
+INTERNET_ONLY_AUDIT_CONTEXT = {
+    **PREVIOUS_INTERNET_ONLY_AUDIT,
+    **CURRENT_CDN_WITNESS_AUDIT,
+    **CURRENT_INTERNET_ONLY_AUDIT,
+}
+
 PUBLICATIONS = (
     ("Microsoft 365 Common", "m365-common-ipv4.txt"),
     ("Microsoft 365 Exchange", "m365-exchange-ipv4.txt"),
@@ -433,8 +584,9 @@ PUBLICATIONS = (
     ("Microsoft Intune / Windows", INTUNE_WINDOWS_FILE),
     ("Apple Software Updates", APPLE_UPDATES_FILE),
     ("Apple App Store / Content", APPLE_CONTENT_FILE),
-    ("Apple Device Services / APNs", APPLE_DEVICE_FILE),
+    ("Apple Device Services / APNs / Private Cloud Compute", APPLE_DEVICE_FILE),
     ("Apple Xcode / Developer downloads", APPLE_XCODE_FILE),
+    ("Ubuntu Pro APT News / MOTD", UBUNTU_MOTD_FILE),
     ("GitHub web/API/git/Pages", GITHUB_FILE),
     ("GitHub Actions / hosted runners", GITHUB_ACTIONS_FILE),
     ("Dropbox product networks", DROPBOX_FILE),
@@ -447,6 +599,7 @@ NEW_SERVICE_FILES = (
     APPLE_CONTENT_FILE,
     APPLE_DEVICE_FILE,
     APPLE_XCODE_FILE,
+    UBUNTU_MOTD_FILE,
     GITHUB_ACTIONS_FILE,
     GITHUB_FILE,
     DROPBOX_FILE,
@@ -455,6 +608,11 @@ NEW_SERVICE_FILES = (
 )
 
 RESIDUAL_IPS = (
+    "2.16.193.188",
+    "34.244.58.147",
+    "40.79.150.123",
+    "72.153.5.132",
+    "72.154.7.97",
     "52.85.118.32",
     "52.85.118.49",
     "52.85.118.61",
@@ -524,6 +682,8 @@ RESIDUAL_IPS = (
     "95.101.137.24",
     "95.101.137.28",
     "95.101.137.33",
+    "95.101.137.34",
+    "95.101.137.35",
     "23.58.84.19",
     "151.101.1.64",
     "151.101.129.64",
@@ -534,6 +694,7 @@ RESIDUAL_IPS = (
     "52.222.169.104",
 )
 INTUNE_EVENT_RESIDUAL_IPS = {
+    "40.79.150.123",
     "4.150.223.107",
     "4.150.223.98",
     "4.150.223.112",
@@ -616,12 +777,30 @@ APPLE_SECTION_REQUIREMENTS = {
         "*.appattest.apple.com",
         "axm-servicediscovery.apple.com",
     },
+    "aisirisearch": {
+        "apple-relay.cloudflare.com",
+        "apple-relay.fastly-edge.com",
+        "cp4.cloudflare.com",
+    },
 }
 
 APPLE_XCODE_HOSTS = {
     "devimages-cdn.apple.com",
     "download.developer.apple.com",
 }
+APPLE_PRIVATE_CLOUD_COMPUTE_HOSTS = {
+    "apple-relay.cloudflare.com",
+    "apple-relay.fastly-edge.com",
+    "cp4.cloudflare.com",
+}
+APPLE_PCC_DNS_ATTEMPTS = 8
+APPLE_PCC_DOH_RESOLVER = XCODE_DOH_RESOLVER
+APPLE_PCC_DOH_ECS_SUBNETS = XCODE_DOH_ECS_SUBNETS
+
+UBUNTU_MOTD_HOSTS = {"motd.ubuntu.com"}
+UBUNTU_DNS_ATTEMPTS = 8
+UBUNTU_DOH_RESOLVER = XCODE_DOH_RESOLVER
+UBUNTU_DOH_ECS_SUBNETS = XCODE_DOH_ECS_SUBNETS
 
 APPLE_APP_WILDCARD_TARGETS = {
     "*.itunes.apple.com": ("itunes.apple.com",),
@@ -688,7 +867,9 @@ WINDOWS_UPDATE_WILDCARD_TARGETS = {
         "array504.prod.do.dsp.mp.microsoft.com",
         "array506.prod.do.dsp.mp.microsoft.com",
         "array508.prod.do.dsp.mp.microsoft.com",
+        "array511.prod.do.dsp.mp.microsoft.com",
         "array516.prod.do.dsp.mp.microsoft.com",
+        "array804.prod.do.dsp.mp.microsoft.com",
         "array808.prod.do.dsp.mp.microsoft.com",
         "disc501.prod.do.dsp.mp.microsoft.com",
         "disc601.prod.do.dsp.mp.microsoft.com",
@@ -752,20 +933,21 @@ INTUNE_EVENT_EXACT_SOURCE_REQUIREMENTS = {
 MICROSOFT_DOH_RESOLVER = XCODE_DOH_RESOLVER
 MICROSOFT_DOH_ECS_SUBNETS = XCODE_DOH_ECS_SUBNETS
 MICROSOFT_DOH_ATTEMPTS = 8
-MICROSOFT_INTUNE_DOH_HOSTS = {
-    "events.data.microsoft.com",
-    "self.events.data.microsoft.com",
-    "v10.events.data.microsoft.com",
-    "v20.events.data.microsoft.com",
-    "mobile.events.data.microsoft.com",
-    "browser.events.data.microsoft.com",
-    "eu-mobile.events.data.microsoft.com",
-    "eu-v20.events.data.microsoft.com",
-}
+MICROSOFT_INTUNE_DOH_HOSTS = set(
+    INTUNE_EVENT_WILDCARD_TARGETS["*.events.data.microsoft.com"]
+)
 MICROSOFT_EDGE_DOH_HOSTS = {
+    "adl.windows.com",
+    "array511.prod.do.dsp.mp.microsoft.com",
+    "array804.prod.do.dsp.mp.microsoft.com",
     "config.edge.skype.com",
+    "ctldl.windowsupdate.com",
+    "dl.delivery.mp.microsoft.com",
+    "download.windowsupdate.com",
+    "fe3cr.delivery.mp.microsoft.com",
     "settings.data.microsoft.com",
     "settings-win.data.microsoft.com",
+    "update.microsoft.com",
 }
 MICROSOFT_DOH_HOSTS = MICROSOFT_INTUNE_DOH_HOSTS | MICROSOFT_EDGE_DOH_HOSTS
 
@@ -941,6 +1123,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--apple-apns-file", type=Path, required=True)
     parser.add_argument(
         "--apple-xcode-dns-observations-file", type=Path, required=True
+    )
+    parser.add_argument(
+        "--apple-pcc-dns-observations-file", type=Path, required=True
+    )
+    parser.add_argument("--ubuntu-pro-defaults-file", type=Path, required=True)
+    parser.add_argument(
+        "--ubuntu-dns-observations-file", type=Path, required=True
     )
     parser.add_argument(
         "--microsoft-dns-observations-file", type=Path, required=True
@@ -1508,6 +1697,17 @@ def extract_apple_section_hostnames(
             + ", ".join(sorted(missing))
         )
     return sorted(hosts)
+
+
+def validate_ubuntu_motd_source(source: str) -> list[str]:
+    """Validate Canonical's exact Ubuntu Pro APT News endpoint."""
+    expected = 'APT_NEWS_URL = "https://motd.ubuntu.com/aptnews.json"'
+    if expected not in source:
+        raise GenerationError(
+            "Canonical Ubuntu Pro defaults no longer document the expected "
+            "motd.ubuntu.com APT News endpoint"
+        )
+    return sorted(UBUNTU_MOTD_HOSTS)
 
 
 def expand_documented_hostnames(
@@ -2443,7 +2643,7 @@ def document_date(markdown: str) -> str | None:
 
 
 def residual_noncoverage_reason(address: ipaddress.IPv4Address) -> str:
-    audit = CURRENT_INTERNET_ONLY_AUDIT.get(str(address))
+    audit = INTERNET_ONLY_AUDIT_CONTEXT.get(str(address))
     if audit is not None:
         reason = audit.get("reason")
         if isinstance(reason, str) and reason:
@@ -2532,7 +2732,7 @@ def residual_classification(
     fqdn: str | None,
 ) -> dict[str, Any]:
     """Describe ownership separately from service authorization evidence."""
-    audit = CURRENT_INTERNET_ONLY_AUDIT.get(str(address))
+    audit = INTERNET_ONLY_AUDIT_CONTEXT.get(str(address))
     if audit is not None:
         return {
             "owner": audit["owner"],
@@ -2636,8 +2836,12 @@ def build_residual_coverage(
         ),
         APPLE_UPDATES_FILE: "Apple enterprise Software updates FQDN resolution",
         APPLE_CONTENT_FILE: "Apple enterprise Apps and additional content FQDN resolution",
-        APPLE_DEVICE_FILE: "Apple enterprise Device management/APNs FQDN resolution",
+        APPLE_DEVICE_FILE: (
+            "Apple enterprise Device management/APNs/Private Cloud Compute "
+            "FQDN resolution"
+        ),
         APPLE_XCODE_FILE: "Apple enterprise Xcode download FQDN resolution",
+        UBUNTU_MOTD_FILE: "Canonical Ubuntu Pro APT News FQDN resolution",
         GITHUB_FILE: "GitHub Meta API fields web, api, git, and pages",
         GITHUB_ACTIONS_FILE: (
             "GitHub Meta official Actions FQDNs and rolling DNS resolution"
@@ -2661,6 +2865,7 @@ def build_residual_coverage(
         APPLE_CONTENT_FILE: APPLE_ENTERPRISE_URL,
         APPLE_DEVICE_FILE: APPLE_ENTERPRISE_URL,
         APPLE_XCODE_FILE: APPLE_ENTERPRISE_URL,
+        UBUNTU_MOTD_FILE: UBUNTU_PRO_DEFAULTS_DOCUMENTATION_URL,
         DELL_UPDATE_FILE: DELL_UPDATE_DOCUMENTATION_URL,
         MICROSOFT_EDGE_WINDOWS_FILE: MICROSOFT_WINDOWS_URL,
         GITHUB_FILE: GITHUB_META_DOCS_URL,
@@ -2680,7 +2885,7 @@ def build_residual_coverage(
     entries: list[dict[str, Any]] = []
     for raw_address in RESIDUAL_IPS:
         address = ipaddress.IPv4Address(raw_address)
-        audit = CURRENT_INTERNET_ONLY_AUDIT.get(raw_address)
+        audit = INTERNET_ONLY_AUDIT_CONTEXT.get(raw_address)
         matching_files = [
             filename
             for filename in ordered_files
@@ -3037,11 +3242,20 @@ def build_index(
     <div class="notice">
       <p><strong>Apple :</strong> les listes utilisent uniquement les A publics
       courants des FQDN présents dans la source Apple. Les services Device setup
-      et Device management sont regroupés, tandis que les téléchargements Xcode
+      et Device management sont regroupés avec les trois relais Private Cloud
+      Compute exacts documentés par Apple, tandis que les téléchargements Xcode
       sont isolés. Chaque EDL Apple conserve pendant 24 heures uniquement les IPv4
-      réellement observées via ses FQDN officiels, avec leur chaîne CNAME.
+      réellement observées via ses FQDN officiels, avec leur chaîne CNAME. Les
+      relais PCC sont interrogés huit fois depuis deux vues DNS françaises.
       Aucun <code>17.0.0.0/8</code> ni range CDN global n'est ajouté.
       Apple recommande d'exempter ces FQDN de l'inspection HTTPS.</p>
+    </div>
+    <div class="notice">
+      <p><strong>Ubuntu Pro APT News :</strong> la liste dédiée valide
+      <code>motd.ubuntu.com</code> dans la configuration officielle Canonical,
+      puis conserve pendant 24 heures uniquement ses A publics observés depuis
+      le résolveur système et deux vues DNS françaises. Aucun range AWS ou EC2
+      global n'est ajouté.</p>
     </div>
     <div class="notice">
       <p><strong>GitHub Actions :</strong> la liste dédiée est alimentée uniquement
@@ -3192,6 +3406,18 @@ def main() -> int:
             args.apple_xcode_dns_observations_file,
             label="Apple Xcode DNS-over-HTTPS observations",
         )
+        apple_pcc_dns_observations = load_text_source(
+            args.apple_pcc_dns_observations_file,
+            label="Apple Private Cloud Compute DNS-over-HTTPS observations",
+        )
+        ubuntu_pro_defaults = load_text_source(
+            args.ubuntu_pro_defaults_file,
+            label="Canonical Ubuntu Pro defaults source",
+        )
+        ubuntu_dns_observations = load_text_source(
+            args.ubuntu_dns_observations_file,
+            label="Ubuntu MOTD DNS-over-HTTPS observations",
+        )
         microsoft_dns_observations = load_text_source(
             args.microsoft_dns_observations_file,
             label="Microsoft DNS-over-HTTPS observations",
@@ -3250,6 +3476,30 @@ def main() -> int:
             resolver_url=MICROSOFT_DOH_RESOLVER,
             required_attempts=MICROSOFT_DOH_ATTEMPTS,
             label="Microsoft",
+        )
+        (
+            apple_pcc_doh_resolutions,
+            apple_pcc_doh_details,
+            apple_pcc_doh_attempt_counts,
+        ) = extract_doh_observations(
+            apple_pcc_dns_observations,
+            authorized_hostnames=APPLE_PRIVATE_CLOUD_COMPUTE_HOSTS,
+            ecs_subnets=APPLE_PCC_DOH_ECS_SUBNETS,
+            resolver_url=APPLE_PCC_DOH_RESOLVER,
+            required_attempts=APPLE_PCC_DNS_ATTEMPTS,
+            label="Apple Private Cloud Compute",
+        )
+        (
+            ubuntu_doh_resolutions,
+            ubuntu_doh_details,
+            ubuntu_doh_attempt_counts,
+        ) = extract_doh_observations(
+            ubuntu_dns_observations,
+            authorized_hostnames=UBUNTU_MOTD_HOSTS,
+            ecs_subnets=UBUNTU_DOH_ECS_SUBNETS,
+            resolver_url=UBUNTU_DOH_RESOLVER,
+            required_attempts=UBUNTU_DNS_ATTEMPTS,
+            label="Ubuntu MOTD",
         )
 
         generated = extract_m365_networks(payload)
@@ -3541,9 +3791,21 @@ def main() -> int:
         apple_device_management_documented = extract_apple_section_hostnames(
             apple_enterprise, section_id="devicemanagement"
         )
+        apple_intelligence_documented = extract_apple_section_hostnames(
+            apple_enterprise, section_id="aisirisearch"
+        )
+        if not APPLE_PRIVATE_CLOUD_COMPUTE_HOSTS.issubset(
+            apple_intelligence_documented
+        ):
+            raise GenerationError(
+                "Apple Intelligence no longer documents all required Private "
+                "Cloud Compute relay hosts"
+            )
+        apple_pcc_documented = sorted(APPLE_PRIVATE_CLOUD_COMPUTE_HOSTS)
         apple_device_documented = sorted(
             set(apple_device_setup_documented)
             | set(apple_device_management_documented)
+            | APPLE_PRIVATE_CLOUD_COMPUTE_HOSTS
         )
         validate_documented_hostnames(
             apple_apns,
@@ -3563,7 +3825,9 @@ def main() -> int:
             apple_device_cname_chains,
             apple_device_unresolved,
         ) = resolve_service_hostnames(
-            apple_device_hosts, label="Apple Device management/APNs"
+            apple_device_hosts,
+            label="Apple Device management/APNs/Private Cloud Compute",
+            attempts=8,
         )
         apple_device_current_resolutions = apple_device_resolutions
         apple_device_current_details = build_dns_observation_details(
@@ -3571,6 +3835,16 @@ def main() -> int:
             resolutions=apple_device_current_resolutions,
             cname_chains=apple_device_cname_chains,
             observation_source="system-resolver",
+        )
+        (
+            apple_device_current_resolutions,
+            apple_device_current_details,
+        ) = combine_dns_observation_details(
+            authorized_hostnames=set(apple_device_hosts),
+            observation_sets=[
+                apple_device_current_details,
+                apple_pcc_doh_details,
+            ],
         )
         (
             apple_device_networks,
@@ -3583,7 +3857,45 @@ def main() -> int:
             authorized_hostnames=set(apple_device_hosts),
             current_details=apple_device_current_details,
             observed_at=observed_at,
-            label="Apple Device management/APNs",
+            label="Apple Device management/APNs/Private Cloud Compute",
+        )
+
+        ubuntu_hosts = validate_ubuntu_motd_source(ubuntu_pro_defaults)
+        (
+            _ubuntu_current_networks,
+            ubuntu_current_resolutions,
+            ubuntu_cname_chains,
+            ubuntu_unresolved,
+        ) = resolve_service_hostnames(
+            ubuntu_hosts,
+            label="Ubuntu Pro APT News / MOTD",
+            attempts=UBUNTU_DNS_ATTEMPTS,
+        )
+        ubuntu_current_details = build_dns_observation_details(
+            authorized_hostnames=set(ubuntu_hosts),
+            resolutions=ubuntu_current_resolutions,
+            cname_chains=ubuntu_cname_chains,
+            observation_source="system-resolver",
+        )
+        (
+            ubuntu_current_resolutions,
+            ubuntu_current_details,
+        ) = combine_dns_observation_details(
+            authorized_hostnames=set(ubuntu_hosts),
+            observation_sets=[ubuntu_current_details, ubuntu_doh_details],
+        )
+        (
+            ubuntu_networks,
+            ubuntu_resolutions,
+            ubuntu_dns_history,
+            ubuntu_expired_records,
+        ) = build_dns_history(
+            previous_sources=previous_sources,
+            filename=UBUNTU_MOTD_FILE,
+            authorized_hostnames=set(ubuntu_hosts),
+            current_details=ubuntu_current_details,
+            observed_at=observed_at,
+            label="Ubuntu Pro APT News / MOTD",
         )
 
         github_networks, github_field_counts = extract_github_networks(github_meta)
@@ -3721,6 +4033,7 @@ def main() -> int:
         generated[APPLE_CONTENT_FILE] = apple_content_networks
         generated[APPLE_DEVICE_FILE] = apple_device_networks
         generated[APPLE_XCODE_FILE] = apple_xcode_networks
+        generated[UBUNTU_MOTD_FILE] = ubuntu_networks
         generated[GITHUB_FILE] = github_networks
         generated[GITHUB_ACTIONS_FILE] = github_actions_networks
         generated[DROPBOX_FILE] = dropbox_networks
@@ -3735,6 +4048,7 @@ def main() -> int:
             APPLE_CONTENT_FILE: apple_content_resolutions,
             APPLE_DEVICE_FILE: apple_device_resolutions,
             APPLE_XCODE_FILE: apple_xcode_resolutions,
+            UBUNTU_MOTD_FILE: ubuntu_resolutions,
             GITHUB_ACTIONS_FILE: github_actions_resolutions,
             DELL_UPDATE_FILE: dell_resolutions,
             MICROSOFT_EDGE_WINDOWS_FILE: microsoft_service_resolutions,
@@ -3746,6 +4060,7 @@ def main() -> int:
             APPLE_CONTENT_FILE: apple_content_cname_chains,
             APPLE_DEVICE_FILE: apple_device_cname_chains,
             APPLE_XCODE_FILE: apple_xcode_cname_chains,
+            UBUNTU_MOTD_FILE: ubuntu_cname_chains,
             GITHUB_ACTIONS_FILE: github_actions_cname_chains,
             DELL_UPDATE_FILE: dell_cname_chains,
             MICROSOFT_EDGE_WINDOWS_FILE: microsoft_service_cname_chains,
@@ -3757,6 +4072,7 @@ def main() -> int:
             APPLE_CONTENT_FILE: apple_content_dns_history,
             APPLE_DEVICE_FILE: apple_device_dns_history,
             APPLE_XCODE_FILE: apple_xcode_dns_history,
+            UBUNTU_MOTD_FILE: ubuntu_dns_history,
             GITHUB_ACTIONS_FILE: github_actions_dns_history,
             MICROSOFT_EDGE_WINDOWS_FILE: microsoft_service_dns_history,
         }
@@ -3771,6 +4087,7 @@ def main() -> int:
                     "Apps and additional content",
                     "Device setup",
                     "Device management",
+                    "Apple Intelligence, Siri, and Search",
                 ],
             },
             "appleApns": {
@@ -3787,6 +4104,37 @@ def main() -> int:
                 "purpose": (
                     "Collect multiple current public A records for the two "
                     "official Apple Xcode FQDNs from controlled France DNS views"
+                ),
+            },
+            "applePrivateCloudComputeDnsObservations": {
+                "resolver": APPLE_PCC_DOH_RESOLVER,
+                "ecsSubnets": list(APPLE_PCC_DOH_ECS_SUBNETS),
+                "attemptsPerHostnameAndSubnet": APPLE_PCC_DNS_ATTEMPTS,
+                "hostnames": sorted(APPLE_PRIVATE_CLOUD_COMPUTE_HOSTS),
+                "resolvedHostnames": apple_pcc_doh_resolutions,
+                "sha256": source_hash(apple_pcc_dns_observations),
+                "purpose": (
+                    "Test the exact Private Cloud Compute relay FQDNs from "
+                    "Apple's official enterprise network documentation"
+                ),
+            },
+            "ubuntuProDefaults": {
+                "publisher": "Canonical",
+                "url": UBUNTU_PRO_DEFAULTS_URL,
+                "documentationUrl": UBUNTU_PRO_DEFAULTS_DOCUMENTATION_URL,
+                "sha256": source_hash(ubuntu_pro_defaults),
+                "validatedHostnames": ubuntu_hosts,
+            },
+            "ubuntuMotdDnsObservations": {
+                "resolver": UBUNTU_DOH_RESOLVER,
+                "ecsSubnets": list(UBUNTU_DOH_ECS_SUBNETS),
+                "attemptsPerHostnameAndSubnet": UBUNTU_DNS_ATTEMPTS,
+                "hostnames": ubuntu_hosts,
+                "resolvedHostnames": ubuntu_doh_resolutions,
+                "sha256": source_hash(ubuntu_dns_observations),
+                "purpose": (
+                    "Resolve only Canonical's documented Ubuntu Pro APT News "
+                    "endpoint from controlled France DNS views"
                 ),
             },
             "microsoftControlledDnsObservations": {
@@ -3991,13 +4339,21 @@ def main() -> int:
                 "cidrCount": len(apple_device_networks),
                 "method": (
                     "Resolve official Apple Device setup, Device management, "
-                    "and audited APNs FQDNs to IPv4 /32"
+                    "audited APNs, and Private Cloud Compute FQDNs to IPv4 /32"
                 ),
                 "documentedHostnames": apple_device_documented,
                 "documentedSections": {
                     "Device setup": apple_device_setup_documented,
                     "Device management": apple_device_management_documented,
+                    "Apple Intelligence, Siri, and Search": (
+                        apple_intelligence_documented
+                    ),
                 },
+                "privateCloudComputeHostnames": apple_pcc_documented,
+                "privateCloudComputeDohResolvedHostnames": (
+                    apple_pcc_doh_resolutions
+                ),
+                "dnsObservationAttempts": apple_pcc_doh_attempt_counts,
                 "wildcardPatterns": apple_device_wildcards,
                 "wildcardResolutionTargets": {
                     pattern: list(targets)
@@ -4014,7 +4370,7 @@ def main() -> int:
                     "expiredThisRun": apple_device_expired_records,
                 },
                 "unresolvedHostnames": apple_device_unresolved,
-                "forbiddenFallback": "17.0.0.0/8",
+                "forbiddenFallback": "17.0.0.0/8 or global CDN ranges",
                 "manualIpOverrides": False,
             },
             APPLE_XCODE_FILE: {
@@ -4043,6 +4399,29 @@ def main() -> int:
                 "unresolvedHostnames": apple_xcode_unresolved,
                 "forbiddenFallback": "17.0.0.0/8 or global CDN ranges",
                 "manualIpOverrides": False,
+            },
+            UBUNTU_MOTD_FILE: {
+                "cidrCount": len(ubuntu_networks),
+                "method": (
+                    "Validate Canonical's Ubuntu Pro APT News URL, resolve only "
+                    "motd.ubuntu.com, and retain DNS-proven IPv4 records for 24 hours"
+                ),
+                "documentedHostnames": ubuntu_hosts,
+                "resolvedHostnames": ubuntu_resolutions,
+                "currentResolvedHostnames": ubuntu_current_resolutions,
+                "dohResolvedHostnames": ubuntu_doh_resolutions,
+                "cnameChains": ubuntu_cname_chains,
+                "dnsObservationAttempts": ubuntu_doh_attempt_counts,
+                "dnsHistory": {
+                    "gracePeriodHours": int(
+                        DNS_HISTORY_GRACE_PERIOD.total_seconds() // 3600
+                    ),
+                    "recordsByHostname": ubuntu_dns_history,
+                    "expiredThisRun": ubuntu_expired_records,
+                },
+                "unresolvedHostnames": ubuntu_unresolved,
+                "manualIpOverrides": False,
+                "globalAwsRangesIncluded": False,
             },
             GITHUB_FILE: {
                 "cidrCount": len(github_networks),
