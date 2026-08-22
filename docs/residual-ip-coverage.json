@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T09:45:43.580991Z",
+  "generatedAt": "2026-08-22T10:04:04.927252Z",
   "policy": "Coverage is reported only from generated EDL content; unmatched IPs are never added to force coverage",
   "entries": [
     {
@@ -70,17 +70,21 @@
       "ip": "20.42.65.85",
       "owner": null,
       "suspectedService": null,
-      "verified": false,
-      "covered": false,
-      "edl": null,
-      "source": null,
-      "fqdn": null,
-      "cname_chain": [],
-      "first_seen": null,
-      "last_seen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "verified": true,
+      "covered": true,
+      "edl": "microsoft-intune-windows-ipv4.txt",
+      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
+      "fqdn": "us-mobile.events.data.microsoft.com",
+      "cname_chain": [
+        "us.events.data.trafficmanager.net",
+        "onedscolprdeus05.eastus.cloudapp.azure.com"
+      ],
+      "first_seen": "2026-08-22T10:04:04.927252Z",
+      "last_seen": "2026-08-22T10:04:04.927252Z",
+      "observation_sources": [
+        "system-resolver"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints"
     },
     {
       "ip": "4.150.223.96",
@@ -99,6 +103,22 @@
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
+      "ip": "4.150.223.98",
+      "owner": "Microsoft/Azure",
+      "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
+      "verified": false,
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
+      "source_documentation": null,
+      "reason": "Probable Microsoft telemetry address not returned during the current or rolling 24-hour DNS window by an authorized *.events.data.microsoft.com target"
+    },
+    {
       "ip": "4.150.223.104",
       "owner": null,
       "suspectedService": null,
@@ -111,10 +131,28 @@
         "us-v20.events.data.trafficmanager.net",
         "onedscolprdcus60.centralus.cloudapp.azure.com"
       ],
+      "first_seen": "2026-08-22T09:45:43.580991Z",
+      "last_seen": "2026-08-22T09:45:43.580991Z",
+      "observation_sources": [
+        "previous-published-dns-snapshot"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints"
+    },
+    {
+      "ip": "4.150.223.112",
+      "owner": "Microsoft/Azure",
+      "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
+      "verified": false,
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
       "first_seen": null,
       "last_seen": null,
       "observation_sources": [],
-      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints"
+      "source_documentation": null,
+      "reason": "Probable Microsoft telemetry address not returned during the current or rolling 24-hour DNS window by an authorized *.events.data.microsoft.com target"
     },
     {
       "ip": "4.150.223.115",
@@ -131,6 +169,42 @@
       "observation_sources": [],
       "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+    },
+    {
+      "ip": "20.184.175.2",
+      "owner": "Microsoft/Azure",
+      "suspectedService": "Unresolved Microsoft/Azure service",
+      "verified": false,
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
+      "source_documentation": null,
+      "reason": "Microsoft/Azure ownership observed, but no in-scope official Microsoft FQDN currently or recently maps this address to a service"
+    },
+    {
+      "ip": "51.132.193.104",
+      "owner": "Microsoft/Azure",
+      "suspectedService": "Microsoft telemetry / events.data.microsoft.com",
+      "verified": true,
+      "covered": true,
+      "edl": "microsoft-intune-windows-ipv4.txt",
+      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
+      "fqdn": "uk-mobile.events.data.microsoft.com",
+      "cname_chain": [
+        "uk.events.data.trafficmanager.net",
+        "onedscolprduks02.uksouth.cloudapp.azure.com"
+      ],
+      "first_seen": "2026-08-22T10:04:04.927252Z",
+      "last_seen": "2026-08-22T10:04:04.927252Z",
+      "observation_sources": [
+        "system-resolver"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints"
     },
     {
       "ip": "23.103.234.43",
@@ -301,7 +375,7 @@
         "tokenghubeus21.actions.githubusercontent.com"
       ],
       "first_seen": "2026-08-22T09:29:05.060917Z",
-      "last_seen": "2026-08-22T09:45:43.580991Z",
+      "last_seen": "2026-08-22T10:04:04.927252Z",
       "observation_sources": [
         "system-resolver"
       ],
@@ -384,7 +458,7 @@
         "glb-c0e95bd587389a.github.com"
       ],
       "first_seen": "2026-08-22T09:29:05.060917Z",
-      "last_seen": "2026-08-22T09:45:43.580991Z",
+      "last_seen": "2026-08-22T10:04:04.927252Z",
       "observation_sources": [
         "system-resolver"
       ],
@@ -425,8 +499,9 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "first_seen": "2026-08-22T09:00:08.705520Z",
-      "last_seen": "2026-08-22T09:00:08.705520Z",
+      "last_seen": "2026-08-22T10:04:04.927252Z",
       "observation_sources": [
+        "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24"
       ],
       "source_documentation": "https://support.apple.com/en-us/101555",
@@ -608,7 +683,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "first_seen": "2026-08-22T09:00:08.705520Z",
-      "last_seen": "2026-08-22T09:29:05.060917Z",
+      "last_seen": "2026-08-22T10:04:04.927252Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24"
@@ -628,7 +703,7 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "first_seen": "2026-08-22T08:46:37.008576Z",
-      "last_seen": "2026-08-22T09:29:05.060917Z",
+      "last_seen": "2026-08-22T10:04:04.927252Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24"
@@ -747,12 +822,16 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "first_seen": "2026-08-22T09:00:08.705520Z",
-      "last_seen": "2026-08-22T09:00:08.705520Z",
+      "last_seen": "2026-08-22T10:04:04.927252Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24"
       ],
-      "source_documentation": "https://support.apple.com/en-us/101555"
+      "source_documentation": "https://support.apple.com/en-us/101555",
+      "allFqdns": [
+        "devimages-cdn.apple.com",
+        "download.developer.apple.com"
+      ]
     },
     {
       "ip": "17.248.209.46",
