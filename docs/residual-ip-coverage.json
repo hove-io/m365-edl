@@ -1,9 +1,12 @@
 {
-  "generatedAt": "2026-08-22T09:00:08.705520Z",
+  "generatedAt": "2026-08-22T09:29:05.060917Z",
   "policy": "Coverage is reported only from generated EDL content; unmatched IPs are never added to force coverage",
   "entries": [
     {
       "ip": "52.85.118.32",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -17,6 +20,9 @@
     },
     {
       "ip": "52.85.118.49",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -30,6 +36,9 @@
     },
     {
       "ip": "52.85.118.61",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -43,6 +52,9 @@
     },
     {
       "ip": "52.85.118.108",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -56,6 +68,9 @@
     },
     {
       "ip": "20.42.65.85",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -69,6 +84,9 @@
     },
     {
       "ip": "4.150.223.96",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -82,21 +100,25 @@
     },
     {
       "ip": "4.150.223.104",
-      "covered": true,
-      "edl": "microsoft-intune-windows-ipv4.txt",
-      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
-      "fqdn": "functional.events.data.microsoft.com",
-      "cname_chain": [
-        "global.asimov.events.data.trafficmanager.net",
-        "onedscolprdcus60.centralus.cloudapp.azure.com"
-      ],
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
       "first_seen": null,
       "last_seen": null,
       "observation_sources": [],
-      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints"
+      "source_documentation": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
       "ip": "4.150.223.115",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -110,6 +132,9 @@
     },
     {
       "ip": "23.103.234.43",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -123,6 +148,9 @@
     },
     {
       "ip": "17.248.236.28",
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -136,6 +164,9 @@
     },
     {
       "ip": "72.153.5.61",
+      "owner": null,
+      "suspectedService": null,
+      "verified": true,
       "covered": true,
       "edl": "microsoft-edge-windows-services-ipv4.txt",
       "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
@@ -148,6 +179,9 @@
     },
     {
       "ip": "72.153.5.129",
+      "owner": null,
+      "suspectedService": null,
+      "verified": true,
       "covered": true,
       "edl": "microsoft-edge-windows-services-ipv4.txt",
       "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
@@ -160,6 +194,9 @@
     },
     {
       "ip": "72.153.5.137",
+      "owner": null,
+      "suspectedService": null,
+      "verified": true,
       "covered": true,
       "edl": "microsoft-edge-windows-services-ipv4.txt",
       "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
@@ -172,6 +209,9 @@
     },
     {
       "ip": "72.153.5.140",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -185,6 +225,9 @@
     },
     {
       "ip": "72.154.7.101",
+      "owner": null,
+      "suspectedService": null,
+      "verified": true,
       "covered": true,
       "edl": "microsoft-edge-windows-services-ipv4.txt",
       "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
@@ -197,6 +240,9 @@
     },
     {
       "ip": "95.101.137.11",
+      "owner": "Akamai",
+      "suspectedService": "Apple Maps / shared CDN",
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -210,6 +256,9 @@
     },
     {
       "ip": "95.101.137.12",
+      "owner": "Akamai",
+      "suspectedService": "Apple Maps / shared CDN",
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -223,6 +272,9 @@
     },
     {
       "ip": "95.101.137.14",
+      "owner": "Akamai",
+      "suspectedService": "Apple Maps / shared CDN",
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -236,19 +288,28 @@
     },
     {
       "ip": "20.85.108.33",
-      "covered": false,
-      "edl": null,
-      "source": null,
-      "fqdn": null,
-      "cname_chain": [],
-      "first_seen": null,
-      "last_seen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "owner": "Microsoft/Azure",
+      "suspectedService": "GitHub Actions",
+      "verified": true,
+      "covered": true,
+      "edl": "github-actions-ipv4.txt",
+      "source": "GitHub Meta official Actions FQDNs and rolling DNS resolution",
+      "fqdn": "tokenghub.actions.githubusercontent.com",
+      "cname_chain": [
+        "tokenghubeus21.actions.githubusercontent.com"
+      ],
+      "first_seen": "2026-08-22T09:29:05.060917Z",
+      "last_seen": "2026-08-22T09:29:05.060917Z",
+      "observation_sources": [
+        "system-resolver"
+      ],
+      "source_documentation": "https://docs.github.com/en/rest/meta/meta"
     },
     {
       "ip": "48.209.138.189",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -262,21 +323,25 @@
     },
     {
       "ip": "52.168.117.169",
-      "covered": true,
-      "edl": "microsoft-intune-windows-ipv4.txt",
-      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
-      "fqdn": "mobile.events.data.microsoft.com",
-      "cname_chain": [
-        "mobile.events.data.trafficmanager.net",
-        "onedscolprdeus10.eastus.cloudapp.azure.com"
-      ],
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
       "first_seen": null,
       "last_seen": null,
       "observation_sources": [],
-      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints"
+      "source_documentation": null,
+      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
       "ip": "52.168.117.170",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -290,6 +355,9 @@
     },
     {
       "ip": "23.200.213.147",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -303,19 +371,34 @@
     },
     {
       "ip": "20.85.130.105",
-      "covered": false,
-      "edl": null,
-      "source": null,
-      "fqdn": null,
-      "cname_chain": [],
-      "first_seen": null,
-      "last_seen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "owner": null,
+      "suspectedService": null,
+      "verified": true,
+      "covered": true,
+      "edl": "github-actions-ipv4.txt",
+      "source": "GitHub Meta official Actions FQDNs and rolling DNS resolution",
+      "fqdn": "broker.actions.githubusercontent.com",
+      "cname_chain": [
+        "glb-c0e95bd587389a.github.com"
+      ],
+      "first_seen": "2026-08-22T09:29:05.060917Z",
+      "last_seen": "2026-08-22T09:29:05.060917Z",
+      "observation_sources": [
+        "system-resolver"
+      ],
+      "source_documentation": "https://docs.github.com/en/rest/meta/meta",
+      "allFqdns": [
+        "broker.actions.githubusercontent.com",
+        "run-actions-1-azure-eastus.actions.githubusercontent.com",
+        "run-actions-2-azure-eastus.actions.githubusercontent.com",
+        "run-actions-3-azure-eastus.actions.githubusercontent.com"
+      ]
     },
     {
       "ip": "48.209.133.15",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -329,6 +412,9 @@
     },
     {
       "ip": "17.253.29.146",
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": true,
       "covered": true,
       "edl": "apple-xcode-developer-ipv4.txt",
       "source": "Apple enterprise Xcode download FQDN resolution",
@@ -349,6 +435,9 @@
     },
     {
       "ip": "17.188.170.10",
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -362,6 +451,9 @@
     },
     {
       "ip": "13.107.6.156",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -375,6 +467,9 @@
     },
     {
       "ip": "143.166.124.33",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -388,6 +483,9 @@
     },
     {
       "ip": "20.105.245.153",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -401,6 +499,9 @@
     },
     {
       "ip": "162.125.67.18",
+      "owner": null,
+      "suspectedService": null,
+      "verified": true,
       "covered": true,
       "edl": "dropbox-ipv4.txt",
       "source": "Dropbox-linked ARIN product allocations",
@@ -413,6 +514,9 @@
     },
     {
       "ip": "172.66.0.227",
+      "owner": "Cloudflare",
+      "suspectedService": "Shared CDN service",
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -426,6 +530,9 @@
     },
     {
       "ip": "140.82.121.5",
+      "owner": null,
+      "suspectedService": null,
+      "verified": true,
       "covered": true,
       "edl": "github-ipv4.txt",
       "source": "GitHub Meta API fields web, api, git, and pages",
@@ -438,6 +545,9 @@
     },
     {
       "ip": "150.171.28.11",
+      "owner": null,
+      "suspectedService": null,
+      "verified": true,
       "covered": true,
       "edl": "microsoft-edge-windows-services-ipv4.txt",
       "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
@@ -453,6 +563,25 @@
     },
     {
       "ip": "17.248.209.16",
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": false,
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
+      "source_documentation": null,
+      "reason": "Apple address not returned by an in-scope official FQDN"
+    },
+    {
+      "ip": "17.145.16.2",
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -466,6 +595,9 @@
     },
     {
       "ip": "17.253.37.204",
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": true,
       "covered": true,
       "edl": "apple-xcode-developer-ipv4.txt",
       "source": "Apple enterprise Xcode download FQDN resolution",
@@ -474,14 +606,18 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "first_seen": "2026-08-22T09:00:08.705520Z",
-      "last_seen": "2026-08-22T09:00:08.705520Z",
+      "last_seen": "2026-08-22T09:29:05.060917Z",
       "observation_sources": [
+        "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24"
       ],
       "source_documentation": "https://support.apple.com/en-us/101555"
     },
     {
       "ip": "17.253.29.135",
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": true,
       "covered": true,
       "edl": "apple-xcode-developer-ipv4.txt",
       "source": "Apple enterprise Xcode download FQDN resolution",
@@ -490,9 +626,10 @@
         "devimages-cdn-origin-apple-com.v.aaplimg.com"
       ],
       "first_seen": "2026-08-22T08:46:37.008576Z",
-      "last_seen": "2026-08-22T08:46:37.008576Z",
+      "last_seen": "2026-08-22T09:29:05.060917Z",
       "observation_sources": [
-        "google-doh-ecs:82.64.0.0/24"
+        "google-doh-ecs:82.64.0.0/24",
+        "google-doh-ecs:82.66.0.0/24"
       ],
       "source_documentation": "https://support.apple.com/en-us/101555",
       "allFqdns": [
@@ -502,6 +639,9 @@
     },
     {
       "ip": "17.253.29.147",
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": true,
       "covered": true,
       "edl": "apple-xcode-developer-ipv4.txt",
       "source": "Apple enterprise Xcode download FQDN resolution",
@@ -523,19 +663,32 @@
     },
     {
       "ip": "17.253.29.140",
-      "covered": false,
-      "edl": null,
-      "source": null,
-      "fqdn": null,
-      "cname_chain": [],
-      "first_seen": null,
-      "last_seen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "reason": "Apple address not returned by an in-scope official FQDN"
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": true,
+      "covered": true,
+      "edl": "apple-xcode-developer-ipv4.txt",
+      "source": "Apple enterprise Xcode download FQDN resolution",
+      "fqdn": "devimages-cdn.apple.com",
+      "cname_chain": [
+        "devimages-cdn-origin-apple-com.v.aaplimg.com"
+      ],
+      "first_seen": "2026-08-22T09:29:05.060917Z",
+      "last_seen": "2026-08-22T09:29:05.060917Z",
+      "observation_sources": [
+        "google-doh-ecs:82.66.0.0/24"
+      ],
+      "source_documentation": "https://support.apple.com/en-us/101555",
+      "allFqdns": [
+        "devimages-cdn.apple.com",
+        "download.developer.apple.com"
+      ]
     },
     {
       "ip": "17.253.29.151",
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": true,
       "covered": true,
       "edl": "apple-xcode-developer-ipv4.txt",
       "source": "Apple enterprise Xcode download FQDN resolution",
@@ -557,6 +710,9 @@
     },
     {
       "ip": "17.253.37.209",
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": true,
       "covered": true,
       "edl": "apple-xcode-developer-ipv4.txt",
       "source": "Apple enterprise Xcode download FQDN resolution",
@@ -577,6 +733,9 @@
     },
     {
       "ip": "17.253.37.210",
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": true,
       "covered": true,
       "edl": "apple-xcode-developer-ipv4.txt",
       "source": "Apple enterprise Xcode download FQDN resolution",
@@ -594,6 +753,41 @@
     },
     {
       "ip": "17.248.209.46",
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": false,
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
+      "source_documentation": null,
+      "reason": "Apple address not returned by an in-scope official FQDN"
+    },
+    {
+      "ip": "17.248.209.62",
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": false,
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
+      "source_documentation": null,
+      "reason": "Apple address not returned by an in-scope official FQDN"
+    },
+    {
+      "ip": "17.248.209.73",
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -607,6 +801,9 @@
     },
     {
       "ip": "17.188.171.202",
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -620,19 +817,32 @@
     },
     {
       "ip": "17.111.103.20",
-      "covered": false,
-      "edl": null,
-      "source": null,
-      "fqdn": null,
-      "cname_chain": [],
-      "first_seen": null,
-      "last_seen": null,
-      "observation_sources": [],
-      "source_documentation": null,
-      "reason": "Apple address not returned by an in-scope official FQDN"
+      "owner": "Apple",
+      "suspectedService": "Apple service",
+      "verified": true,
+      "covered": true,
+      "edl": "apple-updates-ipv4.txt",
+      "source": "Apple enterprise Software updates FQDN resolution",
+      "fqdn": "gdmf.apple.com",
+      "cname_chain": [
+        "gdmf.v.aaplimg.com"
+      ],
+      "first_seen": "2026-08-22T09:29:05.060917Z",
+      "last_seen": "2026-08-22T09:29:05.060917Z",
+      "observation_sources": [
+        "system-resolver"
+      ],
+      "source_documentation": "https://support.apple.com/en-us/101555",
+      "allEdls": [
+        "apple-updates-ipv4.txt",
+        "apple-device-services-ipv4.txt"
+      ]
     },
     {
       "ip": "95.101.137.16",
+      "owner": "Akamai",
+      "suspectedService": "Apple Maps / shared CDN",
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -646,6 +856,9 @@
     },
     {
       "ip": "95.101.137.21",
+      "owner": "Akamai",
+      "suspectedService": "Apple Maps / shared CDN",
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -659,6 +872,9 @@
     },
     {
       "ip": "95.101.137.23",
+      "owner": "Akamai",
+      "suspectedService": "Apple Maps / shared CDN",
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -672,6 +888,9 @@
     },
     {
       "ip": "95.101.137.24",
+      "owner": "Akamai",
+      "suspectedService": "Apple Maps / shared CDN",
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -685,6 +904,9 @@
     },
     {
       "ip": "23.58.84.19",
+      "owner": null,
+      "suspectedService": null,
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -698,6 +920,9 @@
     },
     {
       "ip": "151.101.1.64",
+      "owner": "Fastly",
+      "suspectedService": "Shared CDN service",
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
@@ -711,6 +936,57 @@
     },
     {
       "ip": "151.101.129.64",
+      "owner": "Fastly",
+      "suspectedService": "Shared CDN service",
+      "verified": false,
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
+      "source_documentation": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "162.159.194.64",
+      "owner": "Cloudflare",
+      "suspectedService": "Shared CDN service",
+      "verified": false,
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
+      "source_documentation": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "162.159.194.66",
+      "owner": "Cloudflare",
+      "suspectedService": "Shared CDN service",
+      "verified": false,
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
+      "source_documentation": null,
+      "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
+    },
+    {
+      "ip": "172.64.69.66",
+      "owner": "Cloudflare",
+      "suspectedService": "Shared CDN service",
+      "verified": false,
       "covered": false,
       "edl": null,
       "source": null,
