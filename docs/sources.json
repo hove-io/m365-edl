@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-08-22T07:48:03.001726Z",
+  "generatedAt": "2026-08-22T08:46:37.008576Z",
   "sources": {
     "microsoft365Endpoints": {
       "publisher": "Microsoft",
       "name": "Microsoft 365 IP Address and URL web service",
       "instance": "Worldwide",
       "url": "https://endpoints.office.com/endpoints/worldwide",
-      "requestUrl": "https://endpoints.office.com/endpoints/worldwide?ClientRequestId=550f26ff-181e-451f-b674-069c954d3120&Format=JSON",
-      "clientRequestId": "550f26ff-181e-451f-b674-069c954d3120",
+      "requestUrl": "https://endpoints.office.com/endpoints/worldwide?ClientRequestId=673fa3c8-9672-4838-a4e3-ec8195122549&Format=JSON",
+      "clientRequestId": "673fa3c8-9672-4838-a4e3-ec8195122549",
       "responseRecordCount": 63,
       "field": "ips"
     },
@@ -28,7 +28,7 @@
     "teamsDirectRouting": {
       "publisher": "Microsoft",
       "learnUrl": "https://learn.microsoft.com/en-us/microsoftteams/direct-routing-plan",
-      "sha256": "d8bbfd1b43df0ea00297a42a5838508bb21dcc5d5922e00d95068b9245480069"
+      "sha256": "7eba8a3c1da43b963c1a07aa2ff71efbbeead038d9f511145b95dece5bf61198"
     },
     "intuneNetworkEndpoints": {
       "publisher": "Microsoft",
@@ -54,6 +54,16 @@
       "url": "https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/CommunicatingwithAPNs.html",
       "sha256": "071dbdad50cede26e684ed3af0c7c1879654b0aeb79bcc6ea983e5f38ebe340c",
       "purpose": "Audited concrete targets for *.push.apple.com"
+    },
+    "appleXcodeDnsObservations": {
+      "resolver": "https://dns.google/resolve",
+      "ecsSubnets": [
+        "82.64.0.0/11",
+        "82.66.0.0/16"
+      ],
+      "attemptsPerHostnameAndSubnet": 8,
+      "sha256": "743e1f3a2767ec562ea1684390fac0abb527cf990a80854420884d8548f31440",
+      "purpose": "Collect multiple current public A records for the two official Apple Xcode FQDNs from controlled France DNS views"
     },
     "githubMeta": {
       "publisher": "GitHub",
@@ -81,17 +91,17 @@
     "microsoftEdgeEndpoints": {
       "publisher": "Microsoft",
       "url": "https://learn.microsoft.com/en-us/deployedge/microsoft-edge-security-endpoints",
-      "sha256": "ba410343d135b8d86405f517cf9331783833876c20fa25b918bc9c37d4a089be"
+      "sha256": "c3a01a0e80424ef7cfc8b7641abcb87fab9b182446b75e912e0f4ecbd74aefe7"
     },
     "microsoftWindowsEndpoints": {
       "publisher": "Microsoft",
       "url": "https://learn.microsoft.com/en-us/windows/privacy/manage-windows-11-endpoints",
-      "sha256": "76ab389ba630c16eb1343752996aa49cbec6eeab46031d1ca1f0020446be1c9e"
+      "sha256": "bbfdf33236b96ed797ada15f3ef9783be8a47ad3cd83508b95f0137fd54faa7a"
     },
     "microsoftDeliveryOptimizationWorkflow": {
       "publisher": "Microsoft",
       "url": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow",
-      "sha256": "79489aa824bf0ba3fbcce3f4c7279237519102b2ef35b1b4df24c7b3e95725ef",
+      "sha256": "2b68d8521a4064f6a73098c59ab092e0e0cf5c8b093d32466da914959b89b10d",
       "validatedPatterns": [
         "*.windowsupdate.com",
         "array*.prod.do.dsp.mp.microsoft.com",
@@ -132,7 +142,7 @@
       "method": "Filter the Microsoft 365 ips field by serviceArea"
     },
     "microsoft-defender-ipv4.txt": {
-      "cidrCount": 47,
+      "cidrCount": 34,
       "hostnameCount": 32,
       "method": "Resolve selected official Defender FQDN A records to IPv4 /32",
       "scope": [
@@ -202,65 +212,52 @@
           "20.60.130.228"
         ],
         "crl.microsoft.com": [
-          "23.219.78.41",
-          "23.219.78.48"
+          "23.215.0.8",
+          "23.215.0.10"
         ],
         "ctldl.windowsupdate.com": [
-          "23.53.122.140",
-          "23.53.122.141",
-          "23.53.122.142",
-          "23.53.122.146",
-          "23.53.122.147",
-          "23.53.122.148",
-          "23.53.122.149",
-          "23.53.122.152",
-          "23.53.122.154"
+          "2.18.67.15",
+          "23.15.3.198"
         ],
         "definitionupdates.microsoft.com": [
-          "23.0.193.40"
+          "23.209.57.16"
         ],
         "download.microsoft.com": [
           "204.79.197.219"
         ],
         "download.windowsupdate.com": [
-          "151.101.22.172"
+          "146.75.30.172"
         ],
         "ecs.office.com": [
-          "52.123.248.18",
-          "52.123.248.21",
-          "52.123.248.23",
-          "52.123.248.38",
-          "52.123.248.42",
-          "52.123.248.46",
-          "52.123.248.69",
-          "52.123.248.84"
+          "52.123.128.14",
+          "52.123.129.14"
         ],
         "eu-mobile.events.data.microsoft.com": [
-          "52.178.17.235"
+          "51.116.246.104"
         ],
         "eu-v20.events.data.microsoft.com": [
-          "52.178.17.2"
+          "40.79.141.155"
         ],
         "eu.vortex-win.data.microsoft.com": [
-          "51.11.192.50"
+          "40.79.141.153"
         ],
         "europe.x.cp.wd.microsoft.com": [
           "20.50.2.45"
         ],
         "events.data.microsoft.com": [
-          "20.50.201.200"
+          "20.42.72.131"
         ],
         "fe3cr.delivery.mp.microsoft.com": [
-          "74.178.76.54"
+          "135.232.92.97"
         ],
         "go.microsoft.com": [
-          "23.0.206.8"
+          "23.220.130.208"
         ],
         "mobile.events.data.microsoft.com": [
-          "20.184.175.16"
+          "4.207.44.77"
         ],
         "settings-win.data.microsoft.com": [
-          "4.247.188.224"
+          "48.211.4.16"
         ],
         "update.microsoft.com": [
           "132.196.74.18"
@@ -272,10 +269,10 @@
           "20.209.11.97"
         ],
         "vortex-win.data.microsoft.com": [
-          "20.184.175.6"
+          "20.42.73.30"
         ],
         "wdcp.microsoft.com": [
-          "48.211.71.204"
+          "48.211.71.201"
         ],
         "wdcpalt.microsoft.com": [
           "172.178.160.17"
@@ -287,7 +284,7 @@
           "72.145.59.250"
         ],
         "winatp-gw-weu.microsoft.com": [
-          "72.145.163.206"
+          "48.209.208.170"
         ],
         "winatp-gw-weu3.microsoft.com": [
           "72.145.163.205"
@@ -299,7 +296,7 @@
           "20.60.27.132"
         ],
         "www.microsoft.com": [
-          "23.0.194.92"
+          "23.202.154.36"
         ]
       }
     },
@@ -340,83 +337,83 @@
       },
       "resolvedHostnames": {
         "au-mobile.events.data.microsoft.com": [
-          "104.46.162.224"
+          "40.79.163.155"
         ],
         "au-v20.events.data.microsoft.com": [
-          "104.46.162.231"
+          "40.79.163.155"
         ],
         "eu-mobile.events.data.microsoft.com": [
-          "52.178.17.235"
+          "51.116.246.104"
         ],
         "eu-v20.events.data.microsoft.com": [
-          "52.178.17.2"
+          "13.69.109.130"
         ],
         "events.data.microsoft.com": [
-          "20.50.201.200"
+          "20.42.72.131"
         ],
         "functional.events.data.microsoft.com": [
-          "4.207.44.64"
+          "20.184.175.15"
         ],
         "mobile.events.data.microsoft.com": [
-          "20.42.73.31"
+          "4.150.223.106"
         ],
         "self.events.data.microsoft.com": [
-          "52.178.17.234"
+          "20.42.73.30"
         ],
         "uk-mobile.events.data.microsoft.com": [
           "51.105.71.137"
         ],
         "uk-v20.events.data.microsoft.com": [
-          "51.105.71.136"
+          "51.132.193.105"
         ],
         "us-mobile.events.data.microsoft.com": [
-          "104.208.16.94"
+          "20.184.175.4"
         ],
         "us-v20.events.data.microsoft.com": [
-          "4.150.223.98"
+          "20.184.175.22"
         ],
         "v10.events.data.microsoft.com": [
-          "20.42.65.90"
+          "4.150.223.104"
         ],
         "v10c.events.data.microsoft.com": [
-          "20.184.175.13"
+          "51.116.253.169"
         ],
         "v20.events.data.microsoft.com": [
-          "20.42.65.90"
+          "4.150.223.108"
         ]
       },
       "cnameChains": {
         "au-mobile.events.data.microsoft.com": [
           "au.events.data.trafficmanager.net",
-          "onedscolprdaus50.australiasoutheast.cloudapp.azure.com"
+          "onedscolprdaue51.australiaeast.cloudapp.azure.com"
         ],
         "au-v20.events.data.microsoft.com": [
           "au.events.data.trafficmanager.net",
-          "onedscolprdaus52.australiasoutheast.cloudapp.azure.com"
+          "onedscolprdaue51.australiaeast.cloudapp.azure.com"
         ],
         "eu-mobile.events.data.microsoft.com": [
           "eu.events.data.trafficmanager.net",
-          "onedscolprdweu14.westeurope.cloudapp.azure.com"
+          "onedscolprdgwc00.germanywestcentral.cloudapp.azure.com"
         ],
         "eu-v20.events.data.microsoft.com": [
           "eu.events.data.trafficmanager.net",
-          "onedscolprdweu02.westeurope.cloudapp.azure.com"
+          "onedscolprdweu00.westeurope.cloudapp.azure.com"
         ],
         "events.data.microsoft.com": [
           "global.asimov.events.data.trafficmanager.net",
-          "onedscolprdweu04.westeurope.cloudapp.azure.com"
+          "onedscolprdeus00.eastus.cloudapp.azure.com"
         ],
         "functional.events.data.microsoft.com": [
           "global.asimov.events.data.trafficmanager.net",
-          "onedscolprdneu69.northeurope.cloudapp.azure.com"
+          "onedscolprdwus67.westus.cloudapp.azure.com"
         ],
         "mobile.events.data.microsoft.com": [
           "mobile.events.data.trafficmanager.net",
-          "onedscolprdeus21.eastus.cloudapp.azure.com"
+          "onedscolprdcus52.centralus.cloudapp.azure.com"
         ],
         "self.events.data.microsoft.com": [
           "self-events-data.trafficmanager.net",
-          "onedscolprdweu11.westeurope.cloudapp.azure.com"
+          "onedscolprdeus18.eastus.cloudapp.azure.com"
         ],
         "uk-mobile.events.data.microsoft.com": [
           "uk.events.data.trafficmanager.net",
@@ -424,27 +421,27 @@
         ],
         "uk-v20.events.data.microsoft.com": [
           "uk.events.data.trafficmanager.net",
-          "onedscolprduks00.uksouth.cloudapp.azure.com"
+          "onedscolprduks05.uksouth.cloudapp.azure.com"
         ],
         "us-mobile.events.data.microsoft.com": [
           "us.events.data.trafficmanager.net",
-          "onedscolprdcus66.centralus.cloudapp.azure.com"
+          "onedscolprdwus51.westus.cloudapp.azure.com"
         ],
         "us-v20.events.data.microsoft.com": [
           "us-v20.events.data.trafficmanager.net",
-          "onedscolprdcus61.centralus.cloudapp.azure.com"
+          "onedscolprdwus64.westus.cloudapp.azure.com"
         ],
         "v10.events.data.microsoft.com": [
           "win-global-asimov-leafs-events-data.trafficmanager.net",
-          "onedscolprdeus14.eastus.cloudapp.azure.com"
+          "onedscolprdcus60.centralus.cloudapp.azure.com"
         ],
         "v10c.events.data.microsoft.com": [
           "global.asimov.events.data.trafficmanager.net",
-          "onedscolprdwus71.westus.cloudapp.azure.com"
+          "onedscolprdgwc04.germanywestcentral.cloudapp.azure.com"
         ],
         "v20.events.data.microsoft.com": [
           "win-global-asimov-leafs-events-data.trafficmanager.net",
-          "onedscolprdeus14.eastus.cloudapp.azure.com"
+          "onedscolprdcus64.centralus.cloudapp.azure.com"
         ]
       },
       "unresolvedHostnames": {},
@@ -452,7 +449,7 @@
       "globalAzureOrAs8075RangesIncluded": false
     },
     "apple-updates-ipv4.txt": {
-      "cidrCount": 27,
+      "cidrCount": 25,
       "method": "Resolve official Apple Software updates FQDNs to IPv4 /32",
       "documentedHostnames": [
         "appldnld.apple.com",
@@ -481,79 +478,79 @@
       "wildcardResolutionTargets": {},
       "resolvedHostnames": {
         "appldnld.apple.com": [
-          "17.253.5.142",
-          "17.253.5.152"
+          "17.253.21.138",
+          "17.253.21.142"
         ],
         "configuration.apple.com": [
-          "17.253.5.148",
-          "17.253.5.154"
+          "17.253.21.131",
+          "17.253.21.144"
         ],
         "fcs-keys-pub-prod.cdn-apple.com": [
-          "17.253.5.131",
-          "17.253.5.152"
+          "17.253.21.135",
+          "17.253.21.143"
         ],
         "gdmf-ados.apple.com": [
-          "17.8.138.25"
+          "17.33.203.20"
         ],
         "gdmf.apple.com": [
-          "17.171.47.23"
+          "17.111.103.20"
         ],
         "gg.apple.com": [
-          "17.111.103.4"
+          "17.171.47.4"
         ],
         "gs.apple.com": [
-          "17.111.103.15"
+          "17.137.162.1"
         ],
         "gsra.apple.com": [
-          "17.171.47.40"
+          "17.111.103.39"
         ],
         "ig.apple.com": [
-          "17.111.103.70"
+          "17.171.47.6"
         ],
         "mesu.apple.com": [
-          "17.253.5.133",
-          "17.253.5.150"
+          "17.253.21.142",
+          "17.253.21.148"
         ],
         "oscdn.apple.com": [
-          "23.46.228.137",
-          "23.46.228.142"
+          "23.54.127.233",
+          "23.54.127.239"
         ],
         "osrecovery.apple.com": [
-          "17.156.129.133"
+          "17.132.112.132"
         ],
         "skl.apple.com": [
-          "17.111.103.71"
+          "17.171.47.73"
         ],
         "swcdn.apple.com": [
-          "17.253.5.133",
-          "17.253.5.151"
+          "17.253.21.132",
+          "17.253.21.141"
         ],
         "swdist.apple.com": [
-          "17.253.5.135",
-          "17.253.5.137",
-          "17.253.5.152",
-          "17.253.5.153"
+          "17.253.21.141",
+          "17.253.21.144",
+          "17.253.21.147",
+          "17.253.21.148"
         ],
         "swdownload.apple.com": [
           "17.156.129.140"
         ],
         "swscan.apple.com": [
-          "23.0.193.10"
+          "23.222.197.13"
         ],
         "updates-http.cdn-apple.com": [
-          "17.253.5.132",
-          "17.253.5.150"
+          "17.253.21.142",
+          "17.253.21.145"
         ],
         "updates.cdn-apple.com": [
-          "17.253.5.134",
-          "17.253.5.138"
+          "17.253.21.144",
+          "17.253.21.146"
         ],
         "wkms-public.apple.com": [
-          "17.137.160.111"
+          "17.157.64.131"
         ],
         "xp.apple.com": [
-          "17.253.5.133",
-          "17.253.5.135"
+          "17.253.21.135",
+          "17.253.21.138"
         ]
       },
       "cnameChains": {
@@ -624,7 +621,7 @@
         ],
         "wkms-public.apple.com": [
           "wkms-public.v.aaplimg.com",
-          "wkms-public-prod.prz.sbz.apple.com"
+          "wkms-public-prod.msc.sbz.apple.com"
         ],
         "xp.apple.com": [
           "xp.g.aaplimg.com"
@@ -633,7 +630,7 @@
       "unresolvedHostnames": {}
     },
     "apple-appstore-content-ipv4.txt": {
-      "cidrCount": 18,
+      "cidrCount": 22,
       "method": "Resolve official Apple Apps and additional content FQDNs to IPv4 /32",
       "documentedHostnames": [
         "*.appattest.apple.com",
@@ -681,43 +678,49 @@
       },
       "resolvedHostnames": {
         "api.apple-cloudkit.com": [
-          "17.248.194.8",
-          "17.248.194.15",
-          "17.248.194.64",
-          "17.248.194.65"
+          "17.248.228.12",
+          "17.248.228.27",
+          "17.248.228.64",
+          "17.248.228.68",
+          "17.248.228.69",
+          "17.248.228.70",
+          "17.248.228.71"
         ],
         "apps.apple.com": [
-          "151.101.23.6"
+          "146.75.39.6"
         ],
         "audiocontentdownload.apple.com": [
-          "17.253.5.139",
-          "17.253.5.151"
+          "17.253.21.143",
+          "17.253.21.145"
         ],
         "gateway.icloud.com": [
-          "17.248.194.8",
-          "17.248.194.15",
-          "17.248.194.65"
+          "17.248.228.12",
+          "17.248.228.27",
+          "17.248.228.66",
+          "17.248.228.68",
+          "17.248.228.69",
+          "17.248.228.70"
         ],
         "itunes.apple.com": [
-          "23.0.192.32"
+          "23.222.196.33"
         ],
         "mzstatic.com": [
           "17.253.142.4"
         ],
         "ppq.apple.com": [
-          "17.33.192.136",
-          "17.33.193.105",
-          "17.33.194.109"
+          "17.33.200.235",
+          "17.33.201.70",
+          "17.33.202.170"
         ],
         "sylvan.apple.com": [
-          "17.253.5.142",
-          "17.253.5.143"
+          "17.253.21.140",
+          "17.253.21.150"
         ],
         "token.safebrowsing.apple": [
-          "17.253.31.131",
-          "17.253.31.140",
-          "17.253.31.142",
-          "17.253.31.195"
+          "17.253.21.131",
+          "17.253.21.137",
+          "17.253.21.138",
+          "17.253.21.141"
         ]
       },
       "cnameChains": {
@@ -743,7 +746,7 @@
         "mzstatic.com": [],
         "ppq.apple.com": [
           "ppq-ext.v.aaplimg.com",
-          "usw2-ppq-ext-prod.apple.com"
+          "use1-ppq-ext-prod.apple.com"
         ],
         "sylvan.apple.com": [
           "sylvan.g.aaplimg.com"
@@ -760,7 +763,7 @@
       }
     },
     "apple-device-services-ipv4.txt": {
-      "cidrCount": 36,
+      "cidrCount": 34,
       "method": "Resolve official Apple Device setup, Device management, and audited APNs FQDNs to IPv4 /32",
       "documentedHostnames": [
         "*.appattest.apple.com",
@@ -827,29 +830,29 @@
       },
       "resolvedHostnames": {
         "albert.apple.com": [
-          "17.179.124.120"
+          "17.32.214.169"
         ],
         "api.development.push.apple.com": [
-          "17.188.168.135",
-          "17.188.168.147",
-          "17.188.168.149"
+          "17.188.143.34",
+          "17.188.143.66",
+          "17.188.143.98"
         ],
         "api.push.apple.com": [
-          "17.188.143.10",
-          "17.188.143.171",
-          "17.188.143.236",
-          "17.188.178.6",
-          "17.188.178.7",
-          "17.188.178.8",
-          "17.188.178.101",
-          "17.188.179.40"
+          "17.188.180.9",
+          "17.188.180.13",
+          "17.188.180.14",
+          "17.188.180.141",
+          "17.188.180.204",
+          "17.188.181.201",
+          "17.188.181.202",
+          "17.188.182.139"
         ],
         "axm-servicediscovery.apple.com": [
           "17.33.201.240"
         ],
         "captive.apple.com": [
-          "17.253.5.134",
-          "17.253.5.144"
+          "17.253.21.134",
+          "17.253.21.139"
         ],
         "deviceenrollment.apple.com": [
           "17.156.129.65"
@@ -858,56 +861,54 @@
           "17.179.240.222"
         ],
         "gdmf.apple.com": [
-          "17.171.47.23"
+          "17.111.103.20"
         ],
         "gs.apple.com": [
-          "17.111.103.15"
+          "17.137.162.1"
         ],
         "humb.apple.com": [
-          "17.137.163.2"
+          "17.111.103.19"
         ],
         "identity.apple.com": [
-          "17.32.194.67"
+          "17.179.244.134"
         ],
         "iprofiles.apple.com": [
           "17.156.129.66"
         ],
         "mdmenrollment.apple.com": [
-          "17.248.194.8",
-          "17.248.194.15",
-          "17.248.194.64",
-          "17.248.194.65",
-          "17.248.194.66",
-          "17.248.194.67"
+          "17.248.228.12",
+          "17.248.228.19",
+          "17.248.228.27",
+          "17.248.228.66"
         ],
         "setup.icloud.com": [
-          "17.248.194.8",
-          "17.248.194.15",
-          "17.248.194.65"
+          "17.248.228.12",
+          "17.248.228.19",
+          "17.248.228.27"
         ],
         "sq-device.apple.com": [
-          "17.179.244.122"
+          "17.32.208.187"
         ],
         "static.ips.apple.com": [
-          "184.25.191.176"
+          "23.207.135.111"
         ],
         "tbsc.apple.com": [
-          "17.111.103.72"
+          "17.171.47.16"
         ],
         "time-ios.apple.com": [
-          "17.253.4.37",
-          "17.253.16.125",
-          "17.253.16.253"
+          "17.253.2.35",
+          "17.253.2.45",
+          "17.253.20.45"
         ],
         "time-macos.apple.com": [
-          "17.253.4.45",
-          "17.253.16.125",
-          "17.253.16.253"
+          "17.253.2.35",
+          "17.253.2.37",
+          "17.253.20.45"
         ],
         "time.apple.com": [
-          "17.253.4.37",
-          "17.253.16.125",
-          "17.253.16.253"
+          "17.253.2.35",
+          "17.253.2.45",
+          "17.253.20.45"
         ],
         "vpp.itunes.apple.com": [
           "17.157.96.194"
@@ -960,7 +961,7 @@
         ],
         "sq-device.apple.com": [
           "sq-device.v.aaplimg.com",
-          "rn-sq-device.apple.com"
+          "ma-sq-device.apple.com"
         ],
         "static.ips.apple.com": [
           "static-ips-geo-gcsis-apple-com.v.aaplimg.com",
@@ -989,8 +990,8 @@
       "forbiddenFallback": "17.0.0.0/8"
     },
     "apple-xcode-developer-ipv4.txt": {
-      "cidrCount": 4,
-      "method": "Resolve only the Xcode downloadable-component FQDNs from Apple's official Apps and additional content table to IPv4 /32",
+      "cidrCount": 36,
+      "method": "Resolve only the Xcode downloadable-component FQDNs from Apple's official Apps and additional content table, then retain DNS-proven IPv4 /32 records for a rolling 24-hour window",
       "documentedHostnames": [
         "devimages-cdn.apple.com",
         "download.developer.apple.com"
@@ -1000,11 +1001,146 @@
       "resolvedHostnames": {
         "devimages-cdn.apple.com": [
           "17.253.5.131",
-          "17.253.5.133"
+          "17.253.5.133",
+          "17.253.21.135",
+          "17.253.21.137",
+          "17.253.29.135",
+          "17.253.29.136",
+          "17.253.29.137",
+          "17.253.29.141",
+          "17.253.29.142",
+          "17.253.29.148",
+          "17.253.29.149",
+          "17.253.29.150",
+          "17.253.29.152",
+          "17.253.29.154",
+          "17.253.37.198",
+          "17.253.37.199",
+          "17.253.37.200",
+          "17.253.37.201",
+          "17.253.37.205",
+          "17.253.37.206",
+          "17.253.37.207",
+          "17.253.37.209"
         ],
         "download.developer.apple.com": [
           "17.253.5.142",
-          "17.253.5.146"
+          "17.253.5.146",
+          "17.253.21.136",
+          "17.253.21.146",
+          "17.253.29.131",
+          "17.253.29.132",
+          "17.253.29.133",
+          "17.253.29.136",
+          "17.253.29.142",
+          "17.253.29.143",
+          "17.253.29.144",
+          "17.253.29.146",
+          "17.253.29.147",
+          "17.253.29.149",
+          "17.253.29.151",
+          "17.253.37.195",
+          "17.253.37.198",
+          "17.253.37.199",
+          "17.253.37.200",
+          "17.253.37.208",
+          "17.253.37.209"
+        ]
+      },
+      "currentResolvedHostnames": {
+        "devimages-cdn.apple.com": [
+          "17.253.21.135",
+          "17.253.21.137",
+          "17.253.29.135",
+          "17.253.29.136",
+          "17.253.29.137",
+          "17.253.29.141",
+          "17.253.29.142",
+          "17.253.29.148",
+          "17.253.29.149",
+          "17.253.29.150",
+          "17.253.29.152",
+          "17.253.29.154",
+          "17.253.37.198",
+          "17.253.37.199",
+          "17.253.37.200",
+          "17.253.37.201",
+          "17.253.37.205",
+          "17.253.37.206",
+          "17.253.37.207",
+          "17.253.37.209"
+        ],
+        "download.developer.apple.com": [
+          "17.253.21.136",
+          "17.253.21.146",
+          "17.253.29.131",
+          "17.253.29.132",
+          "17.253.29.133",
+          "17.253.29.136",
+          "17.253.29.142",
+          "17.253.29.143",
+          "17.253.29.144",
+          "17.253.29.146",
+          "17.253.29.147",
+          "17.253.29.149",
+          "17.253.29.151",
+          "17.253.37.195",
+          "17.253.37.198",
+          "17.253.37.199",
+          "17.253.37.200",
+          "17.253.37.208",
+          "17.253.37.209"
+        ]
+      },
+      "nativeResolvedHostnames": {
+        "devimages-cdn.apple.com": [
+          "17.253.21.135",
+          "17.253.21.137"
+        ],
+        "download.developer.apple.com": [
+          "17.253.21.136",
+          "17.253.21.146"
+        ]
+      },
+      "dohResolvedHostnames": {
+        "devimages-cdn.apple.com": [
+          "17.253.29.135",
+          "17.253.29.136",
+          "17.253.29.137",
+          "17.253.29.141",
+          "17.253.29.142",
+          "17.253.29.148",
+          "17.253.29.149",
+          "17.253.29.150",
+          "17.253.29.152",
+          "17.253.29.154",
+          "17.253.37.198",
+          "17.253.37.199",
+          "17.253.37.200",
+          "17.253.37.201",
+          "17.253.37.205",
+          "17.253.37.206",
+          "17.253.37.207",
+          "17.253.37.209"
+        ],
+        "download.developer.apple.com": [
+          "17.253.29.131",
+          "17.253.29.132",
+          "17.253.29.133",
+          "17.253.29.136",
+          "17.253.29.142",
+          "17.253.29.143",
+          "17.253.29.144",
+          "17.253.29.146",
+          "17.253.29.147",
+          "17.253.29.149",
+          "17.253.29.151",
+          "17.253.37.195",
+          "17.253.37.198",
+          "17.253.37.199",
+          "17.253.37.200",
+          "17.253.37.208",
+          "17.253.37.209"
         ]
       },
       "cnameChains": {
@@ -1015,8 +1151,458 @@
           "dd-cdn-origin-apple-com.v.aaplimg.com"
         ]
       },
+      "dnsObservationAttempts": {
+        "devimages-cdn.apple.com@82.64.0.0/11": 8,
+        "devimages-cdn.apple.com@82.66.0.0/16": 8,
+        "download.developer.apple.com@82.64.0.0/11": 8,
+        "download.developer.apple.com@82.66.0.0/16": 8
+      },
+      "dnsHistory": {
+        "gracePeriodHours": 24,
+        "recordsByHostname": {
+          "download.developer.apple.com": {
+            "17.253.5.142": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T07:48:03.001726Z",
+              "lastSeen": "2026-08-22T07:48:03.001726Z",
+              "observationSources": [
+                "previous-published-dns-snapshot"
+              ]
+            },
+            "17.253.5.146": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T07:48:03.001726Z",
+              "lastSeen": "2026-08-22T07:48:03.001726Z",
+              "observationSources": [
+                "previous-published-dns-snapshot"
+              ]
+            },
+            "17.253.21.136": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "system-resolver"
+              ]
+            },
+            "17.253.21.146": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "system-resolver"
+              ]
+            },
+            "17.253.29.131": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.64.0.0/24"
+              ]
+            },
+            "17.253.29.132": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.64.0.0/24"
+              ]
+            },
+            "17.253.29.133": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.64.0.0/24"
+              ]
+            },
+            "17.253.29.136": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.64.0.0/24"
+              ]
+            },
+            "17.253.29.142": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.29.143": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.29.144": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.29.146": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.64.0.0/24"
+              ]
+            },
+            "17.253.29.147": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.29.149": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.29.151": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.64.0.0/24",
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.37.195": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.37.198": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.64.0.0/24"
+              ]
+            },
+            "17.253.37.199": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.37.200": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.37.208": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.37.209": {
+              "cnameChain": [
+                "dd-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.64.0.0/24"
+              ]
+            }
+          },
+          "devimages-cdn.apple.com": {
+            "17.253.5.131": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T07:48:03.001726Z",
+              "lastSeen": "2026-08-22T07:48:03.001726Z",
+              "observationSources": [
+                "previous-published-dns-snapshot"
+              ]
+            },
+            "17.253.5.133": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T07:48:03.001726Z",
+              "lastSeen": "2026-08-22T07:48:03.001726Z",
+              "observationSources": [
+                "previous-published-dns-snapshot"
+              ]
+            },
+            "17.253.21.135": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "system-resolver"
+              ]
+            },
+            "17.253.21.137": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "system-resolver"
+              ]
+            },
+            "17.253.29.135": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.64.0.0/24"
+              ]
+            },
+            "17.253.29.136": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.64.0.0/24",
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.29.137": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.29.141": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.29.142": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.29.148": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.29.149": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.29.150": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.29.152": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.64.0.0/24"
+              ]
+            },
+            "17.253.29.154": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.64.0.0/24"
+              ]
+            },
+            "17.253.37.198": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.37.199": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.37.200": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.64.0.0/24",
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.37.201": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.64.0.0/24"
+              ]
+            },
+            "17.253.37.205": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.64.0.0/24"
+              ]
+            },
+            "17.253.37.206": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.37.207": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            },
+            "17.253.37.209": {
+              "cnameChain": [
+                "devimages-cdn-origin-apple-com.v.aaplimg.com"
+              ],
+              "firstSeen": "2026-08-22T08:46:37.008576Z",
+              "lastSeen": "2026-08-22T08:46:37.008576Z",
+              "observationSources": [
+                "google-doh-ecs:82.66.0.0/24"
+              ]
+            }
+          }
+        },
+        "expiredThisRun": []
+      },
       "unresolvedHostnames": {},
-      "forbiddenFallback": "17.0.0.0/8 or global CDN ranges"
+      "forbiddenFallback": "17.0.0.0/8 or global CDN ranges",
+      "manualIpOverrides": false
     },
     "github-ipv4.txt": {
       "cidrCount": 70,
@@ -1087,7 +1673,7 @@
       ],
       "resolvedHostnames": {
         "downloads.dell.com": [
-          "23.0.194.49"
+          "23.220.128.45"
         ]
       },
       "cnameChains": {
@@ -1101,7 +1687,7 @@
       "unresolvedHostnames": {}
     },
     "microsoft-edge-windows-services-ipv4.txt": {
-      "cidrCount": 48,
+      "cidrCount": 43,
       "method": "Resolve selected official Microsoft Edge and Windows FQDNs to IPv4 /32, then remove networks already covered by existing EDLs",
       "edgeHostnames": [
         "clients.config.office.net",
@@ -1206,8 +1792,8 @@
       },
       "resolvedHostnames": {
         "adl.windows.com": [
-          "23.46.228.134",
-          "23.46.228.140"
+          "23.55.176.233",
+          "23.55.176.238"
         ],
         "array504.prod.do.dsp.mp.microsoft.com": [
           "72.153.5.61"
@@ -1225,164 +1811,156 @@
           "72.154.7.101"
         ],
         "checkappexec.microsoft.com": [
-          "13.91.222.61"
+          "4.152.133.8"
         ],
         "clients.config.office.net": [
-          "23.103.226.30",
-          "23.103.226.48",
-          "23.103.226.70",
-          "23.103.226.80"
+          "23.103.226.130",
+          "23.103.226.193",
+          "23.103.226.195",
+          "23.103.226.200"
         ],
         "config.edge.skype.com": [
           "150.171.22.17"
         ],
         "ctldl.windowsupdate.com": [
-          "151.101.22.172"
+          "146.75.30.172"
         ],
         "data-edge.smartscreen.microsoft.com": [
-          "172.183.192.109"
+          "65.52.241.40"
         ],
         "definitionupdates.microsoft.com": [
-          "184.28.3.35"
+          "23.209.57.16"
         ],
         "disc501.prod.do.dsp.mp.microsoft.com": [
-          "23.0.193.209"
+          "23.220.130.206"
         ],
         "disc601.prod.do.dsp.mp.microsoft.com": [
-          "184.28.10.33"
+          "23.209.57.248"
         ],
         "disc801.prod.do.dsp.mp.microsoft.com": [
-          "23.0.194.39"
+          "23.220.128.75"
         ],
         "displaycatalog.mp.microsoft.com": [
-          "150.171.110.146"
+          "150.171.109.72"
         ],
         "dl.delivery.mp.microsoft.com": [
-          "23.46.228.132",
-          "23.46.228.139"
+          "109.61.38.38"
         ],
         "download.windowsupdate.com": [
-          "23.53.122.134",
-          "23.53.122.141",
-          "23.53.122.146",
-          "23.53.122.151",
-          "23.53.122.152"
+          "109.61.38.38"
         ],
         "edge.microsoft.com": [
           "150.171.27.11",
           "150.171.28.11"
         ],
         "edgepasskeysenclave.microsoft.com": [
-          "150.171.110.145"
+          "150.171.109.73"
         ],
         "fe3cr.delivery.mp.microsoft.com": [
-          "74.178.76.54"
+          "135.232.92.97"
         ],
         "geo-prod.do.dsp.mp.microsoft.com": [
-          "72.145.35.111"
+          "72.145.35.109"
         ],
         "geo.prod.do.dsp.mp.microsoft.com": [
-          "72.145.35.111"
+          "72.145.35.109"
         ],
         "geover-prod.do.dsp.mp.microsoft.com": [
-          "23.48.19.147"
+          "23.204.195.134"
         ],
         "geover.prod.do.dsp.mp.microsoft.com": [
-          "23.0.193.209"
+          "23.209.57.176"
         ],
         "kv501.prod.do.dsp.mp.microsoft.com": [
-          "23.0.193.209"
+          "23.220.130.206"
         ],
         "kv601.prod.do.dsp.mp.microsoft.com": [
-          "23.0.194.34"
+          "23.209.57.248"
         ],
         "kv801.prod.do.dsp.mp.microsoft.com": [
-          "23.0.194.39"
+          "23.220.128.75"
         ],
         "licensing.mp.microsoft.com": [
-          "4.155.93.171"
+          "20.7.249.125"
         ],
         "manage.devcenter.microsoft.com": [
-          "40.83.144.61"
+          "4.255.90.245"
         ],
         "msedge.api.cdp.microsoft.com": [
-          "74.179.71.159"
+          "135.232.92.34"
         ],
         "msedge.b.dl.delivery.mp.microsoft.com": [
-          "151.101.22.172"
-        ],
-        "msedge.b.tlu.dl.delivery.mp.microsoft.com": [
-          "151.101.22.172"
-        ],
-        "msedge.f.dl.delivery.mp.microsoft.com": [
-          "151.101.22.172"
-        ],
-        "msedge.f.tlu.dl.delivery.mp.microsoft.com": [
-          "151.101.22.172"
-        ],
-        "msedge.sb.dl.delivery.mp.microsoft.com": [
-          "151.101.22.172"
-        ],
-        "msedge.sb.tlu.dl.delivery.mp.microsoft.com": [
-          "23.219.78.38",
-          "23.219.78.45"
-        ],
-        "msedge.sf.dl.delivery.mp.microsoft.com": [
-          "23.219.78.37",
-          "23.219.78.38"
-        ],
-        "msedge.sf.tlu.dl.delivery.mp.microsoft.com": [
-          "23.46.228.141",
-          "23.46.228.142"
-        ],
-        "msedgeextensions.b.dl.delivery.mp.microsoft.com": [
-          "23.219.78.37",
-          "23.219.78.46"
-        ],
-        "msedgeextensions.b.tlu.dl.delivery.mp.microsoft.com": [
           "109.61.38.38"
         ],
+        "msedge.b.tlu.dl.delivery.mp.microsoft.com": [
+          "146.75.38.172"
+        ],
+        "msedge.f.dl.delivery.mp.microsoft.com": [
+          "23.53.11.39",
+          "23.53.11.104"
+        ],
+        "msedge.f.tlu.dl.delivery.mp.microsoft.com": [
+          "146.75.38.172"
+        ],
+        "msedge.sb.dl.delivery.mp.microsoft.com": [
+          "23.53.11.40",
+          "23.54.127.240"
+        ],
+        "msedge.sb.tlu.dl.delivery.mp.microsoft.com": [
+          "146.75.38.172"
+        ],
+        "msedge.sf.dl.delivery.mp.microsoft.com": [
+          "146.75.30.172"
+        ],
+        "msedge.sf.tlu.dl.delivery.mp.microsoft.com": [
+          "23.53.11.74",
+          "23.54.127.203"
+        ],
+        "msedgeextensions.b.dl.delivery.mp.microsoft.com": [
+          "109.61.38.38"
+        ],
+        "msedgeextensions.b.tlu.dl.delivery.mp.microsoft.com": [
+          "146.75.38.172"
+        ],
         "msedgeextensions.f.dl.delivery.mp.microsoft.com": [
-          "151.101.22.172"
+          "146.75.30.172"
         ],
         "msedgeextensions.f.tlu.dl.delivery.mp.microsoft.com": [
-          "151.101.22.172"
+          "109.61.38.38"
         ],
         "msedgeextensions.sb.dl.delivery.mp.microsoft.com": [
-          "151.101.22.172"
+          "146.75.38.172"
         ],
         "msedgeextensions.sb.tlu.dl.delivery.mp.microsoft.com": [
-          "23.219.78.38",
-          "23.219.78.45"
+          "146.75.38.172"
         ],
         "msedgeextensions.sf.dl.delivery.mp.microsoft.com": [
-          "23.46.228.133",
-          "23.46.228.142"
+          "23.53.11.44",
+          "23.54.127.240"
         ],
         "msedgeextensions.sf.tlu.dl.delivery.mp.microsoft.com": [
-          "23.219.78.38",
-          "23.219.78.45"
+          "146.75.38.172"
         ],
         "nav-edge.smartscreen.microsoft.com": [
-          "104.40.82.182"
+          "52.159.108.190"
         ],
         "ping-edge.smartscreen.microsoft.com": [
-          "4.249.200.148"
+          "4.153.29.52"
         ],
         "settings-win.data.microsoft.com": [
-          "57.155.101.212"
+          "48.211.4.16"
         ],
         "settings.data.microsoft.com": [
-          "172.215.188.225"
+          "57.154.63.210"
         ],
         "share.microsoft.com": [
-          "184.25.191.127"
+          "23.4.189.138"
         ],
         "storecatalogrevocation.storequality.microsoft.com": [
-          "150.171.110.146"
+          "150.171.109.73"
         ],
         "storeedgefd.dsx.mp.microsoft.com": [
-          "23.0.206.159"
+          "23.220.129.191"
         ],
         "telecommand.telemetry.microsoft.com": [
           "20.118.138.130"
@@ -1409,7 +1987,7 @@
         "array808.prod.do.dsp.mp.microsoft.com": [],
         "checkappexec.microsoft.com": [
           "prod-atm-wds-apprep.trafficmanager.net",
-          "prod-agic-wu-4.westus.cloudapp.azure.com"
+          "prod-agic-eu2-3.eastus2.cloudapp.azure.com"
         ],
         "clients.config.office.net": [
           "cloudpolicyclientsconfig.originmira.tm.svc.cloud.microsoft",
@@ -1428,7 +2006,7 @@
         ],
         "data-edge.smartscreen.microsoft.com": [
           "prod-atm-wds-edge.trafficmanager.net",
-          "prod-agic-ncu-2.northcentralus.cloudapp.azure.com"
+          "prod-agic-ncu-4.northcentralus.cloudapp.azure.com"
         ],
         "definitionupdates.microsoft.com": [
           "definitionupdates.microsoft.com.edgekey.net",
@@ -1454,14 +2032,12 @@
         "dl.delivery.mp.microsoft.com": [
           "dl.delivery.mp.microsoft.com.delivery.microsoft.com",
           "dcat-f-nlu-net.trafficmanager.net",
-          "dl.delivery.mp.microsoft.com-c.edgesuite.net",
-          "a1683.dscd.akamai.net"
+          "cl-glcb907925.globalcdn.co"
         ],
         "download.windowsupdate.com": [
           "download.windowsupdate.com.delivery.microsoft.com",
           "wu-f-net.trafficmanager.net",
-          "download.windowsupdate.com.edgesuite.net",
-          "a767.dspw65.akamai.net"
+          "cl-glcb907925.globalcdn.co"
         ],
         "edge.microsoft.com": [
           "edge-microsoft-com.ax-0002.ax-msedge.net",
@@ -1478,11 +2054,11 @@
         "geo-prod.do.dsp.mp.microsoft.com": [
           "geo.prod.do.dsp.mp.microsoft.com",
           "geo.prod.do.dsp.trafficmanager.net",
-          "array616.prod.do.dsp.mp.microsoft.com"
+          "array614.prod.do.dsp.mp.microsoft.com"
         ],
         "geo.prod.do.dsp.mp.microsoft.com": [
           "geo.prod.do.dsp.trafficmanager.net",
-          "array616.prod.do.dsp.mp.microsoft.com"
+          "array614.prod.do.dsp.mp.microsoft.com"
         ],
         "geover-prod.do.dsp.mp.microsoft.com": [
           "geover-prod.prod.do.dsp.mp.microsoft.com",
@@ -1508,13 +2084,13 @@
         "licensing.mp.microsoft.com": [
           "consumer-licensing-aks2aks.md.mp.microsoft.com.akadns.net",
           "licensing-prod-frontdoor-geomap.trafficmanager.net",
-          "wus2-8.frontdoor.licensing.commerce.microsoft.com"
+          "eus2-6.frontdoor.licensing.commerce.microsoft.com"
         ],
         "manage.devcenter.microsoft.com": [
           "devcenterapi.azure-api.net",
           "apimgmttmr17ij3jt5dneg64srod9jevcuajxaoube4brtu9cq.trafficmanager.net",
-          "devcenterapi-westus-01.regional.azure-api.net",
-          "api78a2b3a421b841ac9b3e4c53c235e088ce7c1za9ksamvizc7hr2r.westus.cloudapp.azure.com"
+          "devcenterapi-eastus-01.regional.azure-api.net",
+          "api78a2b3a421b841ac9b3e4c53c235e088vltthrbjmcdjcfkv0fiyf.eastus.cloudapp.azure.com"
         ],
         "msedge.api.cdp.microsoft.com": [
           "api.cdp.microsoft.com",
@@ -1523,7 +2099,7 @@
         "msedge.b.dl.delivery.mp.microsoft.com": [
           "star.b.dl.delivery.mp.microsoft.com.delivery.microsoft.com",
           "cdp-f-nlu-net.trafficmanager.net",
-          "fg.microsoft.map.fastly.net"
+          "cl-glcb907925.globalcdn.co"
         ],
         "msedge.b.tlu.dl.delivery.mp.microsoft.com": [
           "star.b.tlu.dl.delivery.mp.microsoft.com.delivery.microsoft.com",
@@ -1533,7 +2109,8 @@
         "msedge.f.dl.delivery.mp.microsoft.com": [
           "star.f.dl.delivery.mp.microsoft.com.delivery.microsoft.com",
           "cdp-f-nlu-net.trafficmanager.net",
-          "fg.microsoft.map.fastly.net"
+          "wildcard.f.dl.delivery.mp.microsoft.com.edgesuite.net",
+          "a1996.dscd.akamai.net"
         ],
         "msedge.f.tlu.dl.delivery.mp.microsoft.com": [
           "star.f.tlu.dl.delivery.mp.microsoft.com.delivery.microsoft.com",
@@ -1543,19 +2120,18 @@
         "msedge.sb.dl.delivery.mp.microsoft.com": [
           "star.sb.dl.delivery.mp.microsoft.com.delivery.microsoft.com",
           "cdp-f-ssl-nlu-net.trafficmanager.net",
-          "fg.microsoft.map.fastly.net"
+          "star.sb.dl.delivery.mp.microsoft.com.edgesuite.net",
+          "a952.dscd.akamai.net"
         ],
         "msedge.sb.tlu.dl.delivery.mp.microsoft.com": [
           "star.sb.tlu.dl.delivery.mp.microsoft.com.delivery.microsoft.com",
           "cdp-f-ssl-tlu-net.trafficmanager.net",
-          "star.sb.tlu.dl.delivery.mp.microsoft.com.edgesuite.net",
-          "a2033.dscd.akamai.net"
+          "fg.microsoft.map.fastly.net"
         ],
         "msedge.sf.dl.delivery.mp.microsoft.com": [
           "star.sf.dl.delivery.mp.microsoft.com.delivery.microsoft.com",
           "cdp-f-ssl-nlu-net.trafficmanager.net",
-          "star.sb.dl.delivery.mp.microsoft.com.edgesuite.net",
-          "a952.dscd.akamai.net"
+          "fg.microsoft.map.fastly.net"
         ],
         "msedge.sf.tlu.dl.delivery.mp.microsoft.com": [
           "star.sf.tlu.dl.delivery.mp.microsoft.com.delivery.microsoft.com",
@@ -1566,13 +2142,12 @@
         "msedgeextensions.b.dl.delivery.mp.microsoft.com": [
           "star.b.dl.delivery.mp.microsoft.com.delivery.microsoft.com",
           "cdp-f-nlu-net.trafficmanager.net",
-          "wildcard.f.dl.delivery.mp.microsoft.com.edgesuite.net",
-          "a1996.dscd.akamai.net"
+          "cl-glcb907925.globalcdn.co"
         ],
         "msedgeextensions.b.tlu.dl.delivery.mp.microsoft.com": [
           "star.b.tlu.dl.delivery.mp.microsoft.com.delivery.microsoft.com",
           "cdp-f-tlu-net.trafficmanager.net",
-          "cl-glcb907925.globalcdn.co"
+          "fg.microsoft.map.fastly.net"
         ],
         "msedgeextensions.f.dl.delivery.mp.microsoft.com": [
           "star.f.dl.delivery.mp.microsoft.com.delivery.microsoft.com",
@@ -1582,7 +2157,7 @@
         "msedgeextensions.f.tlu.dl.delivery.mp.microsoft.com": [
           "star.f.tlu.dl.delivery.mp.microsoft.com.delivery.microsoft.com",
           "cdp-f-tlu-net.trafficmanager.net",
-          "fg.microsoft.map.fastly.net"
+          "cl-glcb907925.globalcdn.co"
         ],
         "msedgeextensions.sb.dl.delivery.mp.microsoft.com": [
           "star.sb.dl.delivery.mp.microsoft.com.delivery.microsoft.com",
@@ -1592,8 +2167,7 @@
         "msedgeextensions.sb.tlu.dl.delivery.mp.microsoft.com": [
           "star.sb.tlu.dl.delivery.mp.microsoft.com.delivery.microsoft.com",
           "cdp-f-ssl-tlu-net.trafficmanager.net",
-          "star.sb.tlu.dl.delivery.mp.microsoft.com.edgesuite.net",
-          "a2033.dscd.akamai.net"
+          "fg.microsoft.map.fastly.net"
         ],
         "msedgeextensions.sf.dl.delivery.mp.microsoft.com": [
           "star.sf.dl.delivery.mp.microsoft.com.delivery.microsoft.com",
@@ -1604,24 +2178,23 @@
         "msedgeextensions.sf.tlu.dl.delivery.mp.microsoft.com": [
           "star.sf.tlu.dl.delivery.mp.microsoft.com.delivery.microsoft.com",
           "cdp-f-ssl-tlu-net.trafficmanager.net",
-          "star.sb.tlu.dl.delivery.mp.microsoft.com.edgesuite.net",
-          "a2033.dscd.akamai.net"
+          "fg.microsoft.map.fastly.net"
         ],
         "nav-edge.smartscreen.microsoft.com": [
           "prod-atm-wds-edge.trafficmanager.net",
-          "prod-agic-wu-3.westus.cloudapp.azure.com"
+          "prod-agic-ncu-1.northcentralus.cloudapp.azure.com"
         ],
         "ping-edge.smartscreen.microsoft.com": [
           "prod-atm-wds-edge.trafficmanager.net",
-          "prod-agic-cu-1.centralus.cloudapp.azure.com"
+          "prod-agic-eu2-1.eastus2.cloudapp.azure.com"
         ],
         "settings-win.data.microsoft.com": [
           "atm-settingsfe-prod-geo2.trafficmanager.net",
-          "settings-prod-sea-2-tagged.southeastasia.cloudapp.azure.com"
+          "settings-prod-eus-1-tagged.eastus.cloudapp.azure.com"
         ],
         "settings.data.microsoft.com": [
           "atm-settingsfe-prod-geo2.trafficmanager.net",
-          "settings-prod-scus-2-tagged.southcentralus.cloudapp.azure.com"
+          "settings-prod-wus3-1-tagged.westus3.cloudapp.azure.com"
         ],
         "share.microsoft.com": [
           "share.microsoft.com.edgekey.net",
@@ -1657,22 +2230,19 @@
       },
       "unresolvedHostnames": {},
       "excludedExistingNetworks": {
-        "23.53.122.141/32": [
+        "23.209.57.16/32": [
           "microsoft-defender-ipv4.txt"
         ],
-        "23.53.122.146/32": [
-          "microsoft-defender-ipv4.txt"
-        ],
-        "23.53.122.152/32": [
-          "microsoft-defender-ipv4.txt"
-        ],
-        "74.178.76.54/32": [
+        "48.211.4.16/32": [
           "microsoft-defender-ipv4.txt"
         ],
         "132.196.74.18/32": [
           "microsoft-defender-ipv4.txt"
         ],
-        "151.101.22.172/32": [
+        "135.232.92.97/32": [
+          "microsoft-defender-ipv4.txt"
+        ],
+        "146.75.30.172/32": [
           "microsoft-defender-ipv4.txt"
         ]
       },

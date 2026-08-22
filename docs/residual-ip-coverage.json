@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T07:48:03.001726Z",
+  "generatedAt": "2026-08-22T08:46:37.008576Z",
   "policy": "Coverage is reported only from generated EDL content; unmatched IPs are never added to force coverage",
   "entries": [
     {
@@ -9,6 +9,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
@@ -19,6 +22,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
@@ -29,6 +35,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
@@ -39,6 +48,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
@@ -49,6 +61,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
@@ -59,18 +74,26 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
       "ip": "4.150.223.104",
-      "covered": false,
-      "edl": null,
-      "source": null,
-      "fqdn": null,
-      "cname_chain": [],
-      "source_documentation": null,
-      "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
+      "covered": true,
+      "edl": "microsoft-intune-windows-ipv4.txt",
+      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
+      "fqdn": "v10.events.data.microsoft.com",
+      "cname_chain": [
+        "win-global-asimov-leafs-events-data.trafficmanager.net",
+        "onedscolprdcus60.centralus.cloudapp.azure.com"
+      ],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
+      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints"
     },
     {
       "ip": "4.150.223.115",
@@ -79,6 +102,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
@@ -89,6 +115,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
@@ -99,6 +128,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Apple address not returned by an in-scope official FQDN"
     },
@@ -109,6 +141,9 @@
       "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
       "fqdn": "array504.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow"
     },
     {
@@ -118,6 +153,9 @@
       "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
       "fqdn": "array508.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow"
     },
     {
@@ -127,6 +165,9 @@
       "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
       "fqdn": "array516.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow"
     },
     {
@@ -136,6 +177,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
@@ -146,6 +190,9 @@
       "source": "Official Microsoft Edge, Windows, and Delivery Optimization endpoint FQDN resolution",
       "fqdn": "array808.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": "https://learn.microsoft.com/en-us/windows/deployment/do/delivery-optimization-workflow"
     },
     {
@@ -155,6 +202,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
@@ -165,6 +215,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
@@ -175,6 +228,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
@@ -185,6 +241,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
@@ -195,6 +254,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
@@ -205,6 +267,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
@@ -215,6 +280,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
@@ -225,6 +293,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
@@ -235,6 +306,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
@@ -245,18 +319,27 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
     {
       "ip": "17.253.29.146",
-      "covered": false,
-      "edl": null,
-      "source": null,
-      "fqdn": null,
-      "cname_chain": [],
-      "source_documentation": null,
-      "reason": "Apple address not returned by an in-scope official FQDN"
+      "covered": true,
+      "edl": "apple-xcode-developer-ipv4.txt",
+      "source": "Apple enterprise Xcode download FQDN resolution",
+      "fqdn": "download.developer.apple.com",
+      "cname_chain": [
+        "dd-cdn-origin-apple-com.v.aaplimg.com"
+      ],
+      "first_seen": "2026-08-22T08:46:37.008576Z",
+      "last_seen": "2026-08-22T08:46:37.008576Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/24"
+      ],
+      "source_documentation": "https://support.apple.com/en-us/101555"
     },
     {
       "ip": "17.188.170.10",
@@ -265,6 +348,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Not returned by the targeted official APNs FQDNs; the prohibited 17.0.0.0/8 fallback was not used"
     },
@@ -275,6 +361,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
@@ -285,6 +374,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "PTR stor-g3-ph-legacy-pc1.dell.com observed, but the current A records of the officially documented downloads.dell.com endpoint do not contain this address; PTR ownership alone isn't authorization"
     },
@@ -295,6 +387,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "No in-scope official source or current DNS A resolution maps this address to an authorized service"
     },
@@ -305,6 +400,9 @@
       "source": "Dropbox-linked ARIN product allocations",
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": "https://help.dropbox.com/installs/configuring-firewall"
     },
     {
@@ -314,6 +412,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
@@ -324,6 +425,9 @@
       "source": "GitHub Meta API fields web, api, git, and pages",
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": "https://docs.github.com/en/rest/meta/meta"
     },
     {
@@ -336,6 +440,9 @@
         "edge-microsoft-com.ax-0002.ax-msedge.net",
         "ax-0002.ax-msedge.net"
       ],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": "https://learn.microsoft.com/en-us/windows/privacy/manage-windows-11-endpoints"
     },
     {
@@ -345,6 +452,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Apple address not returned by an in-scope official FQDN"
     },
@@ -355,8 +465,150 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Apple address not returned by an in-scope official FQDN"
+    },
+    {
+      "ip": "17.253.29.135",
+      "covered": true,
+      "edl": "apple-xcode-developer-ipv4.txt",
+      "source": "Apple enterprise Xcode download FQDN resolution",
+      "fqdn": "devimages-cdn.apple.com",
+      "cname_chain": [
+        "devimages-cdn-origin-apple-com.v.aaplimg.com"
+      ],
+      "first_seen": "2026-08-22T08:46:37.008576Z",
+      "last_seen": "2026-08-22T08:46:37.008576Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/24"
+      ],
+      "source_documentation": "https://support.apple.com/en-us/101555"
+    },
+    {
+      "ip": "17.253.29.147",
+      "covered": true,
+      "edl": "apple-xcode-developer-ipv4.txt",
+      "source": "Apple enterprise Xcode download FQDN resolution",
+      "fqdn": "download.developer.apple.com",
+      "cname_chain": [
+        "dd-cdn-origin-apple-com.v.aaplimg.com"
+      ],
+      "first_seen": "2026-08-22T08:46:37.008576Z",
+      "last_seen": "2026-08-22T08:46:37.008576Z",
+      "observation_sources": [
+        "google-doh-ecs:82.66.0.0/24"
+      ],
+      "source_documentation": "https://support.apple.com/en-us/101555"
+    },
+    {
+      "ip": "17.253.29.140",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
+      "source_documentation": null,
+      "reason": "Apple address not returned by an in-scope official FQDN"
+    },
+    {
+      "ip": "17.253.29.151",
+      "covered": true,
+      "edl": "apple-xcode-developer-ipv4.txt",
+      "source": "Apple enterprise Xcode download FQDN resolution",
+      "fqdn": "download.developer.apple.com",
+      "cname_chain": [
+        "dd-cdn-origin-apple-com.v.aaplimg.com"
+      ],
+      "first_seen": "2026-08-22T08:46:37.008576Z",
+      "last_seen": "2026-08-22T08:46:37.008576Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/24",
+        "google-doh-ecs:82.66.0.0/24"
+      ],
+      "source_documentation": "https://support.apple.com/en-us/101555"
+    },
+    {
+      "ip": "17.253.37.209",
+      "covered": true,
+      "edl": "apple-xcode-developer-ipv4.txt",
+      "source": "Apple enterprise Xcode download FQDN resolution",
+      "fqdn": "devimages-cdn.apple.com",
+      "cname_chain": [
+        "devimages-cdn-origin-apple-com.v.aaplimg.com"
+      ],
+      "first_seen": "2026-08-22T08:46:37.008576Z",
+      "last_seen": "2026-08-22T08:46:37.008576Z",
+      "observation_sources": [
+        "google-doh-ecs:82.66.0.0/24"
+      ],
+      "source_documentation": "https://support.apple.com/en-us/101555",
+      "allFqdns": [
+        "devimages-cdn.apple.com",
+        "download.developer.apple.com"
+      ]
+    },
+    {
+      "ip": "17.253.37.210",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
+      "source_documentation": null,
+      "reason": "Apple address not returned by an in-scope official FQDN"
+    },
+    {
+      "ip": "17.248.209.46",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
+      "source_documentation": null,
+      "reason": "Apple address not returned by an in-scope official FQDN"
+    },
+    {
+      "ip": "17.188.171.202",
+      "covered": false,
+      "edl": null,
+      "source": null,
+      "fqdn": null,
+      "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
+      "source_documentation": null,
+      "reason": "Apple address not returned by an in-scope official FQDN"
+    },
+    {
+      "ip": "17.111.103.20",
+      "covered": true,
+      "edl": "apple-updates-ipv4.txt",
+      "source": "Apple enterprise Software updates FQDN resolution",
+      "fqdn": "gdmf.apple.com",
+      "cname_chain": [
+        "gdmf.v.aaplimg.com"
+      ],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
+      "source_documentation": "https://support.apple.com/en-us/101555",
+      "allEdls": [
+        "apple-updates-ipv4.txt",
+        "apple-device-services-ipv4.txt"
+      ]
     },
     {
       "ip": "95.101.137.16",
@@ -365,6 +617,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
@@ -375,6 +630,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
@@ -385,6 +643,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
@@ -395,6 +656,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
@@ -405,6 +669,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
@@ -415,6 +682,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     },
@@ -425,6 +695,9 @@
       "source": null,
       "fqdn": null,
       "cname_chain": [],
+      "first_seen": null,
+      "last_seen": null,
+      "observation_sources": [],
       "source_documentation": null,
       "reason": "Shared CDN address not returned by an authorized service FQDN; global CloudFront, Akamai, Cloudflare, or Fastly ranges are forbidden"
     }
