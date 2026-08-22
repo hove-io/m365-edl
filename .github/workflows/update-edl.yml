@@ -10,6 +10,7 @@ on:
     paths:
       - .github/workflows/update-edl.yml
       - scripts/generate_edl.py
+      - tests/**
 
 permissions:
   contents: write
@@ -33,6 +34,9 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
+
+      - name: Run parser regression tests
+        run: python3 -m unittest discover -s tests -v
 
       - name: Retrieve official service sources
         id: request

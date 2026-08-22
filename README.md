@@ -78,6 +78,18 @@ et contient uniquement les plages commerciales officiellement documentées :
 
 La plage `52.120.0.0/14` couvre notamment `52.123.242.163`.
 
+Le parseur accepte les deux structures de titres Microsoft Learn connues :
+
+- historique : **Media traffic: port ranges** → **Microsoft 365, Office 365,
+  and Office 365 GCC environments** ;
+- actuelle : **Media processor IP ranges** → **Microsoft 365 / Office 365**.
+
+Cette compatibilité de mise en page ne relâche pas le contrôle du contenu :
+l'ensemble extrait doit rester exactement `52.112.0.0/14` et `52.120.0.0/14`.
+Les plages souveraines GCC High (`52.127.88.0/21`) et DoD
+(`52.127.64.0/21`), ainsi que toute autre plage inattendue, provoquent un
+échec de validation avant publication.
+
 ### Microsoft Intune / Windows
 
 La liste Intune est extraite de la documentation officielle
@@ -169,6 +181,9 @@ Il applique les contrôles suivants à chaque liste :
    et journalisation de chaque mapping FQDN vers IPv4 ;
 8. génération atomique de l'ensemble ;
 9. commit et publication uniquement lorsqu'une EDL a changé.
+
+Des tests de régression vérifient les deux structures Microsoft Learn pour
+Teams Media et confirment qu'une plage commerciale inattendue reste bloquée.
 
 Une erreur HTTP, un parsing invalide, un changement inattendu des sources ou
 un échec DNS arrête le workflow avant le remplacement des fichiers. La dernière

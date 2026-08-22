@@ -298,13 +298,16 @@ class GenerationError(RuntimeError):
 
 
 class DirectRoutingMediaParser(HTMLParser):
-    """Capture the commercial Teams media subsection from Microsoft Learn."""
+    """Capture commercial Teams media ranges across Microsoft Learn layouts."""
 
-    TARGET_H3 = "Media traffic: port ranges"
-    TARGET_H4 = "Microsoft 365, Office 365, and Office 365 GCC environments"
+    LEGACY_H3 = "Media traffic: port ranges"
+    LEGACY_H4 = "Microsoft 365, Office 365, and Office 365 GCC environments"
+    CURRENT_H2 = "Media processor IP ranges"
+    CURRENT_H3 = "Microsoft 365 / Office 365"
 
     def __init__(self) -> None:
         super().__init__()
+        self.current_h2 = ""
         self.current_h3 = ""
         self.current_h4 = ""
         self.heading_tag: str | None = None
@@ -315,7 +318,7 @@ class DirectRoutingMediaParser(HTMLParser):
         self, tag: str, attrs: list[tuple[str, str | None]]
     ) -> None:
         del attrs
-        if tag in {"h3", "h4"}:
+        if tag in {"h2", "h3", "h4"}:
             self.heading_tag = tag
             self.heading_parts = []
 
@@ -323,7 +326,11 @@ class DirectRoutingMediaParser(HTMLParser):
         if tag != self.heading_tag:
             return
         heading = " ".join("".join(self.heading_parts).split())
-        if tag == "h3":
+        if tag == "h2":
+            self.current_h2 = heading
+            self.current_h3 = ""
+            self.current_h4 = ""
+        elif tag == "h3":
             self.current_h3 = heading
             self.current_h4 = ""
         elif tag == "h4":
@@ -331,10 +338,21 @@ class DirectRoutingMediaParser(HTMLParser):
         self.heading_tag = None
         self.heading_parts = []
 
+    def _in_commercial_media_section(self) -> bool:
+        legacy = (
+            self.current_h3 == self.LEGACY_H3
+            and self.current_h4 == self.LEGACY_H4
+        )
+        current = (
+            self.current_h2 == self.CURRENT_H2
+            and self.current_h3 == self.CURRENT_H3
+        )
+        return legacy or current
+
     def handle_data(self, data: str) -> None:
         if self.heading_tag is not None:
             self.heading_parts.append(data)
-        elif self.current_h3 == self.TARGET_H3 and self.current_h4 == self.TARGET_H4:
+        elif self._in_commercial_media_section():
             self.target_parts.append(data)
 
 
@@ -1447,11 +1465,17 @@ def build_index(
       table {{ border-collapse: collapse; width: 100%; }}
       th, td {{ border-bottom: 1px solid #8888; padding: .65rem; text-align: left; }}
       code {{ overflow-wrap: anywhere; }}
+      .notice {{ border-left: .3rem solid #1683ff; padding: .2rem 1rem; background: #1683ff12; }}
     </style>
   </head>
   <body>
     <h1>Public service IPv4 EDLs</h1>
-    <p>Listes IPv4 publiques générées depuis des sources officielles.</p>
+    <p>Listes IPv4 publiques générées et validées automatiquement depuis des sources officielles.</p>
+    <div class="notice">
+      <p><strong>Teams Media / Direct Routing :</strong> seules les plages commerciales
+      <code>52.112.0.0/14</code> et <code>52.120.0.0/14</code> sont acceptées.
+      Les plages GCC High, DoD ou toute plage inattendue font échouer la publication.</p>
+    </div>
     <table>
       <thead><tr><th>Périmètre</th><th>Fichier</th><th>CIDR</th></tr></thead>
       <tbody>{''.join(rows)}</tbody>
@@ -1459,6 +1483,7 @@ def build_index(
     <p>Dernière modification des listes : {html.escape(generated_at)}</p>
     <p><a href="sources.json">Provenance et métadonnées</a></p>
     <p><a href="residual-ip-coverage.json">Couverture des IP résiduelles</a></p>
+    <p><a href="https://github.com/hove-io/m365-edl">Code source, méthode et garde-fous</a></p>
   </body>
 </html>
 """
