@@ -2715,6 +2715,7 @@ def build_residual_coverage(
             entries.append(
                 {
                     "ip": raw_address,
+                    "sourcePalo": audit["paloSource"] if audit else None,
                     "paloSource": audit["paloSource"] if audit else None,
                     **classification,
                     "category": category,
@@ -2780,6 +2781,7 @@ def build_residual_coverage(
         )
         entry: dict[str, Any] = {
             "ip": raw_address,
+            "sourcePalo": audit["paloSource"] if audit else None,
             "paloSource": audit["paloSource"] if audit else None,
             **classification,
             "category": "COVERED_OFFICIAL",

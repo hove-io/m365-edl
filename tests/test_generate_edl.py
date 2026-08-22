@@ -760,6 +760,7 @@ class ResidualCoverageTests(unittest.TestCase):
                     "lastSeen",
                     "targetEdl",
                     "reason",
+                    "sourcePalo",
                     "paloSource",
                     "officialSource",
                     "category",
@@ -809,6 +810,9 @@ class ResidualCoverageTests(unittest.TestCase):
         )
         for address in CURRENT_INTERNET_ONLY_AUDIT:
             self.assertIn(entries[address]["category"], COVERAGE_CATEGORIES)
+            self.assertEqual(
+                entries[address]["sourcePalo"], entries[address]["paloSource"]
+            )
             self.assertIsNotNone(entries[address]["paloSource"])
 
     def test_intune_telemetry_residual_requires_dns_provenance(self) -> None:
