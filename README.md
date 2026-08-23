@@ -1,7 +1,8 @@
-# Public service IPv4 EDLs
+# Public service EDLs
 
-Listes IPv4 publiques générées automatiquement pour être consommées comme
-External Dynamic Lists (**IP List**) par un pare-feu Palo Alto Networks.
+Listes publiques générées automatiquement pour être consommées comme External
+Dynamic Lists (**IP List** ou **Domain List**) par un pare-feu Palo Alto
+Networks.
 
 ## EDL publiées
 
@@ -24,9 +25,11 @@ External Dynamic Lists (**IP List**) par un pare-feu Palo Alto Networks.
 | `dropbox-ipv4.txt` | Allocations produit Dropbox | https://hove-io.github.io/m365-edl/dropbox-ipv4.txt |
 | `dell-update-ipv4.txt` | Dell Command Update | https://hove-io.github.io/m365-edl/dell-update-ipv4.txt |
 | `microsoft-edge-windows-services-ipv4.txt` | Microsoft Edge et services Windows complémentaires | https://hove-io.github.io/m365-edl/microsoft-edge-windows-services-ipv4.txt |
+| `log4j-ipv4.txt` | IOC IPv4 historiques Log4Shell/Log4j fortement qualifiés | https://hove-io.github.io/m365-edl/log4j-ipv4.txt |
+| `log4j-domains.txt` | Domaines historiques Log4Shell/Log4j fortement qualifiés | https://hove-io.github.io/m365-edl/log4j-domains.txt |
 
-Toutes les listes sont **IPv4 only**. `microsoft-teams-media-ipv4.txt` complète
-la liste `m365-teams-ipv4.txt` et ne la remplace pas.
+Toutes les listes IP sont **IPv4 only**. `microsoft-teams-media-ipv4.txt`
+complète la liste `m365-teams-ipv4.txt` et ne la remplace pas.
 
 ## Sources officielles
 
@@ -268,10 +271,53 @@ préfixes CDN partagés ne sont jamais autorisés globalement. Une IP
 de CDN n'est publiée que lorsqu'elle résulte au moment de la génération d'un
 FQDN officiel appartenant à Apple, Dell, Microsoft ou un autre service ciblé.
 
+### Log4Shell / Log4j — IOC historiques
+
+`log4j-ipv4.txt` et `log4j-domains.txt` sont des listes historiques,
+conservatrices et reproductibles. Elles ne copient pas aveuglément les grandes
+listes de scanners publiées pendant la crise Log4Shell. Le générateur retient
+uniquement :
+
+- les objets STIX IPv4 et domaines de deux incidents confirmés publiés par la
+  CISA : [AA22-320A](https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-320a)
+  et [AA22-174A](https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-174a) ;
+- les indicateurs déneutralisés présents dans trois sections payload/C2
+  explicitement auditées de l'analyse
+  [Unit 42](https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/) :
+  V8 password stealer, Happy Everyday/Cobalt Strike et coinminer.
+
+Les sections Unit 42 consacrées aux scanners de masse et à la découverte de
+serveurs vulnérables sont hors périmètre. Sont également évaluées mais non
+importées : la liste de scanners citée par CISA AA21-356A, l'échantillon
+Microsoft Sentinel, le catalogue NCSC-NL non vérifié et les pages CERT ne
+fournissant pas de feed structuré. `transfer.sh` est rejeté explicitement car
+ce service légitime mutualisé ne peut pas être bloqué comme un domaine C2.
+
+La provenance complète, le statut des sources, leurs empreintes SHA-256, les
+rejets et les sources de chaque indicateur sont publiés dans
+[`metadata/log4j.json`](https://hove-io.github.io/m365-edl/metadata/log4j.json).
+Les adresses sont validées avec `ipaddress`, limitées aux IPv4 publiques,
+normalisées, dédupliquées et triées numériquement. Les domaines sont validés,
+normalisés et triés. Une source absente, vide, illisible ou une baisse de plus
+de 50 % bloque atomiquement toute nouvelle publication.
+
+La génération initiale du 23 août 2026 contient **18 IPv4 uniques** et
+**2 domaines**. La date UTC exacte et les compteurs de la dernière génération
+sont toujours ceux de `metadata/log4j.json` ; ils sont recalculés par le
+workflow hebdomadaire.
+
+> [!CAUTION]
+> Ces IOC sont historiques : leur présence ne prouve pas une activité
+> malveillante actuelle et leur absence ne prouve pas qu'un flux est sain. Ils
+> ne remplacent pas la mise à jour de Log4j, les signatures IPS, la segmentation
+> des systèmes vulnérables ni le contrôle des sorties LDAP/RMI inattendues.
+
 ## Génération et garde-fous
 
 Le workflow `.github/workflows/update-edl.yml` s'exécute toutes les heures et
-peut être lancé manuellement. Aucun token Microsoft ni secret n'est requis.
+peut être lancé manuellement. Le workflow Log4Shell dédié
+`.github/workflows/update-log4j-edl.yml` s'exécute chaque lundi et peut aussi
+être lancé manuellement. Aucun secret externe n'est requis.
 
 Il applique les contrôles suivants à chaque liste :
 
@@ -330,6 +376,12 @@ persistant se trouve dans le bloc `dnsHistory` du fichier concerné dans
 `verified` : la propriété d'une IP Apple, Azure, Akamai ou Cloudflare ne vaut
 jamais autorisation de service.
 
+Le rapport Log4Shell public
+[`metadata/log4j.json`](https://hove-io.github.io/m365-edl/metadata/log4j.json)
+est indépendant de `sources.json`. Il contient les CVE associées, les sources
+utilisées ou écartées, les compteurs bruts/acceptés/rejetés, les hashes des
+sorties et la provenance multi-source par indicateur.
+
 ## Exploitation Palo Alto
 
 Créer des EDL de type **IP List** avec un rafraîchissement horaire, notamment :
@@ -352,7 +404,13 @@ EDL-GITHUB-ACTIONS-IPV4
 EDL-DROPBOX-IPV4
 EDL-DELL-UPDATE-IPV4
 EDL-MICROSOFT-EDGE-WINDOWS-SERVICES-IPV4
+EDL-LOG4J-HISTORICAL-IPV4
 ```
+
+Créer séparément `EDL-LOG4J-HISTORICAL-DOMAINS` comme **Domain List** si la
+politique PAN-OS consomme aussi les deux domaines historiques publiés. Une
+fréquence de rafraîchissement quotidienne ou hebdomadaire suffit pour ces IOC ;
+ce feed n'est pas une réputation temps réel.
 
 Pour HTTPS, associer un **Certificate Profile** faisant confiance à la chaîne
 de certification présentée par GitHub Pages.

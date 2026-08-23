@@ -1,0 +1,411 @@
+{
+  "classification": "historical-curated-incident-iocs",
+  "counts": {
+    "finalUniqueDomains": 2,
+    "finalUniqueIPv4": 18,
+    "rawDomainCandidates": 7,
+    "rawIPv4Candidates": 22,
+    "rejected": 1
+  },
+  "cves": [
+    "CVE-2021-44228",
+    "CVE-2021-45046",
+    "CVE-2021-45105",
+    "CVE-2021-44832"
+  ],
+  "evaluatedButNotUsed": [
+    {
+      "name": "CISA AA21-356A and Curated Intelligence scanner list",
+      "reason": "CISA describes the list as low-to-medium confidence and warns that scanner activity includes researchers and vendors; unsuitable as a production deny list.",
+      "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa21-356a"
+    },
+    {
+      "name": "Microsoft Sentinel Log4j IP IOC sample feed",
+      "reason": "Historical mass-scan sample without per-indicator role or confidence; retained for hunting, not blocking.",
+      "url": "https://github.com/Azure/Azure-Sentinel/blob/master/Sample%20Data/Feeds/Log4j_IOC_List.csv"
+    },
+    {
+      "name": "NCSC-NL Log4Shell IOC catalog",
+      "reason": "Archived link catalog whose maintainers state that the listed IOCs were not verified.",
+      "url": "https://github.com/NCSC-NL/log4shell/tree/main/iocs"
+    },
+    {
+      "name": "CERT-EU 2021-067 and CERT/CC VU#930724",
+      "reason": "Authoritative vulnerability context but no structured, high-confidence IP feed for deterministic ingestion.",
+      "url": "https://cert.europa.eu/publications/security-advisories/2021-067/"
+    },
+    {
+      "name": "Unit 42 mass-scanning and vulnerable-server-discovery sections",
+      "reason": "Scanner infrastructure and victim-discovery observations are deliberately excluded from permanent blocking.",
+      "url": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/"
+    }
+  ],
+  "generatedAt": "2026-08-23T21:49:38Z",
+  "generated_at": "2026-08-23T21:49:38Z",
+  "indicators": {
+    "domains": [
+      {
+        "sources": [
+          {
+            "id": "unit42-log4j-payload-c2",
+            "organization": "Palo Alto Networks Unit 42",
+            "url": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/"
+          }
+        ],
+        "type": "domain",
+        "value": "1ma.xyz"
+      },
+      {
+        "sources": [
+          {
+            "id": "cisa-aa22-320a",
+            "organization": "CISA",
+            "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-320a"
+          }
+        ],
+        "type": "domain",
+        "value": "us-nation-ny.cf"
+      }
+    ],
+    "ipv4": [
+      {
+        "sources": [
+          {
+            "id": "cisa-aa22-320a",
+            "organization": "CISA",
+            "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-320a"
+          }
+        ],
+        "type": "ipv4",
+        "value": "51.89.181.64"
+      },
+      {
+        "sources": [
+          {
+            "id": "unit42-log4j-payload-c2",
+            "organization": "Palo Alto Networks Unit 42",
+            "url": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/"
+          }
+        ],
+        "type": "ipv4",
+        "value": "68.183.165.105"
+      },
+      {
+        "sources": [
+          {
+            "id": "cisa-aa22-174a",
+            "organization": "CISA",
+            "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-174a"
+          }
+        ],
+        "type": "ipv4",
+        "value": "92.222.241.76"
+      },
+      {
+        "sources": [
+          {
+            "id": "cisa-aa22-174a",
+            "organization": "CISA",
+            "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-174a"
+          }
+        ],
+        "type": "ipv4",
+        "value": "104.155.149.103"
+      },
+      {
+        "sources": [
+          {
+            "id": "cisa-aa22-174a",
+            "organization": "CISA",
+            "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-174a"
+          }
+        ],
+        "type": "ipv4",
+        "value": "104.223.34.198"
+      },
+      {
+        "sources": [
+          {
+            "id": "cisa-aa22-174a",
+            "organization": "CISA",
+            "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-174a"
+          }
+        ],
+        "type": "ipv4",
+        "value": "109.248.150.13"
+      },
+      {
+        "sources": [
+          {
+            "id": "cisa-aa22-174a",
+            "organization": "CISA",
+            "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-174a"
+          }
+        ],
+        "type": "ipv4",
+        "value": "134.119.177.107"
+      },
+      {
+        "sources": [
+          {
+            "id": "unit42-log4j-payload-c2",
+            "organization": "Palo Alto Networks Unit 42",
+            "url": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/"
+          }
+        ],
+        "type": "ipv4",
+        "value": "139.155.2.105"
+      },
+      {
+        "sources": [
+          {
+            "id": "cisa-aa22-320a",
+            "organization": "CISA",
+            "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-320a"
+          }
+        ],
+        "type": "ipv4",
+        "value": "144.76.136.153"
+      },
+      {
+        "sources": [
+          {
+            "id": "unit42-log4j-payload-c2",
+            "organization": "Palo Alto Networks Unit 42",
+            "url": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/"
+          }
+        ],
+        "type": "ipv4",
+        "value": "150.60.139.51"
+      },
+      {
+        "sources": [
+          {
+            "id": "cisa-aa22-174a",
+            "organization": "CISA",
+            "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-174a"
+          }
+        ],
+        "type": "ipv4",
+        "value": "155.94.211.207"
+      },
+      {
+        "sources": [
+          {
+            "id": "unit42-log4j-payload-c2",
+            "organization": "Palo Alto Networks Unit 42",
+            "url": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/"
+          }
+        ],
+        "type": "ipv4",
+        "value": "161.35.184.54"
+      },
+      {
+        "sources": [
+          {
+            "id": "cisa-aa22-174a",
+            "organization": "CISA",
+            "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-174a"
+          }
+        ],
+        "type": "ipv4",
+        "value": "162.245.190.203"
+      },
+      {
+        "sources": [
+          {
+            "id": "unit42-log4j-payload-c2",
+            "organization": "Palo Alto Networks Unit 42",
+            "url": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/"
+          }
+        ],
+        "type": "ipv4",
+        "value": "165.22.2.186"
+      },
+      {
+        "sources": [
+          {
+            "id": "cisa-aa22-320a",
+            "organization": "CISA",
+            "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-320a"
+          }
+        ],
+        "type": "ipv4",
+        "value": "182.54.217.2"
+      },
+      {
+        "sources": [
+          {
+            "id": "cisa-aa22-174a",
+            "organization": "CISA",
+            "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-174a"
+          }
+        ],
+        "type": "ipv4",
+        "value": "185.136.163.104"
+      },
+      {
+        "sources": [
+          {
+            "id": "unit42-log4j-payload-c2",
+            "organization": "Palo Alto Networks Unit 42",
+            "url": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/"
+          }
+        ],
+        "type": "ipv4",
+        "value": "192.46.216.224"
+      },
+      {
+        "sources": [
+          {
+            "id": "cisa-aa22-174a",
+            "organization": "CISA",
+            "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-174a"
+          }
+        ],
+        "type": "ipv4",
+        "value": "192.95.20.8"
+      }
+    ]
+  },
+  "outputs": {
+    "log4j-domains.txt": {
+      "entries": 2,
+      "sha256": "39aee6c2cdfa2231a56463c1d4956feaa43d834a164348f4462e061a69a65e6b",
+      "type": "Palo Alto Domain List"
+    },
+    "log4j-ipv4.txt": {
+      "entries": 18,
+      "sha256": "43a422e5f4df82505f100e6ee9b7d18056063e0c1dc8c0c86cf817036f0fddd3",
+      "type": "Palo Alto IP List"
+    }
+  },
+  "policy": {
+    "broadCloudOrCdnPrefixes": false,
+    "manualIndicators": false,
+    "massScannersExcluded": true,
+    "maximumAllowedDrop": "50%",
+    "publicIPv4Only": true,
+    "purpose": "Conservative Palo Alto deny-list companion for historical Log4Shell infrastructure"
+  },
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "bytes": 23410,
+      "counts": {
+        "acceptedUniqueDomains": 1,
+        "acceptedUniqueIPv4": 3,
+        "rawDomainCandidates": 1,
+        "rawIPv4Candidates": 3,
+        "rejected": 1
+      },
+      "evidenceScope": "STIX indicators from a confirmed Log4Shell compromise incident",
+      "evidence_scope": "STIX indicators from a confirmed Log4Shell compromise incident",
+      "id": "cisa-aa22-320a",
+      "lastUpdatedKnown": "2022-11-25",
+      "last_updated_known": "2022-11-25",
+      "maintenance_status": "historical",
+      "organization": "CISA",
+      "parser": {
+        "acceptedObjectTypes": [
+          "AddressObjectType/ipv4-addr",
+          "DomainNameObjectType"
+        ],
+        "addressObjects": 3,
+        "domainObjects": 2,
+        "format": "STIX XML"
+      },
+      "referenceUrl": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-320a",
+      "reference_url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-320a",
+      "rejected": [
+        {
+          "reason": "legitimate shared file-transfer service; not safe for domain blocking",
+          "type": "domain",
+          "value": "transfer.sh"
+        }
+      ],
+      "retrievedAt": "2026-08-23T21:49:38Z",
+      "retrieved_at": "2026-08-23T21:49:38Z",
+      "sha256": "3ff8023c310cf7daeb5451dca9cb0666952a6ed5ddcdfe0dbad645ff90c30f1c",
+      "status": "retrieved-and-validated",
+      "transport": "HTTPS with certificate validation",
+      "url": "https://www.cisa.gov/sites/default/files/publications/AA22-320A.stix.xml"
+    },
+    {
+      "bytes": 24292,
+      "counts": {
+        "acceptedUniqueDomains": 0,
+        "acceptedUniqueIPv4": 9,
+        "rawDomainCandidates": 0,
+        "rawIPv4Candidates": 9,
+        "rejected": 0
+      },
+      "evidenceScope": "STIX indicators from a confirmed Log4Shell exploitation incident",
+      "evidence_scope": "STIX indicators from a confirmed Log4Shell exploitation incident",
+      "id": "cisa-aa22-174a",
+      "lastUpdatedKnown": "2022-07-18",
+      "last_updated_known": "2022-07-18",
+      "maintenance_status": "historical",
+      "organization": "CISA",
+      "parser": {
+        "acceptedObjectTypes": [
+          "AddressObjectType/ipv4-addr",
+          "DomainNameObjectType"
+        ],
+        "addressObjects": 9,
+        "domainObjects": 0,
+        "format": "STIX XML"
+      },
+      "referenceUrl": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-174a",
+      "reference_url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-174a",
+      "rejected": [],
+      "retrievedAt": "2026-08-23T21:49:38Z",
+      "retrieved_at": "2026-08-23T21:49:38Z",
+      "sha256": "b92ae55f1e0efff75228b2a3ff11100da9dccaad0cd8e550448ae327d54cae3b",
+      "status": "retrieved-and-validated",
+      "transport": "HTTPS with certificate validation",
+      "url": "https://www.cisa.gov/sites/default/files/publications/AA22-174A.stix.xml"
+    },
+    {
+      "bytes": 279208,
+      "counts": {
+        "acceptedUniqueDomains": 1,
+        "acceptedUniqueIPv4": 6,
+        "rawDomainCandidates": 6,
+        "rawIPv4Candidates": 10,
+        "rejected": 0
+      },
+      "evidenceScope": "Only audited V8 stealer, Cobalt Strike, and coinminer payload/C2 sections",
+      "evidence_scope": "Only audited V8 stealer, Cobalt Strike, and coinminer payload/C2 sections",
+      "id": "unit42-log4j-payload-c2",
+      "lastUpdatedKnown": "2022-02-02 observation cutoff",
+      "last_updated_known": "2022-02-02 observation cutoff",
+      "maintenance_status": "historical",
+      "organization": "Palo Alto Networks Unit 42",
+      "parser": {
+        "acceptedSections": [
+          "coinminer",
+          "happy-everyday-cobaltstrike",
+          "v8-password-stealer"
+        ],
+        "excludedScope": "mass-scanner, vulnerable-server-discovery, and unrelated article sections",
+        "format": "HTML",
+        "uniqueIPv4BySection": {
+          "coinminer": 4,
+          "happy-everyday-cobaltstrike": 1,
+          "v8-password-stealer": 1
+        }
+      },
+      "referenceUrl": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/",
+      "reference_url": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/",
+      "rejected": [],
+      "retrievedAt": "2026-08-23T21:49:38Z",
+      "retrieved_at": "2026-08-23T21:49:38Z",
+      "sha256": "6b1a9112f12995e159d2ac1c6d7c088409db6ac502589fb5d6faacd85f135226",
+      "status": "retrieved-and-validated",
+      "transport": "HTTPS with certificate validation",
+      "url": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/"
+    }
+  ],
+  "warning": "Historical Log4Shell indicators are not real-time reputation and are not standalone protection. Patch Log4j, use IPS, segment vulnerable systems, and restrict unexpected LDAP/RMI egress."
+}

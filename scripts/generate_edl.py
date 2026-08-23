@@ -592,6 +592,8 @@ PUBLICATIONS = (
     ("Dropbox product networks", DROPBOX_FILE),
     ("Dell Command Update", DELL_UPDATE_FILE),
     ("Microsoft Edge / Windows services", MICROSOFT_EDGE_WINDOWS_FILE),
+    ("Log4Shell / Log4j historical IPv4 IOCs", "log4j-ipv4.txt"),
+    ("Log4Shell / Log4j historical domains", "log4j-domains.txt"),
 )
 
 NEW_SERVICE_FILES = (
@@ -3187,15 +3189,34 @@ def build_sources(
 
 
 def build_index(
-    generated_at: str, generated: dict[str, list[ipaddress.IPv4Network]]
+    generated_at: str,
+    generated: dict[str, list[ipaddress.IPv4Network]],
+    *,
+    output_dir: Path | None = None,
+    supplemental_counts: dict[str, int] | None = None,
 ) -> str:
+    supplemental_counts = supplemental_counts or {}
     rows = []
     for label, filename in PUBLICATIONS:
+        if filename in generated:
+            count = len(generated[filename])
+        elif filename in supplemental_counts:
+            count = supplemental_counts[filename]
+        elif output_dir is not None and (output_dir / filename).is_file():
+            count = sum(
+                1
+                for line in (output_dir / filename).read_text(
+                    encoding="ascii"
+                ).splitlines()
+                if line.strip() and not line.lstrip().startswith("#")
+            )
+        else:
+            continue
         rows.append(
             "<tr>"
             f"<td>{html.escape(label)}</td>"
             f'<td><a href="{html.escape(filename)}">{html.escape(filename)}</a></td>'
-            f"<td>{len(generated[filename])}</td>"
+            f"<td>{count}</td>"
             "</tr>"
         )
     return f"""<!doctype html>
@@ -3203,7 +3224,7 @@ def build_index(
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Public service IPv4 EDLs</title>
+    <title>Public service EDLs</title>
     <style>
       :root {{ color-scheme: light dark; font-family: system-ui, sans-serif; }}
       body {{ max-width: 68rem; margin: 4rem auto; padding: 0 1.25rem; line-height: 1.55; }}
@@ -3214,8 +3235,8 @@ def build_index(
     </style>
   </head>
   <body>
-    <h1>Public service IPv4 EDLs</h1>
-    <p>Listes IPv4 publiques générées et validées automatiquement depuis des sources officielles.</p>
+    <h1>Public service EDLs</h1>
+    <p>Listes publiques générées et validées automatiquement depuis des sources officielles.</p>
     <div class="notice">
       <p><strong>Microsoft 365 Common :</strong> les CIDR explicites du web service
       sont complétés uniquement par les A publics observés pour
@@ -3263,8 +3284,17 @@ def build_index(
       dans l'API Meta GitHub. Leurs A publics sont conservés 24 heures avec leur
       chaîne CNAME ; les CIDR Actions et Azure globaux ne sont jamais importés.</p>
     </div>
+    <div class="notice">
+      <p><strong>Log4Shell / Log4j :</strong> ces IOC historiques et fortement
+      qualifiés proviennent d'incidents CISA confirmés et de sections payload/C2
+      Unit 42 ciblées. Ils ne constituent ni une réputation temps réel ni une
+      protection autonome : corrigez Log4j, activez l'IPS, segmentez les systèmes
+      et contrôlez les sorties LDAP/RMI. Les scanners de masse et les listes
+      communautaires non qualifiées sont exclus. La
+      <a href="metadata/log4j.json">provenance par indicateur</a> est publique.</p>
+    </div>
     <table>
-      <thead><tr><th>Périmètre</th><th>Fichier</th><th>CIDR</th></tr></thead>
+      <thead><tr><th>Périmètre</th><th>Fichier</th><th>Entrées</th></tr></thead>
       <tbody>{''.join(rows)}</tbody>
     </table>
     <p>Dernière modification des listes : {html.escape(generated_at)}</p>
@@ -3334,7 +3364,7 @@ def publish(
         cname_chains_by_file=cname_chains_by_file,
         dns_history_by_file=dns_history_by_file,
     )
-    index = build_index(generated_at, generated)
+    index = build_index(generated_at, generated, output_dir=output_dir)
     support_rendered = {
         "sources.json": sources,
         RESIDUAL_COVERAGE_FILE: residual_coverage,
