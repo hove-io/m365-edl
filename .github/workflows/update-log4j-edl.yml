@@ -1,0 +1,186 @@
+name: Update historical Log4Shell IOC EDLs
+
+on:
+  schedule:
+    - cron: "17 4 * * 1"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/update-log4j-edl.yml
+      - scripts/build_log4j_edl.py
+      - scripts/generate_edl.py
+      - tests/test_build_log4j_edl.py
+      - README.md
+  pull_request:
+    paths:
+      - .github/workflows/update-log4j-edl.yml
+      - scripts/build_log4j_edl.py
+      - scripts/generate_edl.py
+      - tests/test_build_log4j_edl.py
+      - README.md
+
+concurrency:
+  group: m365-edl-update
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Synchronize current main
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git merge --ff-only origin/main
+
+      - name: Run all parser regression tests
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Generate curated Log4Shell EDLs
+        run: python3 scripts/build_log4j_edl.py --output-dir docs
+
+      - name: Validate generated publication
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import ipaddress
+          import json
+          from pathlib import Path
+          from scripts.build_log4j_edl import ipv4_sort_key, normalize_domain
+
+          docs = Path("docs")
+          ipv4_path = docs / "log4j-ipv4.txt"
+          domain_path = docs / "log4j-domains.txt"
+          metadata_path = docs / "metadata/log4j.json"
+          metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+
+          ipv4_lines = ipv4_path.read_text(encoding="ascii").splitlines()
+          domain_lines = domain_path.read_text(encoding="ascii").splitlines()
+          if not ipv4_lines or not domain_lines:
+              raise SystemExit("Log4Shell EDL output is empty")
+          for value in ipv4_lines:
+              network = ipaddress.ip_network(value, strict=True)
+              if network.version != 4 or not network.is_global:
+                  raise SystemExit(f"Invalid public IPv4 EDL entry: {value}")
+          if ipv4_lines != sorted(set(ipv4_lines), key=ipv4_sort_key):
+              raise SystemExit("IPv4 EDL is not sorted and deduplicated")
+          if domain_lines != sorted(set(domain_lines)):
+              raise SystemExit("Domain EDL is not sorted and deduplicated")
+          for value in domain_lines:
+              if normalize_domain(value) != value:
+                  raise SystemExit(f"Invalid normalized domain EDL entry: {value}")
+
+          for filename, lines in (
+              ("log4j-ipv4.txt", ipv4_lines),
+              ("log4j-domains.txt", domain_lines),
+          ):
+              payload = (docs / filename).read_bytes()
+              output = metadata["outputs"][filename]
+              if output["entries"] != len(lines):
+                  raise SystemExit(f"Metadata count mismatch for {filename}")
+              if output["sha256"] != hashlib.sha256(payload).hexdigest():
+                  raise SystemExit(f"Metadata hash mismatch for {filename}")
+          PY
+          git diff --check
+
+  commit-publication:
+    needs: validate
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out current main
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Synchronize current main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git merge --ff-only origin/main
+
+      - name: Regenerate validated publication
+        run: python3 scripts/build_log4j_edl.py --output-dir docs
+
+      - name: Detect publication changes
+        id: changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "$(git status --porcelain -- \
+            docs/log4j-ipv4.txt \
+            docs/log4j-domains.txt \
+            docs/metadata/log4j.json \
+            docs/index.html)" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit validated publication
+        if: steps.changes.outputs.changed == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- \
+            docs/log4j-ipv4.txt \
+            docs/log4j-domains.txt \
+            docs/metadata/log4j.json \
+            docs/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Update historical Log4Shell IOC EDLs"
+          git push origin HEAD:main
+
+  publish-pages:
+    needs: commit-publication
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check out validated main
+        uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs
+
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
