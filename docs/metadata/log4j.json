@@ -40,8 +40,8 @@
       "url": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/"
     }
   ],
-  "generatedAt": "2026-08-23T21:49:38Z",
-  "generated_at": "2026-08-23T21:49:38Z",
+  "generatedAt": "2026-08-23T22:09:38Z",
+  "generated_at": "2026-08-23T22:09:38Z",
   "indicators": {
     "domains": [
       {
@@ -324,8 +324,8 @@
           "value": "transfer.sh"
         }
       ],
-      "retrievedAt": "2026-08-23T21:49:38Z",
-      "retrieved_at": "2026-08-23T21:49:38Z",
+      "retrievedAt": "2026-08-23T22:09:38Z",
+      "retrieved_at": "2026-08-23T22:09:38Z",
       "sha256": "3ff8023c310cf7daeb5451dca9cb0666952a6ed5ddcdfe0dbad645ff90c30f1c",
       "status": "retrieved-and-validated",
       "transport": "HTTPS with certificate validation",
@@ -359,8 +359,8 @@
       "referenceUrl": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-174a",
       "reference_url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-174a",
       "rejected": [],
-      "retrievedAt": "2026-08-23T21:49:38Z",
-      "retrieved_at": "2026-08-23T21:49:38Z",
+      "retrievedAt": "2026-08-23T22:09:38Z",
+      "retrieved_at": "2026-08-23T22:09:38Z",
       "sha256": "b92ae55f1e0efff75228b2a3ff11100da9dccaad0cd8e550448ae327d54cae3b",
       "status": "retrieved-and-validated",
       "transport": "HTTPS with certificate validation",
@@ -399,8 +399,8 @@
       "referenceUrl": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/",
       "reference_url": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/",
       "rejected": [],
-      "retrievedAt": "2026-08-23T21:49:38Z",
-      "retrieved_at": "2026-08-23T21:49:38Z",
+      "retrievedAt": "2026-08-23T22:09:38Z",
+      "retrieved_at": "2026-08-23T22:09:38Z",
       "sha256": "6b1a9112f12995e159d2ac1c6d7c088409db6ac502589fb5d6faacd85f135226",
       "status": "retrieved-and-validated",
       "transport": "HTTPS with certificate validation",
