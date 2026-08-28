@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-28T21:13:07.760272Z",
+  "generatedAt": "2026-08-28T22:15:22.461827Z",
   "policy": "Coverage is reported only from generated EDL content; unmatched IPs are never added to force coverage",
   "currentInternetOnlyAudit": {
     "ipCount": 6,
@@ -13,9 +13,9 @@
     ],
     "categoryCounts": {
       "CDN_SHARED_UNATTRIBUTED": 2,
-      "COVERED_OFFICIAL": 3,
+      "COVERED_OFFICIAL": 4,
       "INTENTIONALLY_UNCOVERED": 0,
-      "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED": 1,
+      "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED": 0,
       "OWNER_ONLY_UNATTRIBUTED": 0
     }
   },
@@ -61,7 +61,7 @@
       "fqdn": "motd.ubuntu.com",
       "cname_chain": [],
       "first_seen": "2026-08-22T16:23:03.020175Z",
-      "last_seen": "2026-08-28T21:13:07.760272Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/0",
         "google-doh-ecs:82.66.0.0/0",
@@ -73,7 +73,7 @@
       "officialFqdn": "motd.ubuntu.com",
       "cnameChain": [],
       "firstSeen": "2026-08-22T16:23:03.020175Z",
-      "lastSeen": "2026-08-28T21:13:07.760272Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -82,25 +82,37 @@
       "paloSource": "10.50.84.3",
       "owner": "Microsoft/Azure (AS8075)",
       "suspectedService": "Probable Microsoft OneDS telemetry backend",
-      "verified": false,
-      "category": "OFFICIAL_BUT_NOT_CURRENTLY_RESOLVED",
-      "confidence": "medium",
-      "covered": false,
-      "edl": null,
-      "targetEdl": null,
-      "source": null,
-      "fqdn": null,
-      "officialFqdn": "*.events.data.microsoft.com",
-      "cname_chain": [],
-      "cnameChain": [],
-      "first_seen": null,
-      "firstSeen": null,
-      "last_seen": null,
-      "lastSeen": null,
-      "observation_sources": [],
+      "verified": true,
+      "category": "COVERED_OFFICIAL",
+      "confidence": "high",
+      "covered": true,
+      "edl": "microsoft-intune-windows-ipv4.txt",
+      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
+      "fqdn": "eu-mobile.events.data.microsoft.com",
+      "cname_chain": [
+        "eu.events.data.trafficmanager.net",
+        "onedscolprdfrc08.francecentral.cloudapp.azure.com"
+      ],
+      "first_seen": "2026-08-28T22:15:22.461827Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/0"
+      ],
       "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
       "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
-      "reason": "The France Central OneDS backend name is only an attribution clue; no authorized *.events.data.microsoft.com target returned this address in the current or rolling 24-hour DNS window"
+      "allFqdns": [
+        "eu-mobile.events.data.microsoft.com",
+        "eu-v20.events.data.microsoft.com"
+      ],
+      "targetEdl": "microsoft-intune-windows-ipv4.txt",
+      "officialFqdn": "eu-mobile.events.data.microsoft.com",
+      "cnameChain": [
+        "eu.events.data.trafficmanager.net",
+        "onedscolprdfrc08.francecentral.cloudapp.azure.com"
+      ],
+      "firstSeen": "2026-08-28T22:15:22.461827Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
+      "reason": "Covered by a DNS-observed official FQDN"
     },
     {
       "ip": "72.153.5.132",
@@ -117,7 +129,7 @@
       "fqdn": "array511.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
       "first_seen": "2026-08-22T16:23:03.020175Z",
-      "last_seen": "2026-08-28T21:13:07.760272Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/0",
         "google-doh-ecs:82.66.0.0/0",
@@ -129,7 +141,7 @@
       "officialFqdn": "array511.prod.do.dsp.mp.microsoft.com",
       "cnameChain": [],
       "firstSeen": "2026-08-22T16:23:03.020175Z",
-      "lastSeen": "2026-08-28T21:13:07.760272Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -147,7 +159,7 @@
       "fqdn": "array804.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
       "first_seen": "2026-08-22T16:23:03.020175Z",
-      "last_seen": "2026-08-28T21:13:07.760272Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/0",
         "google-doh-ecs:82.66.0.0/0",
@@ -159,7 +171,7 @@
       "officialFqdn": "array804.prod.do.dsp.mp.microsoft.com",
       "cnameChain": [],
       "firstSeen": "2026-08-22T16:23:03.020175Z",
-      "lastSeen": "2026-08-28T21:13:07.760272Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -293,7 +305,9 @@
       "allFqdns": [
         "mobile.events.data.microsoft.com",
         "self.events.data.microsoft.com",
+        "us-mobile.events.data.microsoft.com",
         "us-v20.events.data.microsoft.com",
+        "v10.events.data.microsoft.com",
         "v20.events.data.microsoft.com"
       ],
       "targetEdl": "microsoft-intune-windows-ipv4.txt",
@@ -420,6 +434,7 @@
         "events.data.microsoft.com",
         "functional.events.data.microsoft.com",
         "mobile.events.data.microsoft.com",
+        "self.events.data.microsoft.com",
         "us-v20.events.data.microsoft.com",
         "v10.events.data.microsoft.com",
         "v10c.events.data.microsoft.com",
@@ -498,7 +513,7 @@
         "onedscolprdcus60.centralus.cloudapp.azure.com"
       ],
       "first_seen": "2026-08-27T19:11:26.706183Z",
-      "last_seen": "2026-08-28T05:20:55.160363Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/0",
         "google-doh-ecs:82.66.0.0/0",
@@ -523,7 +538,7 @@
         "onedscolprdcus60.centralus.cloudapp.azure.com"
       ],
       "firstSeen": "2026-08-27T19:11:26.706183Z",
-      "lastSeen": "2026-08-28T05:20:55.160363Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -544,7 +559,7 @@
         "onedscolprdcus67.centralus.cloudapp.azure.com"
       ],
       "first_seen": "2026-08-24T03:55:25.275840Z",
-      "last_seen": "2026-08-27T22:54:02.355123Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/0",
         "google-doh-ecs:82.66.0.0/0",
@@ -555,6 +570,7 @@
       "allFqdns": [
         "events.data.microsoft.com",
         "functional.events.data.microsoft.com",
+        "mobile.events.data.microsoft.com",
         "self.events.data.microsoft.com",
         "us-mobile.events.data.microsoft.com",
         "v10.events.data.microsoft.com",
@@ -568,7 +584,7 @@
         "onedscolprdcus67.centralus.cloudapp.azure.com"
       ],
       "firstSeen": "2026-08-24T03:55:25.275840Z",
-      "lastSeen": "2026-08-27T22:54:02.355123Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -670,19 +686,20 @@
       "covered": true,
       "edl": "microsoft-intune-windows-ipv4.txt",
       "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
-      "fqdn": "mobile.events.data.microsoft.com",
+      "fqdn": "browser.events.data.microsoft.com",
       "cname_chain": [
-        "mobile.events.data.trafficmanager.net",
+        "browser.events.data.trafficmanager.net",
         "onedscolprdwus53.westus.cloudapp.azure.com"
       ],
-      "first_seen": "2026-08-27T22:54:02.355123Z",
-      "last_seen": "2026-08-27T22:54:02.355123Z",
+      "first_seen": "2026-08-28T22:15:22.461827Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
-        "google-doh-ecs:82.64.0.0/0"
+        "google-doh-ecs:82.66.0.0/0"
       ],
       "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
       "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
       "allFqdns": [
+        "browser.events.data.microsoft.com",
         "mobile.events.data.microsoft.com",
         "self.events.data.microsoft.com",
         "us-mobile.events.data.microsoft.com",
@@ -690,13 +707,13 @@
         "v10c.events.data.microsoft.com"
       ],
       "targetEdl": "microsoft-intune-windows-ipv4.txt",
-      "officialFqdn": "mobile.events.data.microsoft.com",
+      "officialFqdn": "browser.events.data.microsoft.com",
       "cnameChain": [
-        "mobile.events.data.trafficmanager.net",
+        "browser.events.data.trafficmanager.net",
         "onedscolprdwus53.westus.cloudapp.azure.com"
       ],
-      "firstSeen": "2026-08-27T22:54:02.355123Z",
-      "lastSeen": "2026-08-27T22:54:02.355123Z",
+      "firstSeen": "2026-08-28T22:15:22.461827Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -753,24 +770,34 @@
       "category": "COVERED_OFFICIAL",
       "confidence": "high",
       "covered": true,
-      "edl": "microsoft-defender-ipv4.txt",
-      "source": "Official Microsoft Defender endpoints and DNS",
-      "fqdn": "events.data.microsoft.com",
-      "cname_chain": [],
-      "first_seen": null,
-      "last_seen": null,
-      "observation_sources": [],
-      "source_documentation": "https://learn.microsoft.com/en-us/defender-endpoint/standard-device-connectivity-urls-commercial",
-      "officialSource": "https://learn.microsoft.com/en-us/defender-endpoint/standard-device-connectivity-urls-commercial",
-      "allEdls": [
-        "microsoft-defender-ipv4.txt",
-        "microsoft-intune-windows-ipv4.txt"
+      "edl": "microsoft-intune-windows-ipv4.txt",
+      "source": "Microsoft Intune consolidated IP Subnets and official FQDN DNS",
+      "fqdn": "browser.events.data.microsoft.com",
+      "cname_chain": [
+        "browser.events.data.trafficmanager.net",
+        "onedscolprdwus60.westus.cloudapp.azure.com"
       ],
-      "targetEdl": "microsoft-defender-ipv4.txt",
-      "officialFqdn": "events.data.microsoft.com",
-      "cnameChain": [],
-      "firstSeen": null,
-      "lastSeen": null,
+      "first_seen": "2026-08-28T22:15:22.461827Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
+      "observation_sources": [
+        "google-doh-ecs:82.64.0.0/0"
+      ],
+      "source_documentation": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "officialSource": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints",
+      "allFqdns": [
+        "browser.events.data.microsoft.com",
+        "events.data.microsoft.com",
+        "self.events.data.microsoft.com",
+        "us-mobile.events.data.microsoft.com"
+      ],
+      "targetEdl": "microsoft-intune-windows-ipv4.txt",
+      "officialFqdn": "browser.events.data.microsoft.com",
+      "cnameChain": [
+        "browser.events.data.trafficmanager.net",
+        "onedscolprdwus60.westus.cloudapp.azure.com"
+      ],
+      "firstSeen": "2026-08-28T22:15:22.461827Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -876,7 +903,7 @@
         "ln-0007.ln-msedge.net"
       ],
       "first_seen": "2026-08-22T13:24:45.428787Z",
-      "last_seen": "2026-08-28T21:13:07.760272Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/0",
         "google-doh-ecs:82.66.0.0/0",
@@ -893,7 +920,7 @@
         "ln-0007.ln-msedge.net"
       ],
       "firstSeen": "2026-08-22T13:24:45.428787Z",
-      "lastSeen": "2026-08-28T21:13:07.760272Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1008,7 +1035,7 @@
       "fqdn": "array504.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
       "first_seen": "2026-08-22T12:53:50.517453Z",
-      "last_seen": "2026-08-28T21:13:07.760272Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "previous-published-dns-snapshot",
         "system-resolver"
@@ -1019,7 +1046,7 @@
       "officialFqdn": "array504.prod.do.dsp.mp.microsoft.com",
       "cnameChain": [],
       "firstSeen": "2026-08-22T12:53:50.517453Z",
-      "lastSeen": "2026-08-28T21:13:07.760272Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1037,7 +1064,7 @@
       "fqdn": "array508.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
       "first_seen": "2026-08-22T12:53:50.517453Z",
-      "last_seen": "2026-08-28T21:13:07.760272Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "previous-published-dns-snapshot",
         "system-resolver"
@@ -1048,7 +1075,7 @@
       "officialFqdn": "array508.prod.do.dsp.mp.microsoft.com",
       "cnameChain": [],
       "firstSeen": "2026-08-22T12:53:50.517453Z",
-      "lastSeen": "2026-08-28T21:13:07.760272Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1066,7 +1093,7 @@
       "fqdn": "array516.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
       "first_seen": "2026-08-22T12:53:50.517453Z",
-      "last_seen": "2026-08-28T21:13:07.760272Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "previous-published-dns-snapshot",
         "system-resolver"
@@ -1077,7 +1104,7 @@
       "officialFqdn": "array516.prod.do.dsp.mp.microsoft.com",
       "cnameChain": [],
       "firstSeen": "2026-08-22T12:53:50.517453Z",
-      "lastSeen": "2026-08-28T21:13:07.760272Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1121,7 +1148,7 @@
       "fqdn": "array808.prod.do.dsp.mp.microsoft.com",
       "cname_chain": [],
       "first_seen": "2026-08-22T12:53:50.517453Z",
-      "last_seen": "2026-08-28T21:13:07.760272Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "previous-published-dns-snapshot",
         "system-resolver"
@@ -1132,7 +1159,7 @@
       "officialFqdn": "array808.prod.do.dsp.mp.microsoft.com",
       "cnameChain": [],
       "firstSeen": "2026-08-22T12:53:50.517453Z",
-      "lastSeen": "2026-08-28T21:13:07.760272Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1230,7 +1257,7 @@
         "tokenghubeus21.actions.githubusercontent.com"
       ],
       "first_seen": "2026-08-22T09:29:05.060917Z",
-      "last_seen": "2026-08-28T21:13:07.760272Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "system-resolver"
       ],
@@ -1242,7 +1269,7 @@
         "tokenghubeus21.actions.githubusercontent.com"
       ],
       "firstSeen": "2026-08-22T09:29:05.060917Z",
-      "lastSeen": "2026-08-28T21:13:07.760272Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1302,7 +1329,7 @@
         "settings-prod-neu-3-tagged.northeurope.cloudapp.azure.com"
       ],
       "first_seen": "2026-08-22T13:24:45.428787Z",
-      "last_seen": "2026-08-28T16:43:53.181876Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/14",
         "google-doh-ecs:82.66.0.0/14"
@@ -1320,7 +1347,7 @@
         "settings-prod-neu-3-tagged.northeurope.cloudapp.azure.com"
       ],
       "firstSeen": "2026-08-22T13:24:45.428787Z",
-      "lastSeen": "2026-08-28T16:43:53.181876Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1341,7 +1368,7 @@
         "onedscolprdeus10.eastus.cloudapp.azure.com"
       ],
       "first_seen": "2026-08-28T12:26:00.684064Z",
-      "last_seen": "2026-08-28T12:26:00.684064Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/0"
       ],
@@ -1361,7 +1388,7 @@
         "onedscolprdeus10.eastus.cloudapp.azure.com"
       ],
       "firstSeen": "2026-08-28T12:26:00.684064Z",
-      "lastSeen": "2026-08-28T12:26:00.684064Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1447,7 +1474,7 @@
         "glb-c0e95bd587389a.github.com"
       ],
       "first_seen": "2026-08-22T09:29:05.060917Z",
-      "last_seen": "2026-08-28T21:13:07.760272Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "system-resolver"
       ],
@@ -1465,7 +1492,7 @@
         "glb-c0e95bd587389a.github.com"
       ],
       "firstSeen": "2026-08-22T09:29:05.060917Z",
-      "lastSeen": "2026-08-28T21:13:07.760272Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1486,7 +1513,7 @@
         "settings-prod-neu-1-tagged.northeurope.cloudapp.azure.com"
       ],
       "first_seen": "2026-08-22T13:46:25.409436Z",
-      "last_seen": "2026-08-28T21:13:07.760272Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/14",
         "google-doh-ecs:82.66.0.0/14"
@@ -1504,7 +1531,7 @@
         "settings-prod-neu-1-tagged.northeurope.cloudapp.azure.com"
       ],
       "firstSeen": "2026-08-22T13:46:25.409436Z",
-      "lastSeen": "2026-08-28T21:13:07.760272Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -1750,7 +1777,7 @@
         "ax-0002.ax-msedge.net"
       ],
       "first_seen": "2026-08-22T12:53:50.517453Z",
-      "last_seen": "2026-08-28T21:13:07.760272Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "previous-published-dns-snapshot",
         "system-resolver"
@@ -1764,7 +1791,7 @@
         "ax-0002.ax-msedge.net"
       ],
       "firstSeen": "2026-08-22T12:53:50.517453Z",
-      "lastSeen": "2026-08-28T21:13:07.760272Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -2235,7 +2262,7 @@
         "gdmf.v.aaplimg.com"
       ],
       "first_seen": "2026-08-28T12:26:00.684064Z",
-      "last_seen": "2026-08-28T12:26:00.684064Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "system-resolver"
       ],
@@ -2251,7 +2278,7 @@
         "gdmf.v.aaplimg.com"
       ],
       "firstSeen": "2026-08-28T12:26:00.684064Z",
-      "lastSeen": "2026-08-28T12:26:00.684064Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -2503,7 +2530,7 @@
       "fqdn": "apple-relay.fastly-edge.com",
       "cname_chain": [],
       "first_seen": "2026-08-22T16:23:03.020175Z",
-      "last_seen": "2026-08-28T21:13:07.760272Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/0",
         "google-doh-ecs:82.66.0.0/0"
@@ -2514,7 +2541,7 @@
       "officialFqdn": "apple-relay.fastly-edge.com",
       "cnameChain": [],
       "firstSeen": "2026-08-22T16:23:03.020175Z",
-      "lastSeen": "2026-08-28T21:13:07.760272Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -2532,7 +2559,7 @@
       "fqdn": "apple-relay.fastly-edge.com",
       "cname_chain": [],
       "first_seen": "2026-08-22T16:23:03.020175Z",
-      "last_seen": "2026-08-28T21:13:07.760272Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/0",
         "google-doh-ecs:82.66.0.0/0"
@@ -2543,7 +2570,7 @@
       "officialFqdn": "apple-relay.fastly-edge.com",
       "cnameChain": [],
       "firstSeen": "2026-08-22T16:23:03.020175Z",
-      "lastSeen": "2026-08-28T21:13:07.760272Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -2587,7 +2614,7 @@
       "fqdn": "apple-relay.cloudflare.com",
       "cname_chain": [],
       "first_seen": "2026-08-22T16:23:03.020175Z",
-      "last_seen": "2026-08-28T21:13:07.760272Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24",
@@ -2599,7 +2626,7 @@
       "officialFqdn": "apple-relay.cloudflare.com",
       "cnameChain": [],
       "firstSeen": "2026-08-22T16:23:03.020175Z",
-      "lastSeen": "2026-08-28T21:13:07.760272Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
@@ -2617,7 +2644,7 @@
       "fqdn": "apple-relay.cloudflare.com",
       "cname_chain": [],
       "first_seen": "2026-08-22T16:23:03.020175Z",
-      "last_seen": "2026-08-28T21:13:07.760272Z",
+      "last_seen": "2026-08-28T22:15:22.461827Z",
       "observation_sources": [
         "google-doh-ecs:82.64.0.0/24",
         "google-doh-ecs:82.66.0.0/24",
@@ -2629,7 +2656,7 @@
       "officialFqdn": "apple-relay.cloudflare.com",
       "cnameChain": [],
       "firstSeen": "2026-08-22T16:23:03.020175Z",
-      "lastSeen": "2026-08-28T21:13:07.760272Z",
+      "lastSeen": "2026-08-28T22:15:22.461827Z",
       "reason": "Covered by a DNS-observed official FQDN"
     },
     {
