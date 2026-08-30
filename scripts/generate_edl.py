@@ -113,6 +113,7 @@ GITHUB_ACTIONS_FILE = "github-actions-ipv4.txt"
 DROPBOX_FILE = "dropbox-ipv4.txt"
 DELL_UPDATE_FILE = "dell-update-ipv4.txt"
 MICROSOFT_EDGE_WINDOWS_FILE = "microsoft-edge-windows-services-ipv4.txt"
+ZSCALER_ZPA_FILE = "zscaler/zpa/zpa_ipv4.txt"
 RESIDUAL_COVERAGE_FILE = "residual-ip-coverage.json"
 XCODE_DNS_GRACE_PERIOD = dt.timedelta(hours=24)
 XCODE_DNS_ATTEMPTS = 8
@@ -592,6 +593,7 @@ PUBLICATIONS = (
     ("Dropbox product networks", DROPBOX_FILE),
     ("Dell Command Update", DELL_UPDATE_FILE),
     ("Microsoft Edge / Windows services", MICROSOFT_EDGE_WINDOWS_FILE),
+    ("Zscaler ZPA Public Service Edges", ZSCALER_ZPA_FILE),
     ("Log4Shell / Log4j historical IPv4 IOCs", "log4j-ipv4.txt"),
     ("Log4Shell / Log4j historical domains", "log4j-domains.txt"),
 )

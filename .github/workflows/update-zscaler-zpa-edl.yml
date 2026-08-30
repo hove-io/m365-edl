@@ -1,0 +1,183 @@
+name: Update Zscaler ZPA Public Service Edge EDL
+
+on:
+  schedule:
+    - cron: "43 5 * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/update-zscaler-zpa-edl.yml
+      - scripts/build_zscaler_zpa_edl.py
+      - scripts/generate_edl.py
+      - tests/test_build_zscaler_zpa_edl.py
+      - README.md
+  pull_request:
+    paths:
+      - .github/workflows/update-zscaler-zpa-edl.yml
+      - scripts/build_zscaler_zpa_edl.py
+      - scripts/generate_edl.py
+      - tests/test_build_zscaler_zpa_edl.py
+      - README.md
+
+concurrency:
+  group: m365-edl-update
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Synchronize current main
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git merge --ff-only origin/main
+
+      - name: Run all parser regression tests
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Generate and cross-check the official ZPA EDL
+        run: python3 scripts/build_zscaler_zpa_edl.py --output-dir docs
+
+      - name: Validate generated publication
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import ipaddress
+          import json
+          from pathlib import Path
+          from scripts.build_zscaler_zpa_edl import network_sort_key
+          from scripts.generate_edl import ZSCALER_ZPA_FILE
+
+          docs = Path("docs")
+          output_path = docs / ZSCALER_ZPA_FILE
+          metadata_path = docs / "metadata/zscaler-zpa.json"
+          lines = output_path.read_text(encoding="ascii").splitlines()
+          if not lines:
+              raise SystemExit("Zscaler ZPA EDL output is empty")
+          networks = []
+          for value in lines:
+              network = ipaddress.ip_network(value, strict=True)
+              if network.version != 4 or not network.is_global:
+                  raise SystemExit(f"Invalid public IPv4 EDL entry: {value}")
+              networks.append(network)
+          if networks != sorted(set(networks), key=network_sort_key):
+              raise SystemExit("Zscaler ZPA EDL is not sorted and deduplicated")
+
+          metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+          if metadata["output"]["entries"] != len(lines):
+              raise SystemExit("Zscaler ZPA metadata count mismatch")
+          if metadata["output"]["sha256"] != hashlib.sha256(output_path.read_bytes()).hexdigest():
+              raise SystemExit("Zscaler ZPA metadata hash mismatch")
+          checks = metadata["crossChecks"]
+          required_checks = (
+              "jsonEqualsPlaintext",
+              "visiblePageIdentityAndExportLinksValidated",
+              "visiblePageConnectorSectionValidated",
+              "outputEqualsJsonConnectorIpv4Selection",
+          )
+          if not all(checks.get(name) is True for name in required_checks):
+              raise SystemExit("Zscaler ZPA source correspondence was not demonstrated")
+          PY
+          git diff --check
+
+  commit-publication:
+    needs: validate
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out current main
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Synchronize current main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git merge --ff-only origin/main
+
+      - name: Regenerate validated ZPA publication
+        run: python3 scripts/build_zscaler_zpa_edl.py --output-dir docs
+
+      - name: Detect publication changes
+        id: changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "$(git status --porcelain -- \
+            docs/zscaler/zpa/zpa_ipv4.txt \
+            docs/metadata/zscaler-zpa.json \
+            docs/index.html)" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit validated publication
+        if: steps.changes.outputs.changed == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- \
+            docs/zscaler/zpa/zpa_ipv4.txt \
+            docs/metadata/zscaler-zpa.json \
+            docs/index.html
+          git diff --cached --check
+          git diff --cached --quiet && exit 0
+          git commit -m "Update Zscaler ZPA Public Service Edge EDL"
+          git push origin HEAD:main
+
+  publish-pages:
+    needs: commit-publication
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check out validated main
+        uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

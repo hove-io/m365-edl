@@ -25,6 +25,7 @@ Networks.
 | `dropbox-ipv4.txt` | Allocations produit Dropbox | https://hove-io.github.io/m365-edl/dropbox-ipv4.txt |
 | `dell-update-ipv4.txt` | Dell Command Update | https://hove-io.github.io/m365-edl/dell-update-ipv4.txt |
 | `microsoft-edge-windows-services-ipv4.txt` | Microsoft Edge et services Windows complémentaires | https://hove-io.github.io/m365-edl/microsoft-edge-windows-services-ipv4.txt |
+| `zscaler/zpa/zpa_ipv4.txt` | Zscaler ZPA Public Service Edges pour App Connectors | https://hove-io.github.io/m365-edl/zscaler/zpa/zpa_ipv4.txt |
 | `log4j-ipv4.txt` | IOC IPv4 historiques Log4Shell/Log4j fortement qualifiés | https://hove-io.github.io/m365-edl/log4j-ipv4.txt |
 | `log4j-domains.txt` | Domaines historiques Log4Shell/Log4j fortement qualifiés | https://hove-io.github.io/m365-edl/log4j-domains.txt |
 
@@ -214,6 +215,60 @@ depuis un FQDN officiel — actuellement via
 manuel. Le champ CIDR `actions` de l'API Meta, les plages Azure globales et les
 adresses déduites de l'ASN sont explicitement exclus de cette EDL.
 
+### Zscaler ZPA Public Service Edges
+
+`zscaler/zpa/zpa_ipv4.txt` est construit exclusivement depuis la page
+officielle [Zscaler Private Access (ZPA)](https://config.zscaler.com/private.zscaler.com/zpa)
+et les deux exports officiels JSON et texte brut qu'elle publie. Le générateur
+sélectionne uniquement les lignes `TCP/UDP 443` dont la source est exactement
+`Connector, Private Service Edge, Zscaler Client Connector` et qui couvrent
+`*.private.zscaler.com`. Les lignes `Browser Access` et les IPv6 sont exclues
+de cette EDL IPv4.
+
+La sortie contient une IPv4 ou un CIDR par ligne, sans commentaire. Chaque
+valeur est validée avec `ipaddress`, limitée aux réseaux IPv4 publics, puis
+normalisée, dédupliquée et triée numériquement. Aucune adresse n'est ajoutée en
+dur dans le générateur.
+
+Le workflow dédié
+`.github/workflows/update-zscaler-zpa-edl.yml` s'exécute quotidiennement et via
+`workflow_dispatch`. Avant publication, il exige simultanément :
+
+- l'identité exacte de la page et de son cloud `private.zscaler.com` ;
+- la présence de la section Connector/Public Service Edge et des liens vers
+  les deux exports officiels ;
+- l'égalité complète des réseaux des exports JSON et texte brut ;
+- l'égalité de la sortie avec la sélection IPv4 des lignes Connector du JSON ;
+- une liste non vide et une variation du nombre d'entrées inférieure ou égale
+  à 50 % par rapport à la dernière version valide.
+
+Une erreur HTTP, un changement de schéma, une entrée invalide, une divergence
+entre sources ou une variation anormale arrête le run avant tout remplacement.
+Les fichiers sont remplacés atomiquement et un commit n'est créé que si la
+source officielle ou la publication a réellement changé. Le rapport
+[`metadata/zscaler-zpa.json`](https://hove-io.github.io/m365-edl/metadata/zscaler-zpa.json)
+conserve les empreintes des trois représentations officielles, les compteurs et
+la preuve des contrôles de correspondance.
+
+Pour une EDL Palo Alto de type **IP List**, utiliser de préférence l'URL GitHub
+Pages stable :
+
+```text
+https://hove-io.github.io/m365-edl/zscaler/zpa/zpa_ipv4.txt
+```
+
+L'URL GitHub raw équivalente est :
+
+```text
+https://raw.githubusercontent.com/hove-io/m365-edl/main/docs/zscaler/zpa/zpa_ipv4.txt
+```
+
+Cette EDL ne remplace pas la politique de déchiffrement TLS. Les App Connectors
+ZPA utilisant du certificate pinning, `*.prod.zpath.net` doit rester dans une
+règle **no-decrypt** dédiée. Si OAuth ZPA est utilisé,
+`zpa-oauth.private.zscaler.com` doit également être autorisé selon la
+documentation Zscaler applicable au tenant.
+
 ### Dropbox
 
 Dropbox renvoie depuis sa
@@ -317,7 +372,10 @@ workflow hebdomadaire.
 Le workflow `.github/workflows/update-edl.yml` s'exécute toutes les heures et
 peut être lancé manuellement. Le workflow Log4Shell dédié
 `.github/workflows/update-log4j-edl.yml` s'exécute chaque lundi et peut aussi
-être lancé manuellement. Aucun secret externe n'est requis.
+être lancé manuellement. Le workflow Zscaler ZPA dédié
+`.github/workflows/update-zscaler-zpa-edl.yml` s'exécute quotidiennement. Les
+trois workflows acceptent aussi `workflow_dispatch`. Aucun secret externe
+n'est requis.
 
 Il applique les contrôles suivants à chaque liste :
 
@@ -382,6 +440,12 @@ est indépendant de `sources.json`. Il contient les CVE associées, les sources
 utilisées ou écartées, les compteurs bruts/acceptés/rejetés, les hashes des
 sorties et la provenance multi-source par indicateur.
 
+Le rapport Zscaler ZPA public
+[`metadata/zscaler-zpa.json`](https://hove-io.github.io/m365-edl/metadata/zscaler-zpa.json)
+est lui aussi indépendant de `sources.json`. Il démontre la concordance des
+exports officiels, décrit le filtre Connector/Public Service Edge et publie le
+nombre ainsi que le hash de l'EDL IPv4 obtenue.
+
 ## Exploitation Palo Alto
 
 Créer des EDL de type **IP List** avec un rafraîchissement horaire, notamment :
@@ -404,8 +468,15 @@ EDL-GITHUB-ACTIONS-IPV4
 EDL-DROPBOX-IPV4
 EDL-DELL-UPDATE-IPV4
 EDL-MICROSOFT-EDGE-WINDOWS-SERVICES-IPV4
+EDL-ZSCALER-ZPA-PSE-IPV4
 EDL-LOG4J-HISTORICAL-IPV4
 ```
+
+Pour `EDL-ZSCALER-ZPA-PSE-IPV4`, utiliser l'URL
+`https://hove-io.github.io/m365-edl/zscaler/zpa/zpa_ipv4.txt`, limiter la règle
+de sécurité aux adresses sources des App Connectors et au service
+`application-default` sur TCP/443, puis configurer séparément l'exemption de
+déchiffrement ZPA.
 
 Créer séparément `EDL-LOG4J-HISTORICAL-DOMAINS` comme **Domain List** si la
 politique PAN-OS consomme aussi les deux domaines historiques publiés. Une
