@@ -113,6 +113,7 @@ GITHUB_ACTIONS_FILE = "github-actions-ipv4.txt"
 DROPBOX_FILE = "dropbox-ipv4.txt"
 DELL_UPDATE_FILE = "dell-update-ipv4.txt"
 MICROSOFT_EDGE_WINDOWS_FILE = "microsoft-edge-windows-services-ipv4.txt"
+ZSCALER_ZPA_FILE = "zscaler/zpa/zpa_ipv4.txt"
 RESIDUAL_COVERAGE_FILE = "residual-ip-coverage.json"
 XCODE_DNS_GRACE_PERIOD = dt.timedelta(hours=24)
 XCODE_DNS_ATTEMPTS = 8
@@ -592,6 +593,7 @@ PUBLICATIONS = (
     ("Dropbox product networks", DROPBOX_FILE),
     ("Dell Command Update", DELL_UPDATE_FILE),
     ("Microsoft Edge / Windows services", MICROSOFT_EDGE_WINDOWS_FILE),
+    ("Zscaler ZPA Public Service Edges", ZSCALER_ZPA_FILE),
     ("Log4Shell / Log4j historical IPv4 IOCs", "log4j-ipv4.txt"),
     ("Log4Shell / Log4j historical domains", "log4j-domains.txt"),
 )
@@ -3220,7 +3222,7 @@ def build_index(
             "</tr>"
         )
     return f"""<!doctype html>
-<html lang="fr">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -3236,71 +3238,76 @@ def build_index(
   </head>
   <body>
     <h1>Public service EDLs</h1>
-    <p>Listes publiques générées et validées automatiquement depuis des sources officielles.</p>
+    <p>Public lists generated and validated automatically from official sources.</p>
     <div class="notice">
-      <p><strong>Microsoft 365 Common :</strong> les CIDR explicites du web service
-      sont complétés uniquement par les A publics observés pour
-      <code>word.office.com</code>, cible auditée du wildcard officiel
-      <code>*.office.com</code>. La provenance DNS est conservée 24 heures ; aucun
-      préfixe Azure ni <code>/32</code> manuel n'est ajouté.</p>
+      <p><strong>Microsoft 365 Common:</strong> explicit CIDRs from the web service
+      are supplemented only with public A records observed for
+      <code>word.office.com</code>, an audited target of the official
+      <code>*.office.com</code> wildcard. DNS provenance is retained for 24 hours;
+      no Azure prefix or manual <code>/32</code> is added.</p>
     </div>
     <div class="notice">
-      <p><strong>Teams Media / Direct Routing :</strong> seules les plages commerciales
-      <code>52.112.0.0/14</code> et <code>52.120.0.0/14</code> sont acceptées.
-      Les plages GCC High, DoD ou toute plage inattendue font échouer la publication.</p>
+      <p><strong>Teams Media / Direct Routing:</strong> only the commercial
+      <code>52.112.0.0/14</code> and <code>52.120.0.0/14</code> ranges are accepted.
+      GCC High, DoD, or any unexpected range causes publication to fail.</p>
     </div>
     <div class="notice">
-      <p><strong>Windows Update, Delivery Optimization et Intune :</strong> les
-      familles FQDN officielles sont validées dans les sources Microsoft puis des
-      cibles DNS auditées sont résolues à chaque exécution. L'EDL Intune conserve
-      pendant 24 heures uniquement les IPv4 publiques réellement observées sous
-      <code>*.events.data.microsoft.com</code>, y compris les diagnostics Windows
-      et Configuration Manager explicitement documentés. Les cibles dynamiques
-      prioritaires Intune, Windows Settings et Edge sont aussi observées depuis
-      deux vues DNS françaises contrôlées, avec chaîne CNAME et grâce de 24 heures.
-      Aucune IP de logs ni plage Azure globale n'est injectée manuellement.</p>
+      <p><strong>Windows Update, Delivery Optimization, and Intune:</strong>
+      official FQDN families are validated against Microsoft sources, then audited
+      DNS targets are resolved on every run. The Intune EDL retains for 24 hours
+      only public IPv4 addresses actually observed under
+      <code>*.events.data.microsoft.com</code>, including explicitly documented
+      Windows and Configuration Manager diagnostics. Priority dynamic targets for
+      Intune, Windows Settings, and Edge are also observed through two controlled
+      French DNS views, including the CNAME chain and a 24-hour grace period.
+      No log-derived IP or global Azure range is injected manually.</p>
     </div>
     <div class="notice">
-      <p><strong>Apple :</strong> les listes utilisent uniquement les A publics
-      courants des FQDN présents dans la source Apple. Les services Device setup
-      et Device management sont regroupés avec les trois relais Private Cloud
-      Compute exacts documentés par Apple, tandis que les téléchargements Xcode
-      sont isolés. Chaque EDL Apple conserve pendant 24 heures uniquement les IPv4
-      réellement observées via ses FQDN officiels, avec leur chaîne CNAME. Les
-      relais PCC sont interrogés huit fois depuis deux vues DNS françaises.
-      Aucun <code>17.0.0.0/8</code> ni range CDN global n'est ajouté.
-      Apple recommande d'exempter ces FQDN de l'inspection HTTPS.</p>
+      <p><strong>Apple:</strong> the lists use only current public A records for
+      FQDNs found in Apple's source. Device setup and Device management services
+      are grouped with the three exact Private Cloud Compute relays documented by
+      Apple, while Xcode downloads remain separate. Each Apple EDL retains for 24
+      hours only IPv4 addresses actually observed through its official FQDNs,
+      including the CNAME chain. PCC relays are queried eight times through two
+      French DNS views. Neither <code>17.0.0.0/8</code> nor global CDN ranges are
+      added. Apple recommends exempting these FQDNs from HTTPS inspection.</p>
     </div>
     <div class="notice">
-      <p><strong>Ubuntu Pro APT News :</strong> la liste dédiée valide
-      <code>motd.ubuntu.com</code> dans la configuration officielle Canonical,
-      puis conserve pendant 24 heures uniquement ses A publics observés depuis
-      le résolveur système et deux vues DNS françaises. Aucun range AWS ou EC2
-      global n'est ajouté.</p>
+      <p><strong>Ubuntu Pro APT News:</strong> the dedicated list validates
+      <code>motd.ubuntu.com</code> against Canonical's official configuration, then
+      retains for 24 hours only public A records observed through the system
+      resolver and two French DNS views. No global AWS or EC2 range is added.</p>
     </div>
     <div class="notice">
-      <p><strong>GitHub Actions :</strong> la liste dédiée est alimentée uniquement
-      par les FQDN <code>*.actions.githubusercontent.com</code> concrets publiés
-      dans l'API Meta GitHub. Leurs A publics sont conservés 24 heures avec leur
-      chaîne CNAME ; les CIDR Actions et Azure globaux ne sont jamais importés.</p>
+      <p><strong>GitHub Actions:</strong> the dedicated list is populated only from
+      concrete <code>*.actions.githubusercontent.com</code> FQDNs published by the
+      GitHub Meta API. Their public A records are retained for 24 hours with their
+      CNAME chain; global Actions and Azure CIDRs are never imported.</p>
     </div>
     <div class="notice">
-      <p><strong>Log4Shell / Log4j :</strong> ces IOC historiques et fortement
-      qualifiés proviennent d'incidents CISA confirmés et de sections payload/C2
-      Unit 42 ciblées. Ils ne constituent ni une réputation temps réel ni une
-      protection autonome : corrigez Log4j, activez l'IPS, segmentez les systèmes
-      et contrôlez les sorties LDAP/RMI. Les scanners de masse et les listes
-      communautaires non qualifiées sont exclus. La
-      <a href="metadata/log4j.json">provenance par indicateur</a> est publique.</p>
+      <p><strong>Zscaler ZPA:</strong> the App Connector IPv4 EDL is selected only
+      from official <code>private.zscaler.com</code> TCP/UDP 443 service rows.
+      Zscaler's JSON and plain-text exports are cross-checked with the visible page
+      identity. Invalid or empty output, a source mismatch, or an entry-count
+      variation greater than 50% causes publication to fail. See the
+      <a href="metadata/zscaler-zpa.json">ZPA provenance metadata</a>.</p>
+    </div>
+    <div class="notice">
+      <p><strong>Log4Shell / Log4j:</strong> these historical, high-confidence IOCs
+      come from confirmed CISA incidents and targeted Unit 42 payload/C2 sections.
+      They provide neither real-time reputation nor standalone protection: patch
+      Log4j, enable IPS, segment systems, and control outbound LDAP/RMI traffic.
+      Mass scanners and unqualified community lists are excluded. Public
+      <a href="metadata/log4j.json">per-indicator provenance</a> is provided.</p>
     </div>
     <table>
-      <thead><tr><th>Périmètre</th><th>Fichier</th><th>Entrées</th></tr></thead>
+      <thead><tr><th>Scope</th><th>File</th><th>Entries</th></tr></thead>
       <tbody>{''.join(rows)}</tbody>
     </table>
-    <p>Dernière modification des listes : {html.escape(generated_at)}</p>
-    <p><a href="sources.json">Provenance et métadonnées</a></p>
-    <p><a href="residual-ip-coverage.json">Couverture des IP résiduelles et matrice INTERNET-ONLY</a></p>
-    <p><a href="https://github.com/hove-io/m365-edl">Code source, méthode et garde-fous</a></p>
+    <p>Last list update: {html.escape(generated_at)}</p>
+    <p><a href="sources.json">Provenance and metadata</a></p>
+    <p><a href="residual-ip-coverage.json">Residual IP coverage and INTERNET-ONLY matrix</a></p>
+    <p><a href="https://github.com/hove-io/m365-edl">Source code, methodology, and safeguards</a></p>
   </body>
 </html>
 """
