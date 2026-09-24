@@ -2,7 +2,7 @@ name: Update public service IPv4 EDLs
 
 on:
   schedule:
-    - cron: "37 * * * *"
+    - cron: "37 3,9,15,21 * * *"
   workflow_dispatch:
   push:
     branches:
@@ -76,27 +76,45 @@ jobs:
           windows_diagnostic_endpoints_file="${RUNNER_TEMP}/windows-diagnostic-endpoints.html"
           configmgr_internet_endpoints_file="${RUNNER_TEMP}/configmgr-internet-endpoints.html"
 
-          content_type="$(curl \
-            --fail \
+          # Keep the response on HTTP errors so the failure can be diagnosed.
+          # curl's normal --retry handles transient 408/429/5xx responses,
+          # without retrying a permanent 404.
+          headers_file="${RUNNER_TEMP}/m365-endpoints-headers.txt"
+          http_result="$(curl \
             --silent \
             --show-error \
             --location \
             --retry 3 \
-            --retry-all-errors \
             --connect-timeout 15 \
             --max-time 60 \
             --proto '=https' \
             --tlsv1.2 \
             --header 'Accept: application/json' \
             --header 'User-Agent: hove-io-m365-edl/1.0' \
+            --dump-header "$headers_file" \
             --output "$response_file" \
-            --write-out '%{content_type}' \
+            --write-out '%{http_code} %{content_type}' \
             "$request_url")"
+          read -r http_status content_type <<< "$http_result"
+          if [[ "$http_status" != "200" ]]; then
+            echo "::error::Microsoft 365 endpoints returned HTTP ${http_status} (${content_type}) for ${request_url}"
+            python3 - "$headers_file" "$response_file" <<'PY'
+          import pathlib
+          import sys
 
+          headers = pathlib.Path(sys.argv[1]).read_text(errors="replace")
+          for line in headers.splitlines():
+              if line.lower().startswith(("x-ms-request-id:", "request-id:", "retry-after:")):
+                  print(line[:300])
+          body = pathlib.Path(sys.argv[2]).read_bytes()[:512]
+          print("Response excerpt:", repr(body.decode("utf-8", errors="replace")))
+          PY
+            exit 1
+          fi
           case "$content_type" in
             application/json*) ;;
             *)
-              echo "Unexpected Microsoft content type: $content_type" >&2
+              echo "::error::Unexpected Microsoft content type: $content_type"
               exit 1
               ;;
           esac
