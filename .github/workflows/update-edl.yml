@@ -122,6 +122,7 @@ jobs:
           download_source() {
             local url="$1"
             local destination="$2"
+            printf 'Fetching source: %s\n' "$url"
             curl \
               --fail \
               --silent \
@@ -140,10 +141,10 @@ jobs:
           }
 
           download_source \
-            'https://raw.githubusercontent.com/MicrosoftDocs/defender-docs/public/defender-endpoint/standard-device-connectivity-urls-commercial.md' \
+            'https://learn.microsoft.com/en-us/defender-endpoint/standard-device-connectivity-urls-commercial?accept=text/markdown' \
             "$defender_standard_file"
           download_source \
-            'https://raw.githubusercontent.com/MicrosoftDocs/defender-docs/public/defender-endpoint/configure-network-connections-microsoft-defender-antivirus.md' \
+            'https://learn.microsoft.com/en-us/defender-endpoint/configure-network-connections-microsoft-defender-antivirus?accept=text/markdown' \
             "$defender_antivirus_file"
           download_source \
             'https://learn.microsoft.com/en-us/microsoftteams/direct-routing-plan' \

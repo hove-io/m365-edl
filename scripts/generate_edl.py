@@ -28,16 +28,16 @@ DEFENDER_STANDARD_LEARN_URL = (
     "standard-device-connectivity-urls-commercial"
 )
 DEFENDER_STANDARD_RAW_URL = (
-    "https://raw.githubusercontent.com/MicrosoftDocs/defender-docs/public/"
-    "defender-endpoint/standard-device-connectivity-urls-commercial.md"
+    "https://learn.microsoft.com/en-us/defender-endpoint/"
+    "standard-device-connectivity-urls-commercial?accept=text/markdown"
 )
 DEFENDER_ANTIVIRUS_LEARN_URL = (
     "https://learn.microsoft.com/en-us/defender-endpoint/"
     "configure-network-connections-microsoft-defender-antivirus"
 )
 DEFENDER_ANTIVIRUS_RAW_URL = (
-    "https://raw.githubusercontent.com/MicrosoftDocs/defender-docs/public/"
-    "defender-endpoint/configure-network-connections-microsoft-defender-antivirus.md"
+    "https://learn.microsoft.com/en-us/defender-endpoint/"
+    "configure-network-connections-microsoft-defender-antivirus?accept=text/markdown"
 )
 TEAMS_DIRECT_ROUTING_URL = (
     "https://learn.microsoft.com/en-us/microsoftteams/direct-routing-plan"
@@ -1327,7 +1327,11 @@ def validate_m365_documented_urls(
 def extract_markdown_table(
     text: str, *, header_prefix: str, expected_columns: int, label: str
 ) -> list[list[str]]:
-    lines = text.splitlines()
+    lines = [
+        re.sub(r"[ \t]*\|[ \t]*", "|", line.strip())
+        if line.lstrip().startswith("|") else line
+        for line in text.splitlines()
+    ]
     matches = [index for index, line in enumerate(lines) if line.startswith(header_prefix)]
     if len(matches) != 1:
         raise GenerationError(
