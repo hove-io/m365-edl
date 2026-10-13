@@ -43,13 +43,9 @@ TEAMS_DIRECT_ROUTING_URL = (
     "https://learn.microsoft.com/en-us/microsoftteams/direct-routing-plan"
 )
 INTUNE_ENDPOINTS_LEARN_URL = (
-    "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/"
-    "intune-endpoints"
+    "https://learn.microsoft.com/en-us/intune/fundamentals/endpoints"
 )
-INTUNE_ENDPOINTS_RAW_URL = (
-    "https://raw.githubusercontent.com/MicrosoftDocs/memdocs/main/"
-    "intune/fundamentals/endpoints.md"
-)
+INTUNE_ENDPOINTS_MARKDOWN_URL = INTUNE_ENDPOINTS_LEARN_URL + "?accept=text/markdown"
 APPLE_ENTERPRISE_URL = "https://support.apple.com/en-us/101555"
 APPLE_APNS_URL = (
     "https://developer.apple.com/library/archive/documentation/NetworkingInternet/"
@@ -3177,7 +3173,7 @@ def build_sources(
             "intuneNetworkEndpoints": {
                 "publisher": "Microsoft",
                 "learnUrl": INTUNE_ENDPOINTS_LEARN_URL,
-                "sourceUrl": INTUNE_ENDPOINTS_RAW_URL,
+                "sourceUrl": INTUNE_ENDPOINTS_MARKDOWN_URL,
                 "documentDate": document_date(intune_endpoints),
                 "sha256": source_hash(intune_endpoints),
                 "section": "Consolidated Endpoint List / IP Subnets",
