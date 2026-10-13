@@ -2622,8 +2622,22 @@ def render_edl(networks: list[ipaddress.IPv4Network]) -> str:
 
 
 def check_drop_guard(
-    output_dir: Path, generated: dict[str, list[ipaddress.IPv4Network]]
+    output_dir: Path, generated: dict[str, list[ipaddress.IPv4Network]],
+    *, dns_files: dict[str, dict[str, Any]] | None = None,
 ) -> None:
+    # CDN address counts vary with geography and the 24-hour history window.
+    # A large contraction is safe only when current hostname coverage is intact
+    # and every published /32 still has validated DNS provenance.
+    dns_only_files = {
+        APPLE_UPDATES_FILE, APPLE_CONTENT_FILE, APPLE_DEVICE_FILE,
+        APPLE_XCODE_FILE, UBUNTU_MOTD_FILE, GITHUB_ACTIONS_FILE,
+        DELL_UPDATE_FILE, MICROSOFT_EDGE_WINDOWS_FILE,
+    }
+    previous_sources_path = output_dir / "sources.json"
+    previous_files = (
+        load_json_source(previous_sources_path, label="previous publication").get("files", {})
+        if dns_files and previous_sources_path.exists() else {}
+    )
     for filename, new_networks in generated.items():
         previous = parse_previous_file(output_dir / filename)
         if previous is None:
@@ -2631,6 +2645,33 @@ def check_drop_guard(
         previous_count = len(previous)
         new_count = len(new_networks)
         if new_count * 2 < previous_count:
+            if filename in dns_only_files and dns_files and new_networks:
+                old = previous_files.get(filename, {})
+                new = dns_files.get(filename, {})
+                old_hosts = {
+                    host for host, addresses in old.get(
+                        "currentResolvedHostnames", old.get("resolvedHostnames", {})
+                    ).items() if addresses
+                }
+                new_hosts = {
+                    host for host, addresses in new.get(
+                        "currentResolvedHostnames", new.get("resolvedHostnames", {})
+                    ).items() if addresses
+                }
+                proven_addresses = {
+                    address for addresses in new.get("resolvedHostnames", {}).values()
+                    for address in addresses
+                }
+                if old_hosts and old_hosts <= new_hosts and all(
+                    network.prefixlen == 32
+                    and str(network.network_address) in proven_addresses
+                    for network in new_networks
+                ):
+                    print(
+                        f"{filename}: DNS address count contracted from {previous_count} "
+                        f"to {new_count}; current hostname coverage and provenance verified"
+                    )
+                    continue
             raise GenerationError(
                 f"Refusing {filename}: CIDR count dropped from "
                 f"{previous_count} to {new_count} (>50%)"
@@ -3337,7 +3378,7 @@ def publish(
         str, dict[str, dict[str, dict[str, Any]]]
     ],
 ) -> bool:
-    check_drop_guard(output_dir, generated)
+    check_drop_guard(output_dir, generated, dns_files=additional_files)
     rendered = {filename: render_edl(items) for filename, items in generated.items()}
 
     edl_changed = any(

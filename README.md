@@ -273,7 +273,9 @@ No external secret is required. The publication pipeline enforces:
 4. rejection of `0.0.0.0/0`, RFC1918, loopback, multicast, link-local,
    reserved, unspecified, and non-global networks;
 5. rejection of empty output;
-6. abnormal entry-count drop protection, plus bidirectional 50% variation
+6. abnormal entry-count drop protection (DNS-only lists may contract when all
+   previously resolved domains still resolve and every output IP has DNS
+   provenance), plus bidirectional 50% variation
    protection for Zscaler ZPA;
 7. repeated DNS observation for dynamic FQDNs with CNAME provenance;
 8. atomic generation and replacement;
