@@ -1,12 +1,14 @@
 import datetime as dt
 import ipaddress
 import json
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
 from scripts.generate_edl import (
     APPLE_SECTION_REQUIREMENTS,
+    APPLE_UPDATES_FILE,
     APPLE_PRIVATE_CLOUD_COMPUTE_HOSTS,
     APPLE_XCODE_HOSTS,
     APPLE_XCODE_FILE,
@@ -35,6 +37,7 @@ from scripts.generate_edl import (
     XCODE_DOH_RESOLVER,
     build_residual_coverage,
     combine_dns_observation_details,
+    check_drop_guard,
     build_dns_history,
     build_dns_observation_details,
     build_xcode_dns_history,
@@ -56,6 +59,43 @@ EXPECTED = [
     ipaddress.IPv4Network("52.112.0.0/14"),
     ipaddress.IPv4Network("52.120.0.0/14"),
 ]
+
+
+class PublicationDropGuardTests(unittest.TestCase):
+    def test_dns_contraction_requires_current_coverage_and_ip_provenance(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            (output / APPLE_UPDATES_FILE).write_text(
+                "17.1.1.1/32\n17.1.1.2/32\n17.1.1.3/32\n"
+            )
+            (output / "sources.json").write_text(json.dumps({"files": {
+                APPLE_UPDATES_FILE: {
+                    "currentResolvedHostnames": {"updates.apple.com": ["17.1.1.1"]}
+                }
+            }}))
+            generated = {APPLE_UPDATES_FILE: [ipaddress.IPv4Network("17.2.2.2/32")]}
+            current = {APPLE_UPDATES_FILE: {
+                "currentResolvedHostnames": {"updates.apple.com": ["17.2.2.2"]},
+                "resolvedHostnames": {"updates.apple.com": ["17.2.2.2"]},
+            }}
+            check_drop_guard(output, generated, dns_files=current)
+            current[APPLE_UPDATES_FILE]["currentResolvedHostnames"] = {}
+            with self.assertRaises(GenerationError):
+                check_drop_guard(output, generated, dns_files=current)
+            current[APPLE_UPDATES_FILE]["currentResolvedHostnames"] = {
+                "updates.apple.com": ["17.2.2.2"]
+            }
+            current[APPLE_UPDATES_FILE]["resolvedHostnames"] = {}
+            with self.assertRaises(GenerationError):
+                check_drop_guard(output, generated, dns_files=current)
+
+    def test_official_subnet_lists_keep_count_drop_protection(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            filename = M365_SERVICE_FILES["Common"]
+            (output / filename).write_text("8.8.8.0/24\n9.9.9.0/24\n1.1.1.0/24\n")
+            with self.assertRaises(GenerationError):
+                check_drop_guard(output, {filename: [ipaddress.IPv4Network("8.8.8.0/24")]})
 
 
 class Microsoft365CommonDnsTests(unittest.TestCase):
