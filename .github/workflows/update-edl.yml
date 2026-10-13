@@ -2,7 +2,7 @@ name: Update public service IPv4 EDLs
 
 on:
   schedule:
-    - cron: "37 3,9,15,21 * * *"
+    - cron: "37 3,15 * * *"
   workflow_dispatch:
   push:
     branches:
@@ -123,21 +123,26 @@ jobs:
             local url="$1"
             local destination="$2"
             printf 'Fetching source: %s\n' "$url"
-            curl \
+            if ! curl \
               --fail \
               --silent \
               --show-error \
               --location \
               --retry 3 \
-              --retry-all-errors \
               --connect-timeout 15 \
               --max-time 60 \
               --proto '=https' \
               --tlsv1.2 \
               --header 'User-Agent: hove-io-m365-edl/1.0' \
               --output "$destination" \
-              "$url"
-            test -s "$destination"
+              "$url"; then
+              echo "::error::Unable to retrieve official source: $url"
+              return 1
+            fi
+            if [[ ! -s "$destination" ]]; then
+              echo "::error::Official source returned an empty response: $url"
+              return 1
+            fi
           }
 
           download_source \
@@ -150,7 +155,7 @@ jobs:
             'https://learn.microsoft.com/en-us/microsoftteams/direct-routing-plan' \
             "$teams_direct_routing_file"
           download_source \
-            'https://raw.githubusercontent.com/MicrosoftDocs/memdocs/main/intune/fundamentals/endpoints.md' \
+            'https://learn.microsoft.com/en-us/intune/fundamentals/endpoints?accept=text/markdown' \
             "$intune_endpoints_file"
           download_source \
             'https://support.apple.com/en-us/101555' \

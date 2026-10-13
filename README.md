@@ -260,7 +260,8 @@ output hashes are published in
 
 The workflows run as follows:
 
-- `.github/workflows/update-edl.yml`: hourly and on manual dispatch;
+- `.github/workflows/update-edl.yml`: twice daily at 03:37 and 15:37 UTC,
+  on relevant pushes to `main`, and on manual dispatch;
 - `.github/workflows/update-log4j-edl.yml`: every Monday and on manual dispatch;
 - `.github/workflows/update-zscaler-zpa-edl.yml`: daily and on manual dispatch.
 
