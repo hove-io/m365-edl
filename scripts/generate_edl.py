@@ -1010,7 +1010,12 @@ class DirectRoutingMediaParser(HTMLParser):
     LEGACY_H3 = "Media traffic: port ranges"
     LEGACY_H4 = "Microsoft 365, Office 365, and Office 365 GCC environments"
     CURRENT_H2 = "Media processor IP ranges"
-    CURRENT_H3 = "Microsoft 365 / Office 365"
+    CURRENT_H3_HEADINGS = frozenset(
+        {
+            "Microsoft 365 / Office 365",
+            "Microsoft 365 / Office 365 / Office 365 GCC environments",
+        }
+    )
 
     def __init__(self) -> None:
         super().__init__()
@@ -1052,7 +1057,7 @@ class DirectRoutingMediaParser(HTMLParser):
         )
         current = (
             self.current_h2 == self.CURRENT_H2
-            and self.current_h3 == self.CURRENT_H3
+            and self.current_h3 in self.CURRENT_H3_HEADINGS
         )
         return legacy or current
 

@@ -161,6 +161,19 @@ class TeamsMediaParserTests(unittest.TestCase):
 
         self.assertEqual(extract_teams_media_networks(learn_html), EXPECTED)
 
+    def test_extracts_current_commercial_gcc_heading(self) -> None:
+        learn_html = """
+        <h2>Media processor IP ranges</h2>
+        <h3>Microsoft 365 / Office 365 / Office 365 GCC environments</h3>
+        <ul><li>52.112.0.0/14</li><li>52.120.0.0/14</li></ul>
+        <h3>Office 365 GCC High environment</h3>
+        <ul><li>52.127.88.0/21</li></ul>
+        <h3>Office 365 DoD environment</h3>
+        <ul><li>52.127.64.0/21</li></ul>
+        """
+
+        self.assertEqual(extract_teams_media_networks(learn_html), EXPECTED)
+
     def test_rejects_unexpected_commercial_range(self) -> None:
         learn_html = """
         <h2>Media processor IP ranges</h2>
