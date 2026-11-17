@@ -49,6 +49,8 @@ jobs:
       - name: Retrieve official service sources
         id: request
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
 
@@ -122,20 +124,26 @@ jobs:
           download_source() {
             local url="$1"
             local destination="$2"
+            local -a curl_args=(
+              --fail
+              --silent
+              --show-error
+              --location
+              --retry 3
+              --connect-timeout 15
+              --max-time 60
+              --proto '=https'
+              --tlsv1.2
+              --header 'User-Agent: hove-io-m365-edl/1.0'
+            )
+            if [[ "$url" == https://api.github.com/* && -n "${GITHUB_TOKEN:-}" ]]; then
+              curl_args+=(
+                --header 'Accept: application/vnd.github+json'
+                --header "Authorization: Bearer ${GITHUB_TOKEN}"
+              )
+            fi
             printf 'Fetching source: %s\n' "$url"
-            if ! curl \
-              --fail \
-              --silent \
-              --show-error \
-              --location \
-              --retry 3 \
-              --connect-timeout 15 \
-              --max-time 60 \
-              --proto '=https' \
-              --tlsv1.2 \
-              --header 'User-Agent: hove-io-m365-edl/1.0' \
-              --output "$destination" \
-              "$url"; then
+            if ! curl "${curl_args[@]}" --output "$destination" "$url"; then
               echo "::error::Unable to retrieve official source: $url"
               return 1
             fi
@@ -143,6 +151,56 @@ jobs:
               echo "::error::Official source returned an empty response: $url"
               return 1
             fi
+          }
+
+          fetch_doh_observation() {
+            local resolver="$1"
+            local fqdn="$2"
+            local ecs_subnet="$3"
+            local attempt="$4"
+            local output_file="$5"
+            local max_retries=5
+            local retry=1
+            local dns_response=""
+
+            while true; do
+              if dns_response="$(curl \
+                --fail \
+                --silent \
+                --show-error \
+                --location \
+                --retry 3 \
+                --retry-all-errors \
+                --connect-timeout 15 \
+                --max-time 60 \
+                --proto '=https' \
+                --tlsv1.2 \
+                --get \
+                --data-urlencode "name=${fqdn}" \
+                --data-urlencode 'type=A' \
+                --data-urlencode "edns_client_subnet=${ecs_subnet}" \
+                --header 'Accept: application/dns-json' \
+                --header 'User-Agent: hove-io-m365-edl/1.0' \
+                "$resolver")" && jq -e '.Status == 0 and (.Answer | type == "array")' <<< "$dns_response" > /dev/null 2>&1; then
+                jq -cn \
+                  --arg fqdn "$fqdn" \
+                  --arg ecsSubnet "$ecs_subnet" \
+                  --arg resolver "$resolver" \
+                  --argjson attempt "$attempt" \
+                  --argjson response "$dns_response" \
+                  '{fqdn: $fqdn, ecsSubnet: $ecsSubnet, resolver: $resolver,
+                    attempt: $attempt, response: $response}' \
+                  >> "$output_file"
+                return 0
+              fi
+
+              if [[ "$retry" -ge "$max_retries" ]]; then
+                echo "::error::DoH query failed after ${max_retries} attempts for ${fqdn} (ecs=${ecs_subnet}, attempt=${attempt}): ${dns_response:-empty/curl error}"
+                return 1
+              fi
+              sleep $((retry * 2))
+              retry=$((retry + 1))
+            done
           }
 
           download_source \
@@ -181,35 +239,12 @@ jobs:
           for attempt in $(seq 1 "$xcode_dns_attempts"); do
             for fqdn in "${xcode_dns_hosts[@]}"; do
               for ecs_subnet in "${xcode_dns_ecs_subnets[@]}"; do
-                dns_response="$(curl \
-                  --fail \
-                  --silent \
-                  --show-error \
-                  --location \
-                  --retry 3 \
-                  --retry-all-errors \
-                  --connect-timeout 15 \
-                  --max-time 60 \
-                  --proto '=https' \
-                  --tlsv1.2 \
-                  --get \
-                  --data-urlencode "name=${fqdn}" \
-                  --data-urlencode 'type=A' \
-                  --data-urlencode "edns_client_subnet=${ecs_subnet}" \
-                  --header 'Accept: application/dns-json' \
-                  --header 'User-Agent: hove-io-m365-edl/1.0' \
-                  "$xcode_dns_resolver")"
-                jq -e '.Status == 0 and (.Answer | type == "array")' \
-                  <<< "$dns_response" > /dev/null
-                jq -cn \
-                  --arg fqdn "$fqdn" \
-                  --arg ecsSubnet "$ecs_subnet" \
-                  --arg resolver "$xcode_dns_resolver" \
-                  --argjson attempt "$attempt" \
-                  --argjson response "$dns_response" \
-                  '{fqdn: $fqdn, ecsSubnet: $ecsSubnet, resolver: $resolver,
-                    attempt: $attempt, response: $response}' \
-                  >> "$apple_xcode_dns_observations_file"
+                fetch_doh_observation \
+                  "$xcode_dns_resolver" \
+                  "$fqdn" \
+                  "$ecs_subnet" \
+                  "$attempt" \
+                  "$apple_xcode_dns_observations_file"
               done
             done
             if [[ "$attempt" -lt "$xcode_dns_attempts" ]]; then
@@ -233,35 +268,12 @@ jobs:
           for attempt in $(seq 1 "$apple_pcc_dns_attempts"); do
             for fqdn in "${apple_pcc_dns_hosts[@]}"; do
               for ecs_subnet in "${apple_pcc_dns_ecs_subnets[@]}"; do
-                dns_response="$(curl \
-                  --fail \
-                  --silent \
-                  --show-error \
-                  --location \
-                  --retry 3 \
-                  --retry-all-errors \
-                  --connect-timeout 15 \
-                  --max-time 60 \
-                  --proto '=https' \
-                  --tlsv1.2 \
-                  --get \
-                  --data-urlencode "name=${fqdn}" \
-                  --data-urlencode 'type=A' \
-                  --data-urlencode "edns_client_subnet=${ecs_subnet}" \
-                  --header 'Accept: application/dns-json' \
-                  --header 'User-Agent: hove-io-m365-edl/1.0' \
-                  "$apple_pcc_dns_resolver")"
-                jq -e '.Status == 0 and (.Answer | type == "array")' \
-                  <<< "$dns_response" > /dev/null
-                jq -cn \
-                  --arg fqdn "$fqdn" \
-                  --arg ecsSubnet "$ecs_subnet" \
-                  --arg resolver "$apple_pcc_dns_resolver" \
-                  --argjson attempt "$attempt" \
-                  --argjson response "$dns_response" \
-                  '{fqdn: $fqdn, ecsSubnet: $ecsSubnet, resolver: $resolver,
-                    attempt: $attempt, response: $response}' \
-                  >> "$apple_pcc_dns_observations_file"
+                fetch_doh_observation \
+                  "$apple_pcc_dns_resolver" \
+                  "$fqdn" \
+                  "$ecs_subnet" \
+                  "$attempt" \
+                  "$apple_pcc_dns_observations_file"
               done
             done
             if [[ "$attempt" -lt "$apple_pcc_dns_attempts" ]]; then
@@ -279,35 +291,12 @@ jobs:
           )
           for attempt in $(seq 1 "$ubuntu_dns_attempts"); do
             for ecs_subnet in "${ubuntu_dns_ecs_subnets[@]}"; do
-              dns_response="$(curl \
-                --fail \
-                --silent \
-                --show-error \
-                --location \
-                --retry 3 \
-                --retry-all-errors \
-                --connect-timeout 15 \
-                --max-time 60 \
-                --proto '=https' \
-                --tlsv1.2 \
-                --get \
-                --data-urlencode 'name=motd.ubuntu.com' \
-                --data-urlencode 'type=A' \
-                --data-urlencode "edns_client_subnet=${ecs_subnet}" \
-                --header 'Accept: application/dns-json' \
-                --header 'User-Agent: hove-io-m365-edl/1.0' \
-                "$ubuntu_dns_resolver")"
-              jq -e '.Status == 0 and (.Answer | type == "array")' \
-                <<< "$dns_response" > /dev/null
-              jq -cn \
-                --arg fqdn 'motd.ubuntu.com' \
-                --arg ecsSubnet "$ecs_subnet" \
-                --arg resolver "$ubuntu_dns_resolver" \
-                --argjson attempt "$attempt" \
-                --argjson response "$dns_response" \
-                '{fqdn: $fqdn, ecsSubnet: $ecsSubnet, resolver: $resolver,
-                  attempt: $attempt, response: $response}' \
-                >> "$ubuntu_dns_observations_file"
+              fetch_doh_observation \
+                "$ubuntu_dns_resolver" \
+                'motd.ubuntu.com' \
+                "$ecs_subnet" \
+                "$attempt" \
+                "$ubuntu_dns_observations_file"
             done
             if [[ "$attempt" -lt "$ubuntu_dns_attempts" ]]; then
               sleep 1
@@ -356,35 +345,12 @@ jobs:
           for attempt in $(seq 1 "$microsoft_dns_attempts"); do
             for fqdn in "${microsoft_dns_hosts[@]}"; do
               for ecs_subnet in "${microsoft_dns_ecs_subnets[@]}"; do
-                dns_response="$(curl \
-                  --fail \
-                  --silent \
-                  --show-error \
-                  --location \
-                  --retry 3 \
-                  --retry-all-errors \
-                  --connect-timeout 15 \
-                  --max-time 60 \
-                  --proto '=https' \
-                  --tlsv1.2 \
-                  --get \
-                  --data-urlencode "name=${fqdn}" \
-                  --data-urlencode 'type=A' \
-                  --data-urlencode "edns_client_subnet=${ecs_subnet}" \
-                  --header 'Accept: application/dns-json' \
-                  --header 'User-Agent: hove-io-m365-edl/1.0' \
-                  "$microsoft_dns_resolver")"
-                jq -e '.Status == 0 and (.Answer | type == "array")' \
-                  <<< "$dns_response" > /dev/null
-                jq -cn \
-                  --arg fqdn "$fqdn" \
-                  --arg ecsSubnet "$ecs_subnet" \
-                  --arg resolver "$microsoft_dns_resolver" \
-                  --argjson attempt "$attempt" \
-                  --argjson response "$dns_response" \
-                  '{fqdn: $fqdn, ecsSubnet: $ecsSubnet, resolver: $resolver,
-                    attempt: $attempt, response: $response}' \
-                  >> "$microsoft_dns_observations_file"
+                fetch_doh_observation \
+                  "$microsoft_dns_resolver" \
+                  "$fqdn" \
+                  "$ecs_subnet" \
+                  "$attempt" \
+                  "$microsoft_dns_observations_file"
               done
             done
             if [[ "$attempt" -lt "$microsoft_dns_attempts" ]]; then
