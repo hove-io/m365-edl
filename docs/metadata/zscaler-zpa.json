@@ -1,6 +1,6 @@
 {
   "crossChecks": {
-    "allOfficialUniqueIpNetworks": 1319,
+    "allOfficialUniqueIpNetworks": 1322,
     "jsonEqualsPlaintext": true,
     "outputEqualsJsonConnectorIpv4Selection": true,
     "visiblePageConnectorSectionValidated": true,
@@ -12,12 +12,12 @@
     "invalidOrNonPublicNetworkRejected": true,
     "maximumCountVariation": "50%"
   },
-  "generatedAt": "2026-11-17T05:45:35Z",
+  "generatedAt": "2026-11-19T05:45:18Z",
   "output": {
-    "entries": 1088,
+    "entries": 1091,
     "file": "zscaler/zpa/zpa_ipv4.txt",
     "ipVersion": 4,
-    "sha256": "f71e94ecf6d72656e3be36f393886681752ea04f97039ae27ab8bc59e9732896",
+    "sha256": "b4018c1883c4a1d76c4b22ffaef0caa81541753b77313e99004edc7d113a27f2",
     "type": "Palo Alto IP List"
   },
   "schemaVersion": 1,
@@ -28,9 +28,9 @@
     "excludedValidIPv6Entries": 224,
     "port": 443,
     "protocol": "TCP/UDP",
-    "rawEntries": 1316,
+    "rawEntries": 1319,
     "requiredDomain": "*.private.zscaler.com",
-    "selectedRows": 45,
+    "selectedRows": 46,
     "source": "Connector, Private Service Edge, Zscaler Client Connector"
   },
   "source": {
@@ -40,9 +40,9 @@
     "pageData": "https://config.zscaler.com/api/getpagedata/private.zscaler.com/all/zpa?site=config.zscaler.com",
     "plaintext": "https://config.zscaler.com/api/private.zscaler.com/zpa/plaintext",
     "sha256": {
-      "json": "b95e7df067f2ea97f34f07895af6ca88f2f17baed6cacb9951b06cf703c445c7",
+      "json": "5d3393f69773ef3bc09d12ee9ca4cd910b9d609d76fb57a55b844d4337a4eb7c",
       "pageData": "a5eccc0508ed9d4432763c4668a0d7cc5576bce18fddb2f90c005ab792118c44",
-      "plaintext": "117e5c851d82e4253b0a890a2227bec610c19d8b4e6bd5bb9a13db57374eac09"
+      "plaintext": "7ce289287fc049610a9d8154fe8cd4e6b567c14bae156982ef95b4e39ff37141"
     }
   }
 }
