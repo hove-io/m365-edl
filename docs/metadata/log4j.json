@@ -40,8 +40,8 @@
       "url": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/"
     }
   ],
-  "generatedAt": "2026-11-16T04:24:24Z",
-  "generated_at": "2026-11-16T04:24:24Z",
+  "generatedAt": "2026-11-23T04:23:30Z",
+  "generated_at": "2026-11-23T04:23:30Z",
   "indicators": {
     "domains": [
       {
@@ -324,8 +324,8 @@
           "value": "transfer.sh"
         }
       ],
-      "retrievedAt": "2026-11-16T04:24:24Z",
-      "retrieved_at": "2026-11-16T04:24:24Z",
+      "retrievedAt": "2026-11-23T04:23:30Z",
+      "retrieved_at": "2026-11-23T04:23:30Z",
       "sha256": "3ff8023c310cf7daeb5451dca9cb0666952a6ed5ddcdfe0dbad645ff90c30f1c",
       "status": "retrieved-and-validated",
       "transport": "HTTPS with certificate validation",
@@ -359,15 +359,15 @@
       "referenceUrl": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-174a",
       "reference_url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-174a",
       "rejected": [],
-      "retrievedAt": "2026-11-16T04:24:24Z",
-      "retrieved_at": "2026-11-16T04:24:24Z",
+      "retrievedAt": "2026-11-23T04:23:30Z",
+      "retrieved_at": "2026-11-23T04:23:30Z",
       "sha256": "b92ae55f1e0efff75228b2a3ff11100da9dccaad0cd8e550448ae327d54cae3b",
       "status": "retrieved-and-validated",
       "transport": "HTTPS with certificate validation",
       "url": "https://www.cisa.gov/sites/default/files/publications/AA22-174A.stix.xml"
     },
     {
-      "bytes": 292688,
+      "bytes": 292673,
       "counts": {
         "acceptedUniqueDomains": 1,
         "acceptedUniqueIPv4": 6,
@@ -399,9 +399,9 @@
       "referenceUrl": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/",
       "reference_url": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/",
       "rejected": [],
-      "retrievedAt": "2026-11-16T04:24:24Z",
-      "retrieved_at": "2026-11-16T04:24:24Z",
-      "sha256": "c7e0ec1f32a3ed4ac41950d0db54f8fdd5fa8f1e60a2b14765dac59391c181ee",
+      "retrievedAt": "2026-11-23T04:23:30Z",
+      "retrieved_at": "2026-11-23T04:23:30Z",
+      "sha256": "d6d1c321043e3c81ddc3751d1e274d00f3f9b828aa4369688b68f5dde10ff889",
       "status": "retrieved-and-validated",
       "transport": "HTTPS with certificate validation",
       "url": "https://unit42.paloaltonetworks.com/apache-log4j-vulnerability-cve-2021-44228/"
